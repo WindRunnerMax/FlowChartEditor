@@ -1,6 +1,6 @@
 import { FC, useRef } from "react";
 import { XML_DATA } from "./constant";
-import { convertToSVG } from "src/core/utils/convert";
+import { convertToSVG } from "src/package/utils/convert";
 export const DiagramExample: FC = () => {
   const container = useRef<HTMLDivElement>(null);
 

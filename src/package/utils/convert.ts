@@ -1,4 +1,4 @@
-import { mxGraph, mxCodec } from "./mxgraph";
+import { mxGraph, mxCodec } from "../core/mxgraph";
 import { stringToXml } from "./xml";
 
 export const convertToSVG = (str: string): SVGElement | null => {
