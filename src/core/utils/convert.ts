@@ -1,6 +1,4 @@
-import { Codec, Graph } from "@maxgraph/core";
 import mx from "./mxgraph";
-import { svgToString } from "./svg";
 import { stringToXml } from "./xml";
 
 export const convertToSVG = (str: string): SVGElement | null => {
