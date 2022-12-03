@@ -19,6 +19,12 @@ window.mxResourceExtension = ".txt";
 
 const mx = factory({
   // not working see https://github.com/jgraph/mxgraph/issues/479
-  mxBasePath: "assets/mxgraph",
+  mxBasePath: "static/js",
 });
 export default mx;
+
+for (const item of Object.keys(mx)) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window[item] = mx[item];
+}
