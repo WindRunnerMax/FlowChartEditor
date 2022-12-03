@@ -1,7 +1,8 @@
-import { mxGraph, mxCodec } from "../core/mxgraph";
+import { mxGraph, mxCodec, mxSvgCanvas2D, mxImageExport } from "../core/mxgraph";
 import { DEFAULT_STYLE_XML } from "../core/style";
 import { stringToXml } from "./xml";
 
+const XMLNS = "http://www.w3.org/2000/svg";
 const opt = Object.prototype.toString;
 const isString = (value: unknown): value is string => {
   return opt.call(value) === "[object String]";
@@ -13,7 +14,7 @@ export const convertXMLToSVG = (
 ): SVGElement | null => {
   const element = document.createElement("div");
   const doc = isString(xml) ? stringToXml(xml) : xml;
-  const sheet = style
+  const stylesheet = style
     ? isString(style)
       ? stringToXml(style)
       : style
@@ -23,10 +24,21 @@ export const convertXMLToSVG = (
     graph.model.beginUpdate();
     const codec = new mxCodec(doc);
     codec.decode(doc.documentElement, graph.getModel());
-    sheet && codec.decode(sheet.documentElement, graph.getStylesheet());
+    stylesheet && codec.decode(stylesheet.documentElement, graph.getStylesheet());
     graph.model.endUpdate();
-    const svg = element.firstChild ? element.firstChild.cloneNode(true) : null;
-    return svg as SVGElement;
+    const svg = document.createElementNS(XMLNS, "svg");
+    const bounds = graph.getGraphBounds();
+    svg.setAttribute("xmlns", XMLNS);
+    svg.setAttribute("width", bounds.width.toString());
+    svg.setAttribute("height", bounds.height.toString());
+    svg.setAttribute("viewBox", "0 0 " + bounds.width + " " + bounds.height);
+    svg.setAttribute("version", "1.1");
+    const canvas = new mxSvgCanvas2D(svg);
+    canvas.translate(-bounds.x, -bounds.y);
+    const exporter = new mxImageExport();
+    const state = graph.getView().getState(graph.model.root);
+    exporter.drawState(state, canvas);
+    return svg;
   }
   return null;
 };
