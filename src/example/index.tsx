@@ -1,13 +1,13 @@
 import { FC, useRef } from "react";
 import { XML_DATA } from "./constant";
-import { convertToSVG } from "src/package/utils/convert";
+import { convertXMLToSVG } from "src/package/utils/convert";
 export const DiagramExample: FC = () => {
   const container = useRef<HTMLDivElement>(null);
 
   const convert = () => {
     const div = container.current;
     if (div) {
-      const svg = convertToSVG(XML_DATA);
+      const svg = convertXMLToSVG(XML_DATA);
       div.childNodes.forEach(node => div.removeChild(node));
       svg && div.appendChild(svg);
     }
