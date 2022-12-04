@@ -1,0 +1,13 @@
+.example {
+  align-items: center;
+  display: flex;
+
+  .buttonGroup {
+    margin: 30px;
+
+    > button {
+      display: block;
+      margin: 10px;
+    }
+  }
+}
