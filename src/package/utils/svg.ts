@@ -18,3 +18,13 @@ export const stringToSvg = (str: string): SVGElement | null => {
     return null;
   }
 };
+
+export const base64ToSvgString = (base64: string): string | null => {
+  try {
+    const svg = atob(base64.replace("data:image/svg+xml;base64,", ""));
+    return svg;
+  } catch (error) {
+    console.log("base64ToSvgString Error: ", error);
+    return null;
+  }
+};

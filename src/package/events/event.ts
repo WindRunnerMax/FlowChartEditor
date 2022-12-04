@@ -23,7 +23,7 @@ export abstract class EditorEvents {
       try {
         const msg = JSON.parse(event.data) as EditorMsg;
         this.handleMessage(msg);
-        console.log("msg", msg);
+        // console.log("msg", msg);
       } catch (error) {
         console.log("MessageEvent Error", Error);
       }

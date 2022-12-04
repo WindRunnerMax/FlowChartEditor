@@ -6,6 +6,7 @@ export type Config = {
   compress?: boolean;
   data?: string;
   format?: "xml" | "svg";
+  title?: string;
   onInit?: () => void;
   onLoad?: () => void;
   onConfig?: () => void;
@@ -17,8 +18,5 @@ export type Config = {
 
 export type InitMsg = { event: "init" | "load" | "configure" };
 export type SaveMsg = { event: "autosave" | "save" | "exit"; xml: string; exit?: boolean };
-export type ExportMsg = { event: "export" } & (
-  | { svg: string; fmt: "svg" }
-  | { xml: string; fmt: "xml" }
-);
+export type ExportMsg = { event: "export"; data: string; format: Config["format"] };
 export type EditorMsg = InitMsg | SaveMsg | ExportMsg;

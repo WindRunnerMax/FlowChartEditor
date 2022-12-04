@@ -2,7 +2,7 @@ import styles from "./index.module.scss";
 import { FC, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
 import { convertXMLToSVG } from "src/package/utils/convert";
-import { EditorBus, stringToSvg, stringToXml, xmlToString } from "src/package";
+import { base64ToSvgString, EditorBus, stringToSvg, stringToXml, xmlToString } from "src/package";
 export const DiagramExample: FC = () => {
   const [xmlExample, setXMLExample] = useState(XML_DATA);
   const [svgExample, setSVGExample] = useState(SVG_DATA);
@@ -18,10 +18,10 @@ export const DiagramExample: FC = () => {
     }
   };
 
-  const convertSVG = () => {
+  const convertSVG = (svgString: string = svgExample) => {
     const div = svgExampleContainer.current;
     if (div) {
-      const svg = stringToSvg(svgExample);
+      const svg = stringToSvg(svgString);
       div.childNodes.forEach(node => div.removeChild(node));
       svg && div.appendChild(svg);
     }
@@ -36,6 +36,21 @@ export const DiagramExample: FC = () => {
           const str = xmlToString(xmlNode.documentElement.firstChild?.firstChild || null) || xml;
           setXMLExample(str);
           convertXML(str);
+        }
+      },
+    });
+    bus.startEdit();
+  };
+
+  const editSVG = () => {
+    const bus = new EditorBus({
+      data: svgExample,
+      format: "svg",
+      onExport: (svg: string) => {
+        const svgStr = base64ToSvgString(svg);
+        if (svgStr) {
+          setSVGExample(svgStr);
+          convertSVG(svgStr);
         }
       },
     });
@@ -62,8 +77,8 @@ export const DiagramExample: FC = () => {
           <textarea cols={30} rows={10} value={svgExample} disabled></textarea>
         </div>
         <div className={styles.buttonGroup}>
-          <button onClick={convertSVG}>显示图像</button>
-          <button>在线编辑</button>
+          <button onClick={() => convertSVG()}>显示图像</button>
+          <button onClick={editSVG}>在线编辑</button>
         </div>
         <div ref={svgExampleContainer}></div>
       </div>

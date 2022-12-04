@@ -21,20 +21,12 @@ export class EditorBus extends EditorEvents {
     const iframe = this.iframe;
     const url =
       `${this.url}?` +
-      [
-        "embed=1",
-        "ui=atlas",
-        "spin=1",
-        "proto=json",
-        "configure=1",
-        "libraries=1",
-        "noSaveBtn=1",
-      ].join("&");
+      ["embed=1", "spin=1", "proto=json", "configure=1", "noSaveBtn=1", "stealth=1"].join("&");
     iframe.setAttribute("src", url);
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute(
       "style",
-      "position:absolute;top:0;left:0;width:100%;height:100%;background-color:#fff;"
+      "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#fff;"
     );
     iframe.className = "drawio-iframe-container";
     document.body.style.overflow = "hidden";
@@ -67,7 +59,7 @@ export class EditorBus extends EditorEvents {
           saveAndExit: "1",
           modified: "unsavedChanges",
           xml: this.config.data,
-          title: "Flow Chart",
+          title: this.config.title || "流程图",
         });
   }
   onLoad(): void {
@@ -94,11 +86,11 @@ export class EditorBus extends EditorEvents {
   }
   onExport(msg: ExportMsg): void {
     if (!this.config.onExport) return void 0;
-    if (msg.fmt === "svg") {
-      this.config.onExport(msg.svg, "svg");
-    } else if (msg.fmt === "xml") {
-      this.config.onExport(msg.xml, "xml");
-    }
+    this.config.onExport(msg.data, this.config.format);
     this.exitEdit();
   }
 }
+
+// https://github.com/jgraph/drawio-integration
+// https://github.com/jgraph/drawio-tools
+// https://www.diagrams.net/doc/faq/supported-url-parameters
