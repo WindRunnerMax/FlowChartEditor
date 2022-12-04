@@ -21,7 +21,15 @@ export class EditorBus extends EditorEvents {
     const iframe = this.iframe;
     const url =
       `${this.url}?` +
-      ["embed=1", "spin=1", "proto=json", "configure=1", "noSaveBtn=1", "stealth=1"].join("&");
+      [
+        "embed=1",
+        "spin=1",
+        "proto=json",
+        "configure=1",
+        "noSaveBtn=1",
+        "stealth=1",
+        "libraries=0",
+      ].join("&");
     iframe.setAttribute("src", url);
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute(
@@ -47,7 +55,10 @@ export class EditorBus extends EditorEvents {
       ? this.config.onConfig()
       : this.postMessage({
           action: "configure",
-          config: { compressXml: this.config.compress ?? false },
+          config: {
+            compressXml: this.config.compress ?? false,
+            css: ".geTabContainer{display:none !important;}",
+          },
         });
   }
   onInit(): void {
@@ -94,3 +105,5 @@ export class EditorBus extends EditorEvents {
 // https://github.com/jgraph/drawio-integration
 // https://github.com/jgraph/drawio-tools
 // https://www.diagrams.net/doc/faq/supported-url-parameters
+// https://www.diagrams.net/doc/faq/configure-diagram-editor
+// https://desk.draw.io/support/solutions/articles/16000042544
