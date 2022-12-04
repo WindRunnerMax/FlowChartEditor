@@ -7,7 +7,7 @@ export class EditorBus extends EditorEvents {
   private config: Config;
   protected iframe: HTMLIFrameElement | null;
 
-  constructor(config: Config) {
+  constructor(config: Config = { format: "xml" }) {
     super();
     this.lock = false;
     this.config = config;
@@ -26,7 +26,6 @@ export class EditorBus extends EditorEvents {
         "ui=atlas",
         "spin=1",
         "proto=json",
-        "modified=unsavedChanges",
         "configure=1",
         "libraries=1",
         "noSaveBtn=1",
@@ -51,23 +50,47 @@ export class EditorBus extends EditorEvents {
     window.removeEventListener(MESSAGE_EVENT, this.handleMessageEvent);
   };
 
+  onConfig(): void {
+    this.config.onConfig
+      ? this.config.onConfig()
+      : this.postMessage({
+          action: "configure",
+          config: { compressXml: this.config.compress ?? false },
+        });
+  }
   onInit(): void {
-    this.config.onInit && this.config.onInit();
+    this.config.onInit
+      ? this.config.onInit()
+      : this.postMessage({
+          action: "load",
+          autosave: 1,
+          saveAndExit: "1",
+          modified: "unsavedChanges",
+          xml: this.config.data,
+          title: "Flow Chart",
+        });
   }
   onLoad(): void {
     this.config.onLoad && this.config.onLoad();
-  }
-  onConfig(): void {
-    this.config.onConfig && this.config.onConfig();
   }
   onAutoSave(msg: SaveMsg): void {
     this.config.onAutoSave && this.config.onAutoSave(msg.xml);
   }
   onSave(msg: SaveMsg): void {
     this.config.onSave && this.config.onSave(msg.xml);
+    if (this.config.onExport) {
+      this.postMessage({
+        action: "export",
+        format: this.config.format,
+        xml: msg.xml,
+      });
+    } else {
+      if (msg.exit) this.exitEdit();
+    }
   }
   onExit(msg: SaveMsg): void {
     this.config.onExit && this.config.onExit(msg.xml);
+    this.exitEdit();
   }
   onExport(msg: ExportMsg): void {
     if (!this.config.onExport) return void 0;
@@ -76,5 +99,6 @@ export class EditorBus extends EditorEvents {
     } else if (msg.fmt === "xml") {
       this.config.onExport(msg.xml, "xml");
     }
+    this.exitEdit();
   }
 }

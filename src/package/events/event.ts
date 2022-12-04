@@ -4,9 +4,9 @@ export abstract class EditorEvents {
   protected abstract url: string;
   protected abstract iframe: HTMLIFrameElement | null;
 
+  abstract onConfig(msg: InitMsg): void;
   abstract onInit(msg: InitMsg): void;
   abstract onLoad(msg: InitMsg): void;
-  abstract onConfig(msg: InitMsg): void;
   abstract onAutoSave(msg: SaveMsg): void;
   abstract onSave(msg: SaveMsg): void;
   abstract onExit(msg: SaveMsg): void;
@@ -15,7 +15,7 @@ export abstract class EditorEvents {
   protected postMessage = (message: unknown) => {
     this.iframe &&
       this.iframe.contentWindow &&
-      this.iframe.contentWindow.postMessage(message, this.url);
+      this.iframe.contentWindow.postMessage(JSON.stringify(message), this.url);
   };
 
   protected handleMessageEvent = (event: MessageEvent) => {
@@ -36,7 +36,7 @@ export abstract class EditorEvents {
         return this.onInit(msg);
       case "load":
         return this.onLoad(msg);
-      case "config":
+      case "configure":
         return this.onConfig(msg);
       case "autosave":
         return this.onAutoSave(msg);

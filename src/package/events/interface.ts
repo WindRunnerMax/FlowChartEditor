@@ -4,7 +4,8 @@ export const MESSAGE_EVENT = "message" as const;
 export type Config = {
   url?: string;
   compress?: boolean;
-  format: "xml" | "svg";
+  data?: string;
+  format?: "xml" | "svg";
   onInit?: () => void;
   onLoad?: () => void;
   onConfig?: () => void;
@@ -14,8 +15,8 @@ export type Config = {
   onExport?: (xml: string, fmt: Config["format"]) => void;
 };
 
-export type InitMsg = { event: "init" | "load" | "config" };
-export type SaveMsg = { event: "autosave" | "save" | "exit"; xml: string };
+export type InitMsg = { event: "init" | "load" | "configure" };
+export type SaveMsg = { event: "autosave" | "save" | "exit"; xml: string; exit?: boolean };
 export type ExportMsg = { event: "export" } & (
   | { svg: string; fmt: "svg" }
   | { xml: string; fmt: "xml" }

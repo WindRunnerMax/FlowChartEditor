@@ -1,4 +1,5 @@
-export const svgToString = (svg: Node): string | null => {
+export const svgToString = (svg: Node | null): string | null => {
+  if (!svg) return null;
   try {
     const serialize = new XMLSerializer();
     return serialize.serializeToString(svg);
