@@ -109,4 +109,4 @@ export const DEFAULT_STYLE_XML = `
 		<add as="edgeStyle" value="none"/>
 		<add as="fillColor" value="#ffffff"/>
 	</add>
-</mxStylesheet>`;
+</mxStylesheet>` as string;

@@ -1,12 +1,12 @@
 {
   "name": "embed-drawio",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "files": [
     "dist",
     "pnpm-lock.yaml"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/package/index.js",
+  "types": "dist/package/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/WindrunnerMax/EmbedDrawIO"
