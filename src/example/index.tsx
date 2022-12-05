@@ -45,7 +45,7 @@ export const DiagramExample: FC = () => {
   const editSVG = () => {
     const bus = new EditorBus({
       data: svgExample,
-      format: "svg",
+      format: "xmlsvg",
       onExport: (svg: string) => {
         const svgStr = base64ToSvgString(svg);
         if (svgStr) {

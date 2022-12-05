@@ -21,8 +21,9 @@ export const convertXMLToSVG = (
     : stringToXml(DEFAULT_STYLE_XML);
   if (doc) {
     const graph = new mxGraph(element);
-    graph.model.beginUpdate();
     const codec = new mxCodec(doc);
+    graph.model.beginUpdate();
+    graph.setEnabled(false);
     codec.decode(doc.documentElement, graph.getModel());
     stylesheet && codec.decode(stylesheet.documentElement, graph.getStylesheet());
     graph.model.endUpdate();

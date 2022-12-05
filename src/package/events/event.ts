@@ -22,10 +22,10 @@ export abstract class EditorEvents {
     if (this.iframe && event.source === this.iframe.contentWindow && event.data) {
       try {
         const msg = JSON.parse(event.data) as EditorMsg;
-        this.handleMessage(msg);
         // console.log("msg", msg);
+        this.handleMessage(msg);
       } catch (error) {
-        console.log("MessageEvent Error", Error);
+        console.log("MessageEvent Error", error);
       }
     }
   };

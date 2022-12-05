@@ -107,3 +107,4 @@ export class EditorBus extends EditorEvents {
 // https://www.diagrams.net/doc/faq/supported-url-parameters
 // https://www.diagrams.net/doc/faq/configure-diagram-editor
 // https://desk.draw.io/support/solutions/articles/16000042544
+// https://github.com/jgraph/mxgraph-js aa11697fbd5ba9f4bb

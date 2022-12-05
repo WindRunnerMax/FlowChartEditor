@@ -5,7 +5,7 @@ export type Config = {
   url?: string;
   compress?: boolean;
   data?: string;
-  format?: "xml" | "svg";
+  format?: "xml" | "xmlsvg";
   title?: string;
   onInit?: () => void;
   onLoad?: () => void;
