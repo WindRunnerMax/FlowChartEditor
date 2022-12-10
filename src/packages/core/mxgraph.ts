@@ -22,7 +22,33 @@ const mx = factory({
 });
 
 // 需要用到的再引用 实际上还是把所有的包都打进来了
-export const { mxGraph, mxCodec, mxConstants, mxSvgCanvas2D, mxImageExport } = mx;
+export const {
+  mxGraph,
+  mxCodec,
+  mxConstants,
+  mxSvgCanvas2D,
+  mxImageExport,
+  mxEventSource,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxRectangle,
+  mxDivResizer,
+  mxPopupMenu,
+  mxPoint,
+  mxPrintPreview,
+  mxGraphView,
+  mxMouseEvent,
+  mxPolyline,
+  mxGraphHandler,
+  mxConnectionHandler,
+  mxCellMarker,
+  mxRectangleShape,
+  mxPopupMenuHandler,
+  mxUndoManager,
+} = mx;
 
 // https://github.com/maxGraph/maxGraph/issues/102
 // https://github.com/jgraph/mxgraph/blob/master/javascript/src/js/io/mxCodec.js#L423
