@@ -17,20 +17,14 @@ import {
 } from "../../core/mxgraph";
 
 import { RESOURCES_PATH } from "../constant";
-import {
-  OpenFile,
-  Editor,
-  OpenDialog,
-  PageSetupDialog,
-  PrintDialog,
-  FilenameDialog,
-} from "./Editor";
+import { OpenFile, Editor, PageSetupDialog, PrintDialog, FilenameDialog } from "./Editor";
 import {
   ExportDialog,
   EditDiagramDialog,
   TextareaDialog,
   LayersWindow,
   OutlineWindow,
+  OpenDialog,
   AboutDialog,
 } from "./Dialogs";
 import { ChangePageSetup } from "./EditorUi";

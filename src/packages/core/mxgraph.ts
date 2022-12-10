@@ -108,6 +108,7 @@ export const {
   mxTriangle,
   mxCloud,
   mxArrow,
+  mxCodecRegistry,
 } = mx;
 
 // https://github.com/maxGraph/maxGraph/issues/102

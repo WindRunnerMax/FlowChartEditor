@@ -42,6 +42,7 @@ export {
   EditDataDialog,
   OutlineWindow,
   LayersWindow,
+  EditDiagramDialog,
 };
 
 /**
@@ -663,7 +664,7 @@ function TextareaDialog(
 /**
  * Constructs a new edit file dialog.
  */
-var EditDiagramDialog = function (editorUi) {
+function EditDiagramDialog(editorUi) {
   const div = document.createElement("div");
   div.style.textAlign = "right";
   const textarea = document.createElement("textarea");
@@ -803,7 +804,7 @@ var EditDiagramDialog = function (editorUi) {
   }
 
   this.container = div;
-};
+}
 
 /**
  *

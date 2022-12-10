@@ -3302,7 +3302,6 @@ HoverIcons.prototype.triangleUp = !mxClient.IS_SVG
         HoverIcons.prototype.arrowFill +
         '"/>'
     );
-
 /**
  * Right arrow.
  */
@@ -8797,14 +8796,12 @@ if (typeof mxVertexHandler != "undefined") {
     mxEdgeHandler.prototype.labelHandleImage = HoverIcons.prototype.secondaryHandle;
     mxOutline.prototype.sizerImage = HoverIcons.prototype.mainHandle;
 
-    if (window.Sidebar != null) {
-      Sidebar.prototype.triangleUp = HoverIcons.prototype.triangleUp;
-      Sidebar.prototype.triangleRight = HoverIcons.prototype.triangleRight;
-      Sidebar.prototype.triangleDown = HoverIcons.prototype.triangleDown;
-      Sidebar.prototype.triangleLeft = HoverIcons.prototype.triangleLeft;
-      Sidebar.prototype.refreshTarget = HoverIcons.prototype.refreshTarget;
-      Sidebar.prototype.roundDrop = HoverIcons.prototype.roundDrop;
-    }
+    Sidebar.prototype.triangleUp = HoverIcons.prototype.triangleUp;
+    Sidebar.prototype.triangleRight = HoverIcons.prototype.triangleRight;
+    Sidebar.prototype.triangleDown = HoverIcons.prototype.triangleDown;
+    Sidebar.prototype.triangleLeft = HoverIcons.prototype.triangleLeft;
+    Sidebar.prototype.refreshTarget = HoverIcons.prototype.refreshTarget;
+    Sidebar.prototype.roundDrop = HoverIcons.prototype.roundDrop;
 
     // Pre-fetches images (only needed for non data-uris)
     if (!mxClient.IS_SVG) {

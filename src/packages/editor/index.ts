@@ -11,6 +11,7 @@ export {
   AboutDialog,
   OutlineWindow,
   EditDataDialog,
+  EditDiagramDialog,
   LayersWindow,
 } from "./js/Dialogs";
 

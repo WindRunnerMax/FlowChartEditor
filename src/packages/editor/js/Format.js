@@ -4414,10 +4414,10 @@ TextFormatPanel.prototype.addFont = function (container) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-function StyleFormatPanel(format, editorUi, container) {
+const StyleFormatPanel = function StyleFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-}
+};
 
 mxUtils.extend(StyleFormatPanel, BaseFormatPanel);
 
@@ -6204,7 +6204,7 @@ StyleFormatPanel.prototype.addStroke = function (container) {
         markerDiv.style.marginTop = "5px";
         markerDiv.style.fontSize = "10px";
         markerDiv.style.filter = "none";
-        markerDiv.style.color = this.defaultStrokeColor;
+        markerDiv.style.color = "black";
         markerDiv.nextSibling.style.marginTop = "0px";
       }
 

@@ -4386,7 +4386,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
       arrow.setAttribute("title", tooltip);
     }
 
-    mxUtils.setOpacity(arrow, img == this.refreshTarget ? 30 : 20);
+    mxUtils.setOpacity(arrow, img == this?.refreshTarget ? 30 : 20);
     arrow.style.position = "absolute";
     arrow.style.cursor = "crosshair";
 

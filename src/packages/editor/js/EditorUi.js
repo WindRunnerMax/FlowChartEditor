@@ -25,13 +25,13 @@ import {
   mxMorphing,
 } from "../../core/mxgraph";
 import { Actions } from "./Actions";
-import { Editor, Dialog, OpenFile, FilenameDialog } from "./Editor";
+import { Editor, Dialog, OpenFile, FilenameDialog, ErrorDialog } from "./Editor";
 import { Sidebar } from "./Sidebar";
 import { Menus } from "./Menus";
 import { Graph, HoverIcons } from "./Graph";
 import { Toolbar } from "./Toolbar";
 import { Format } from "./Format";
-import { ErrorDialog, ColorDialog, OpenDialog, EditDataDialog } from "./Dialogs";
+import { ColorDialog, OpenDialog, EditDataDialog } from "./Dialogs";
 
 export { ChangePageSetup, EditorUi };
 
@@ -1239,7 +1239,7 @@ EditorUi.prototype.getCssClassForMarker = function (prefix, shape, marker, fill)
  * Overridden in Menus.js
  */
 EditorUi.prototype.createMenus = function () {
-  return null;
+  return new Menus(this);
 };
 
 /**

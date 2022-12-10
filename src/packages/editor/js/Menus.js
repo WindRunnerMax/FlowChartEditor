@@ -1649,10 +1649,3 @@ Menu.prototype.setEnabled = function (value) {
 Menu.prototype.execute = function (menu, parent) {
   this.funct(menu, parent);
 };
-
-/**
- * "Installs" menus in EditorUi.
- */
-EditorUi.prototype.createMenus = function () {
-  return new Menus(this);
-};
