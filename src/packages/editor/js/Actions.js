@@ -280,27 +280,13 @@ Actions.prototype.init = function () {
   function deleteCells(includeEdges) {
     // Cancels interactive operations
     graph.escape();
-    var cells = graph.getDeletableCells(graph.getSelectionCells());
+    var select = graph.deleteCells(
+      graph.getDeletableCells(graph.getSelectionCells()),
+      includeEdges
+    );
 
-    if (cells != null && cells.length > 0) {
-      var parents = graph.selectParentAfterDelete ? graph.model.getParents(cells) : null;
-      graph.removeCells(cells, includeEdges);
-
-      // Selects parents for easier editing of groups
-      if (parents != null) {
-        var select = [];
-
-        for (var i = 0; i < parents.length; i++) {
-          if (
-            graph.model.contains(parents[i]) &&
-            (graph.model.isVertex(parents[i]) || graph.model.isEdge(parents[i]))
-          ) {
-            select.push(parents[i]);
-          }
-        }
-
-        graph.setSelectionCells(select);
-      }
+    if (select != null) {
+      graph.setSelectionCells(select);
     }
   }
 
@@ -414,7 +400,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    "Home"
+    "Shift+Home"
   );
   this.addAction(
     "exitGroup",
@@ -762,7 +748,7 @@ Actions.prototype.init = function () {
 
               // Removes HTML tags
               var temp = document.createElement("div");
-              temp.innerHTML = label;
+              temp.innerHTML = graph.sanitizeHtml(label);
               label = mxUtils.extractTextWithWhitespace(temp.childNodes);
 
               graph.cellLabelChanged(state.cell, label);
@@ -843,7 +829,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+H"
+    "Home"
   );
   this.addAction(
     "zoomIn",

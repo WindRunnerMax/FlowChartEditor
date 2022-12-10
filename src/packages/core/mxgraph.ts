@@ -53,6 +53,7 @@ export const {
   mxGraphModel,
   mxShape,
   mxEdgeStyle,
+  mxSelectionCellsHandler,
   mxClipboard,
   mxEdgeHandler,
   mxCellRenderer,

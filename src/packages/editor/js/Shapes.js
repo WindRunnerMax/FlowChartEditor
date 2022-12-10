@@ -48,6 +48,191 @@ import { Graph } from "./Graph";
  * Registers shapes.
  */
 (function () {
+  // LATER: Use this to implement striping
+  function paintTableBackground(state, c, x, y, w, h, r) {
+    if (state != null) {
+      var graph = state.view.graph;
+      var start = graph.getActualStartSize(state.cell);
+      var rows = graph.model.getChildCells(state.cell, true);
+
+      if (rows.length > 0) {
+        var events = false;
+
+        if (this.style != null) {
+          events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, "1") == "1";
+        }
+
+        if (!events) {
+          c.pointerEvents = false;
+        }
+
+        var evenRowColor = mxUtils.getValue(state.style, "evenRowColor", mxConstants.NONE);
+        var oddRowColor = mxUtils.getValue(state.style, "oddRowColor", mxConstants.NONE);
+        var evenColColor = mxUtils.getValue(state.style, "evenColumnColor", mxConstants.NONE);
+        var oddColColor = mxUtils.getValue(state.style, "oddColumnColor", mxConstants.NONE);
+        var cols = graph.model.getChildCells(rows[0], true);
+
+        // Paints column backgrounds
+        for (var i = 0; i < cols.length; i++) {
+          var clr = mxUtils.mod(i, 2) == 1 ? evenColColor : oddColColor;
+          var geo = graph.getCellGeometry(cols[i]);
+
+          if (geo != null && clr != mxConstants.NONE) {
+            c.setFillColor(clr);
+            c.begin();
+            c.moveTo(x + geo.x, y + start.y);
+
+            if (r > 0 && i == cols.length - 1) {
+              c.lineTo(x + geo.x + geo.width - r, y);
+              c.quadTo(x + geo.x + geo.width, y, x + geo.x + geo.width, y + r);
+              c.lineTo(x + geo.x + geo.width, y + h - r);
+              c.quadTo(x + geo.x + geo.width, y + h, x + geo.x + geo.width - r, y + h);
+            } else {
+              c.lineTo(x + geo.x + geo.width, y + start.y);
+              c.lineTo(x + geo.x + geo.width, y + h - start.height);
+            }
+
+            c.lineTo(x + geo.x, y + h);
+            c.close();
+            c.fill();
+          }
+        }
+
+        // Paints row backgrounds
+        for (var i = 0; i < rows.length; i++) {
+          var clr = mxUtils.mod(i, 2) == 1 ? evenRowColor : oddRowColor;
+          var geo = graph.getCellGeometry(rows[i]);
+
+          if (geo != null && clr != mxConstants.NONE) {
+            var b = i == rows.length - 1 ? y + h : y + geo.y + geo.height;
+            c.setFillColor(clr);
+
+            c.begin();
+            c.moveTo(x + start.x, y + geo.y);
+            c.lineTo(x + w - start.width, y + geo.y);
+
+            if (r > 0 && i == rows.length - 1) {
+              c.lineTo(x + w, b - r);
+              c.quadTo(x + w, b, x + w - r, b);
+              c.lineTo(x + r, b);
+              c.quadTo(x, b, x, b - r);
+            } else {
+              c.lineTo(x + w - start.width, b);
+              c.lineTo(x + start.x, b);
+            }
+
+            c.close();
+            c.fill();
+          }
+        }
+      }
+    }
+  }
+
+  // Table Shape
+  function TableShape() {
+    mxSwimlane.call(this);
+  }
+
+  mxUtils.extend(TableShape, mxSwimlane);
+
+  TableShape.prototype.getLabelBounds = function (rect) {
+    var start = this.getTitleSize();
+
+    if (start == 0) {
+      return mxShape.prototype.getLabelBounds.apply(this, arguments);
+    } else {
+      return mxSwimlane.prototype.getLabelBounds.apply(this, arguments);
+    }
+  };
+
+  TableShape.prototype.paintVertexShape = function (c, x, y, w, h) {
+    // LATER: Split background to add striping
+    //paintTableBackground(this.state, c, x, y, w, h);
+
+    var start = this.getTitleSize();
+
+    if (start == 0) {
+      mxRectangleShape.prototype.paintBackground.apply(this, arguments);
+    } else {
+      mxSwimlane.prototype.paintVertexShape.apply(this, arguments);
+      c.translate(-x, -y);
+    }
+
+    this.paintForeground(c, x, y, w, h);
+  };
+
+  TableShape.prototype.paintForeground = function (c, x, y, w, h) {
+    if (this.state != null) {
+      var flipH = this.flipH;
+      var flipV = this.flipV;
+
+      if (
+        this.direction == mxConstants.DIRECTION_NORTH ||
+        this.direction == mxConstants.DIRECTION_SOUTH
+      ) {
+        var tmp = flipH;
+        flipH = flipV;
+        flipV = tmp;
+      }
+
+      // Negative transform to avoid save/restore
+      c.rotate(-this.getShapeRotation(), flipH, flipV, x + w / 2, y + h / 2);
+
+      const s = this.scale;
+      x = this.bounds.x / s;
+      y = this.bounds.y / s;
+      w = this.bounds.width / s;
+      h = this.bounds.height / s;
+      this.paintTableForeground(c, x, y, w, h);
+    }
+  };
+
+  TableShape.prototype.paintTableForeground = function (c, x, y, w, h) {
+    var graph = this.state.view.graph;
+    var start = graph.getActualStartSize(this.state.cell);
+    var rows = graph.model.getChildCells(this.state.cell, true);
+
+    if (rows.length > 0) {
+      var rowLines = mxUtils.getValue(this.state.style, "rowLines", "1") != "0";
+      var columnLines = mxUtils.getValue(this.state.style, "columnLines", "1") != "0";
+
+      // Paints row lines
+      if (rowLines) {
+        for (var i = 1; i < rows.length; i++) {
+          var geo = graph.getCellGeometry(rows[i]);
+
+          if (geo != null) {
+            c.begin();
+            c.moveTo(x + start.x, y + geo.y);
+            c.lineTo(x + w - start.width, y + geo.y);
+            c.end();
+            c.stroke();
+          }
+        }
+      }
+
+      if (columnLines) {
+        var cols = graph.model.getChildCells(rows[0], true);
+
+        // Paints column lines
+        for (var i = 1; i < cols.length; i++) {
+          var geo = graph.getCellGeometry(cols[i]);
+
+          if (geo != null) {
+            c.begin();
+            c.moveTo(x + geo.x + start.x, y + start.y);
+            c.lineTo(x + geo.x + start.x, y + h - start.height);
+            c.end();
+            c.stroke();
+          }
+        }
+      }
+    }
+  };
+
+  mxCellRenderer.registerShape("table", TableShape);
+
   // Cube Shape, supports size style
   function CubeShape() {
     mxCylinder.call(this);
@@ -3132,12 +3317,24 @@ import { Graph } from "./Graph";
 
   // Handlers are only added if mxVertexHandler is defined (ie. not in embedded graph)
   if (typeof mxVertexHandler !== "undefined") {
-    function createHandle(state, keys, getPositionFn, setPositionFn, ignoreGrid, redrawEdges) {
+    function createHandle(
+      state,
+      keys,
+      getPositionFn,
+      setPositionFn,
+      ignoreGrid,
+      redrawEdges,
+      executeFn
+    ) {
       var handle = new mxHandle(state, null, mxVertexHandler.prototype.secondaryHandleImage);
 
-      handle.execute = function () {
+      handle.execute = function (me) {
         for (var i = 0; i < keys.length; i++) {
           this.copyStyle(keys[i]);
+        }
+
+        if (executeFn) {
+          executeFn(me);
         }
       };
 
@@ -3260,7 +3457,7 @@ import { Graph } from "./Graph";
                 Math.min(max, (pt.x - bounds.x) / (bounds.width * 0.75))
               );
             },
-            null,
+            false,
             true
           ),
         ];
@@ -3310,13 +3507,9 @@ import { Graph } from "./Graph";
                 ? pt.x - bounds.x
                 : Math.max(0, Math.min(max, (pt.x - bounds.x) / bounds.width));
 
-              if (fixed && !mxEvent.isAltDown(me.getEvent())) {
-                size = state.view.graph.snap(size);
-              }
-
               this.state.style["size"] = size;
             },
-            null,
+            false,
             redrawEdges
           ),
         ];
@@ -3360,7 +3553,8 @@ import { Graph } from "./Graph";
                   )
                 ) / factor
               );
-            }
+            },
+            false
           ),
         ];
 
@@ -3745,7 +3939,21 @@ import { Graph } from "./Graph";
         return handles;
       },
       "swimlane": function (state) {
-        var handles = [
+        var handles = [];
+
+        if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED)) {
+          var size = parseFloat(
+            mxUtils.getValue(
+              state.style,
+              mxConstants.STYLE_STARTSIZE,
+              mxConstants.DEFAULT_STARTSIZE
+            )
+          );
+          handles.push(createArcHandle(state, size / 2));
+        }
+
+        // Start size handle must be last item in handles for hover to work in tables (see mouse event handler in Graph)
+        handles.push(
           createHandle(
             state,
             [mxConstants.STYLE_STARTSIZE],
@@ -3775,20 +3983,40 @@ import { Graph } from "./Graph";
                 mxUtils.getValue(this.state.style, mxConstants.STYLE_HORIZONTAL, 1) == 1
                   ? Math.round(Math.max(0, Math.min(bounds.height, pt.y - bounds.y)))
                   : Math.round(Math.max(0, Math.min(bounds.width, pt.x - bounds.x)));
-            }
-          ),
-        ];
+            },
+            false,
+            null,
+            function (me) {
+              if (mxEvent.isShiftDown(me.getEvent())) {
+                var graph = state.view.graph;
 
-        if (mxUtils.getValue(state.style, mxConstants.STYLE_ROUNDED)) {
-          var size = parseFloat(
-            mxUtils.getValue(
-              state.style,
-              mxConstants.STYLE_STARTSIZE,
-              mxConstants.DEFAULT_STARTSIZE
-            )
-          );
-          handles.push(createArcHandle(state, size / 2));
-        }
+                if (graph.isTableRow(state.cell) || graph.isTableCell(state.cell)) {
+                  var dir = graph.getSwimlaneDirection(state.style);
+                  var parent = graph.model.getParent(state.cell);
+                  var cells = graph.model.getChildCells(parent, true);
+                  var temp = [];
+
+                  for (var i = 0; i < cells.length; i++) {
+                    // Finds siblings with the same direction and to set start size
+                    if (
+                      cells[i] != state.cell &&
+                      graph.isSwimlane(cells[i]) &&
+                      graph.getSwimlaneDirection(graph.getCurrentCellStyle(cells[i])) == dir
+                    ) {
+                      temp.push(cells[i]);
+                    }
+                  }
+
+                  graph.setCellStyles(
+                    mxConstants.STYLE_STARTSIZE,
+                    state.style[mxConstants.STYLE_STARTSIZE],
+                    temp
+                  );
+                }
+              }
+            }
+          )
+        );
 
         return handles;
       },
@@ -3882,7 +4110,8 @@ import { Graph } from "./Graph";
                 0,
                 Math.min(0.5, (pt.x - bounds.x) / bounds.width)
               );
-            }
+            },
+            false
           ),
         ];
 
@@ -3978,7 +4207,8 @@ import { Graph } from "./Graph";
               this.state.style["size"] = Math.round(
                 Math.max(0, Math.min(bounds.height, ((pt.y - bounds.y) * 4) / 3))
               );
-            }
+            },
+            false
           ),
         ];
 
@@ -4011,7 +4241,8 @@ import { Graph } from "./Graph";
                 0,
                 Math.min(1, (bounds.x + bounds.width - pt.x) / bounds.width)
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4061,7 +4292,8 @@ import { Graph } from "./Graph";
               );
               this.state.style["position"] =
                 Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
-            }
+            },
+            false
           ),
           createHandle(
             state,
@@ -4080,7 +4312,8 @@ import { Graph } from "./Graph";
             function (bounds, pt) {
               this.state.style["position2"] =
                 Math.round(Math.max(0, Math.min(1, (pt.x - bounds.x) / bounds.width)) * 100) / 100;
-            }
+            },
+            false
           ),
           createHandle(
             state,
@@ -4125,7 +4358,8 @@ import { Graph } from "./Graph";
               this.state.style["base"] = Math.round(
                 Math.max(0, Math.min(bounds.width, pt.x - bounds.x - position * bounds.width))
               );
-            }
+            },
+            false
           ),
         ];
 
@@ -4165,7 +4399,8 @@ import { Graph } from "./Graph";
               this.state.style["dy"] = Math.round(
                 Math.max(0, Math.min(bounds.height, pt.y - bounds.y))
               );
-            }
+            },
+            false
           ),
         ];
 
@@ -4245,7 +4480,8 @@ import { Graph } from "./Graph";
               this.state.style["dy"] = Math.round(
                 Math.max(0, Math.min(bounds.height, pt.y - bounds.y))
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4279,7 +4515,8 @@ import { Graph } from "./Graph";
               this.state.style["dy"] = Math.round(
                 Math.max(0, Math.min(bounds.height, pt.y - bounds.y))
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4335,7 +4572,8 @@ import { Graph } from "./Graph";
               this.state.style["tabHeight"] = Math.round(
                 Math.max(0, Math.min(bounds.height, pt.y - bounds.y))
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4365,7 +4603,8 @@ import { Graph } from "./Graph";
                 0,
                 Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height)
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4390,7 +4629,8 @@ import { Graph } from "./Graph";
                 0,
                 Math.min(1, ((pt.y - bounds.y) / bounds.height) * 2)
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4417,7 +4657,8 @@ import { Graph } from "./Graph";
                 0,
                 Math.min(1, (bounds.y + bounds.height - pt.y) / bounds.height)
               );
-            }
+            },
+            false
           ),
         ];
       },
@@ -4442,7 +4683,11 @@ import { Graph } from "./Graph";
     Graph.createHandle = createHandle;
     Graph.handleFactory = handleFactory;
 
+    var vertexHandlerCreateCustomHandles = mxVertexHandler.prototype.createCustomHandles;
+
     mxVertexHandler.prototype.createCustomHandles = function () {
+      var handles = vertexHandlerCreateCustomHandles.apply(this, arguments);
+
       if (this.graph.isCellRotatable(this.state.cell)) {
         // LATER: Make locked state independent of rotatable flag, fix toggle if default is false
         //if (this.graph.isCellResizable(this.state.cell) || this.graph.isCellMovable(this.state.cell))
@@ -4453,6 +4698,8 @@ import { Graph } from "./Graph";
           mxStencilRegistry.getStencil(name) == null
         ) {
           name = mxConstants.SHAPE_RECTANGLE;
+        } else if (this.state.view.graph.isSwimlane(this.state.cell)) {
+          name = mxConstants.SHAPE_SWIMLANE;
         }
 
         var fn = handleFactory[name];
@@ -4462,11 +4709,19 @@ import { Graph } from "./Graph";
         }
 
         if (fn != null) {
-          return fn(this.state);
+          var temp = fn(this.state);
+
+          if (temp != null) {
+            if (handles == null) {
+              handles = temp;
+            } else {
+              handles = handles.concat(temp);
+            }
+          }
         }
       }
 
-      return null;
+      return handles;
     };
 
     mxEdgeHandler.prototype.createCustomHandles = function () {

@@ -40,5 +40,5 @@ export { Sidebar } from "./js/Sidebar";
 export { Toolbar } from "./js/Toolbar";
 
 // https://github.com/jgraph/mxgraph-js
-// b30fd0353838c53eb08c4
+// f43fc06f72ff5153e84ebfab8eed16a7d58a3b68
 // python3 -m http.server 9000

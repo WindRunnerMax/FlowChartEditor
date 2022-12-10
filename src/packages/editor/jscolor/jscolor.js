@@ -1,5 +1,4 @@
-/* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+import { mxClient } from "../../core/mxgraph";
 
 /**
  * jscolor, JavaScript Color Picker
@@ -11,29 +10,28 @@
  * @updated 2012-01-19
  * @link    http://jscolor.com
  */
-
-export const jscolor = {
+export const mxJSColor = {
   dir: "", // location of jscolor directory (leave empty to autodetect)
   bindClass: "color", // class name
   binding: true, // automatic binding via <input class="...">
   preloading: true, // use image preloading?
 
   install: function () {
-    //jscolor.addEvent(window, 'load', jscolor.init);
+    //mxJSColor.addEvent(window, 'load', mxJSColor.init);
   },
 
   init: function () {
-    if (jscolor.preloading) {
-      jscolor.preload();
+    if (mxJSColor.preloading) {
+      mxJSColor.preload();
     }
   },
 
   getDir: function () {
-    if (!jscolor.dir) {
-      const detected = jscolor.detectDir();
-      jscolor.dir = detected !== false ? detected : "jscolor/";
+    if (!mxJSColor.dir) {
+      const detected = mxJSColor.detectDir();
+      mxJSColor.dir = detected !== false ? detected : "jscolor/";
     }
-    return jscolor.dir;
+    return mxJSColor.dir;
   },
 
   detectDir: function () {
@@ -49,7 +47,7 @@ export const jscolor = {
     var e = document.getElementsByTagName("script");
     for (var i = 0; i < e.length; i += 1) {
       if (e[i].src && /(^|\/)jscolor\.js([?#].*)?$/i.test(e[i].src)) {
-        const src = new jscolor.URI(e[i].src);
+        const src = new mxJSColor.URI(e[i].src);
         const srcAbs = src.toAbsolute(base);
         srcAbs.path = srcAbs.path.replace(/[^\/]+$/, ""); // remove filename
         srcAbs.query = null;
@@ -61,9 +59,9 @@ export const jscolor = {
   },
 
   preload: function () {
-    for (const fn in jscolor.imgRequire) {
-      if (jscolor.imgRequire.hasOwnProperty(fn)) {
-        jscolor.loadImage(fn);
+    for (const fn in mxJSColor.imgRequire) {
+      if (mxJSColor.imgRequire.hasOwnProperty(fn)) {
+        mxJSColor.loadImage(fn);
       }
     }
   },
@@ -79,13 +77,13 @@ export const jscolor = {
   imgLoaded: {},
 
   requireImage: function (filename) {
-    jscolor.imgRequire[filename] = true;
+    mxJSColor.imgRequire[filename] = true;
   },
 
   loadImage: function (filename) {
-    if (!jscolor.imgLoaded[filename]) {
-      jscolor.imgLoaded[filename] = new Image();
-      jscolor.imgLoaded[filename].src = jscolor.getDir() + filename;
+    if (!mxJSColor.imgLoaded[filename]) {
+      mxJSColor.imgLoaded[filename] = new Image();
+      mxJSColor.imgLoaded[filename].src = mxJSColor.getDir() + filename;
     }
   },
 
@@ -228,9 +226,9 @@ export const jscolor = {
     };
 
     this.toAbsolute = function (base) {
-      var base = new jscolor.URI(base);
+      var base = new mxJSColor.URI(base);
       const r = this;
-      const t = new jscolor.URI();
+      const t = new mxJSColor.URI();
 
       if (base.scheme === null) {
         return false;
@@ -310,7 +308,7 @@ export const jscolor = {
 
   /*
    * Usage example:
-   * var myColor = new jscolor.color(myInputElement)
+   * var myColor = new mxJSColor.color(myInputElement)
    */
 
   color: function (target, prop) {
@@ -355,10 +353,10 @@ export const jscolor = {
 
     this.showPicker = function () {
       if (!isPickerOwner()) {
-        const tp = jscolor.getElementPos(target); // target pos
-        const ts = jscolor.getElementSize(target); // target size
-        const vp = jscolor.getViewPos(); // view pos
-        const vs = jscolor.getViewSize(); // view size
+        const tp = mxJSColor.getElementPos(target); // target pos
+        const ts = mxJSColor.getElementSize(target); // target size
+        const vp = mxJSColor.getViewPos(); // view pos
+        const vs = mxJSColor.getViewSize(); // view size
         const ps = getPickerDims(this); // picker size
         let a, b, c;
         switch (this.pickerPosition.toLowerCase()) {
@@ -562,13 +560,13 @@ export const jscolor = {
     }
 
     function removePicker() {
-      delete jscolor.picker.owner;
-      document.getElementsByTagName("body")[0].removeChild(jscolor.picker.boxB);
+      delete mxJSColor.picker.owner;
+      document.getElementsByTagName("body")[0].removeChild(mxJSColor.picker.boxB);
     }
 
     function drawPicker(x, y) {
-      if (!jscolor.picker) {
-        jscolor.picker = {
+      if (!mxJSColor.picker) {
+        mxJSColor.picker = {
           box: document.createElement("div"),
           boxB: document.createElement("div"),
           pad: document.createElement("div"),
@@ -581,26 +579,26 @@ export const jscolor = {
           btnS: document.createElement("span"),
           btnT: document.createTextNode(THIS.pickerCloseText),
         };
-        for (let i = 0, segSize = 4; i < jscolor.images.sld[1]; i += segSize) {
+        for (let i = 0, segSize = 4; i < mxJSColor.images.sld[1]; i += segSize) {
           const seg = document.createElement("div");
           seg.style.height = segSize + "px";
           seg.style.fontSize = "1px";
           seg.style.lineHeight = "0";
-          jscolor.picker.sld.appendChild(seg);
+          mxJSColor.picker.sld.appendChild(seg);
         }
-        jscolor.picker.sldB.appendChild(jscolor.picker.sld);
-        jscolor.picker.box.appendChild(jscolor.picker.sldB);
-        jscolor.picker.box.appendChild(jscolor.picker.sldM);
-        jscolor.picker.padB.appendChild(jscolor.picker.pad);
-        jscolor.picker.box.appendChild(jscolor.picker.padB);
-        jscolor.picker.box.appendChild(jscolor.picker.padM);
-        jscolor.picker.btnS.appendChild(jscolor.picker.btnT);
-        jscolor.picker.btn.appendChild(jscolor.picker.btnS);
-        jscolor.picker.box.appendChild(jscolor.picker.btn);
-        jscolor.picker.boxB.appendChild(jscolor.picker.box);
+        mxJSColor.picker.sldB.appendChild(mxJSColor.picker.sld);
+        mxJSColor.picker.box.appendChild(mxJSColor.picker.sldB);
+        mxJSColor.picker.box.appendChild(mxJSColor.picker.sldM);
+        mxJSColor.picker.padB.appendChild(mxJSColor.picker.pad);
+        mxJSColor.picker.box.appendChild(mxJSColor.picker.padB);
+        mxJSColor.picker.box.appendChild(mxJSColor.picker.padM);
+        mxJSColor.picker.btnS.appendChild(mxJSColor.picker.btnT);
+        mxJSColor.picker.btn.appendChild(mxJSColor.picker.btnS);
+        mxJSColor.picker.box.appendChild(mxJSColor.picker.btn);
+        mxJSColor.picker.boxB.appendChild(mxJSColor.picker.box);
       }
 
-      const p = jscolor.picker;
+      const p = mxJSColor.picker;
 
       // controls interaction
       p.box.onmouseup = p.box.onmouseout = function () {
@@ -626,7 +624,7 @@ export const jscolor = {
       p.padM.onmouseup = p.padM.onmouseout = function () {
         if (holdPad) {
           holdPad = false;
-          jscolor.fireEvent(valueElement, "change");
+          mxJSColor.fireEvent(valueElement, "change");
         }
       };
       p.padM.onmousedown = function (e) {
@@ -650,7 +648,7 @@ export const jscolor = {
       p.sldM.onmouseup = p.sldM.onmouseout = function () {
         if (holdSld) {
           holdSld = false;
-          jscolor.fireEvent(valueElement, "change");
+          mxJSColor.fireEvent(valueElement, "change");
         }
       };
       p.sldM.onmousedown = function (e) {
@@ -675,8 +673,8 @@ export const jscolor = {
       p.boxB.style.background = THIS.pickerFaceColor;
 
       // pad image
-      p.pad.style.width = jscolor.images.pad[0] + "px";
-      p.pad.style.height = jscolor.images.pad[1] + "px";
+      p.pad.style.width = mxJSColor.images.pad[0] + "px";
+      p.pad.style.height = mxJSColor.images.pad[1] + "px";
 
       // pad border
       p.padB.style.position = "absolute";
@@ -692,16 +690,16 @@ export const jscolor = {
       p.padM.style.width =
         THIS.pickerFace +
         2 * THIS.pickerInset +
-        jscolor.images.pad[0] +
-        jscolor.images.arrow[0] +
+        mxJSColor.images.pad[0] +
+        mxJSColor.images.arrow[0] +
         "px";
       p.padM.style.height = p.box.style.height;
       p.padM.style.cursor = "crosshair";
 
       // slider image
       p.sld.style.overflow = "hidden";
-      p.sld.style.width = jscolor.images.sld[0] + "px";
-      p.sld.style.height = jscolor.images.sld[1] + "px";
+      p.sld.style.width = mxJSColor.images.sld[0] + "px";
+      p.sld.style.height = mxJSColor.images.sld[1] + "px";
 
       // slider border
       p.sldB.style.display = THIS.slider ? "block" : "none";
@@ -717,8 +715,8 @@ export const jscolor = {
       p.sldM.style.right = "0";
       p.sldM.style.top = "0";
       p.sldM.style.width =
-        jscolor.images.sld[0] +
-        jscolor.images.arrow[0] +
+        mxJSColor.images.sld[0] +
+        mxJSColor.images.arrow[0] +
         THIS.pickerFace +
         2 * THIS.pickerInset +
         "px";
@@ -768,11 +766,11 @@ export const jscolor = {
           var padImg = "hv.png";
           break;
       }
-      p.padM.style.backgroundImage = "url('" + jscolor.getDir() + "cross.gif')";
+      p.padM.style.backgroundImage = "url('" + mxJSColor.getDir() + "cross.gif')";
       p.padM.style.backgroundRepeat = "no-repeat";
-      p.sldM.style.backgroundImage = "url('" + jscolor.getDir() + "arrow.gif')";
+      p.sldM.style.backgroundImage = "url('" + mxJSColor.getDir() + "arrow.gif')";
       p.sldM.style.backgroundRepeat = "no-repeat";
-      p.pad.style.backgroundImage = "url('" + jscolor.getDir() + padImg + "')";
+      p.pad.style.backgroundImage = "url('" + mxJSColor.getDir() + padImg + "')";
       p.pad.style.backgroundRepeat = "no-repeat";
       p.pad.style.backgroundPosition = "0 0";
 
@@ -780,7 +778,7 @@ export const jscolor = {
       redrawPad();
       redrawSld();
 
-      jscolor.picker.owner = THIS;
+      mxJSColor.picker.owner = THIS;
       document.getElementsByTagName("body")[0].appendChild(p.boxB);
     }
 
@@ -788,11 +786,13 @@ export const jscolor = {
       const dims = [
         2 * o.pickerInset +
           2 * o.pickerFace +
-          jscolor.images.pad[0] +
-          (o.slider ? 2 * o.pickerInset + 2 * jscolor.images.arrow[0] + jscolor.images.sld[0] : 0),
+          mxJSColor.images.pad[0] +
+          (o.slider
+            ? 2 * o.pickerInset + 2 * mxJSColor.images.arrow[0] + mxJSColor.images.sld[0]
+            : 0),
         o.pickerClosable
-          ? 4 * o.pickerInset + 3 * o.pickerFace + jscolor.images.pad[1] + o.pickerButtonHeight
-          : 2 * o.pickerInset + 2 * o.pickerFace + jscolor.images.pad[1],
+          ? 4 * o.pickerInset + 3 * o.pickerFace + mxJSColor.images.pad[1] + o.pickerButtonHeight
+          : 2 * o.pickerInset + 2 * o.pickerFace + mxJSColor.images.pad[1],
       ];
       return dims;
     }
@@ -807,19 +807,19 @@ export const jscolor = {
           var yComponent = 2;
           break;
       }
-      const x = Math.round((THIS.hsv[0] / 6) * (jscolor.images.pad[0] - 1));
-      const y = Math.round((1 - THIS.hsv[yComponent]) * (jscolor.images.pad[1] - 1));
-      jscolor.picker.padM.style.backgroundPosition =
+      const x = Math.round((THIS.hsv[0] / 6) * (mxJSColor.images.pad[0] - 1));
+      const y = Math.round((1 - THIS.hsv[yComponent]) * (mxJSColor.images.pad[1] - 1));
+      mxJSColor.picker.padM.style.backgroundPosition =
         THIS.pickerFace +
         THIS.pickerInset +
         x -
-        Math.floor(jscolor.images.cross[0] / 2) +
+        Math.floor(mxJSColor.images.cross[0] / 2) +
         "px " +
-        (THIS.pickerFace + THIS.pickerInset + y - Math.floor(jscolor.images.cross[1] / 2)) +
+        (THIS.pickerFace + THIS.pickerInset + y - Math.floor(mxJSColor.images.cross[1] / 2)) +
         "px";
 
       // redraw the slider image
-      const seg = jscolor.picker.sld.childNodes;
+      const seg = mxJSColor.picker.sld.childNodes;
 
       switch (modeID) {
         case 0:
@@ -883,15 +883,15 @@ export const jscolor = {
           var yComponent = 1;
           break;
       }
-      const y = Math.round((1 - THIS.hsv[yComponent]) * (jscolor.images.sld[1] - 1));
-      jscolor.picker.sldM.style.backgroundPosition =
+      const y = Math.round((1 - THIS.hsv[yComponent]) * (mxJSColor.images.sld[1] - 1));
+      mxJSColor.picker.sldM.style.backgroundPosition =
         "0 " +
-        (THIS.pickerFace + THIS.pickerInset + y - Math.floor(jscolor.images.arrow[1] / 2)) +
+        (THIS.pickerFace + THIS.pickerInset + y - Math.floor(mxJSColor.images.arrow[1] / 2)) +
         "px";
     }
 
     function isPickerOwner() {
-      return jscolor.picker && jscolor.picker.owner === THIS;
+      return mxJSColor.picker && mxJSColor.picker.owner === THIS;
     }
 
     function blurTarget() {
@@ -910,23 +910,23 @@ export const jscolor = {
     }
 
     function setPad(e) {
-      const mpos = jscolor.getRelMousePos(e);
+      const mpos = mxJSColor.getRelMousePos(e);
       const x = mpos.x - THIS.pickerFace - THIS.pickerInset;
       const y = mpos.y - THIS.pickerFace - THIS.pickerInset;
       switch (modeID) {
         case 0:
           THIS.fromHSV(
-            x * (6 / (jscolor.images.pad[0] - 1)),
-            1 - y / (jscolor.images.pad[1] - 1),
+            x * (6 / (mxJSColor.images.pad[0] - 1)),
+            1 - y / (mxJSColor.images.pad[1] - 1),
             null,
             leaveSld
           );
           break;
         case 1:
           THIS.fromHSV(
-            x * (6 / (jscolor.images.pad[0] - 1)),
+            x * (6 / (mxJSColor.images.pad[0] - 1)),
             null,
-            1 - y / (jscolor.images.pad[1] - 1),
+            1 - y / (mxJSColor.images.pad[1] - 1),
             leaveSld
           );
           break;
@@ -934,14 +934,14 @@ export const jscolor = {
     }
 
     function setSld(e) {
-      const mpos = jscolor.getRelMousePos(e);
+      const mpos = mxJSColor.getRelMousePos(e);
       const y = mpos.y - THIS.pickerFace - THIS.pickerInset;
       switch (modeID) {
         case 0:
-          THIS.fromHSV(null, null, 1 - y / (jscolor.images.sld[1] - 1), leavePad);
+          THIS.fromHSV(null, null, 1 - y / (mxJSColor.images.sld[1] - 1), leavePad);
           break;
         case 1:
-          THIS.fromHSV(null, 1 - y / (jscolor.images.sld[1] - 1), null, leavePad);
+          THIS.fromHSV(null, 1 - y / (mxJSColor.images.sld[1] - 1), null, leavePad);
           break;
       }
     }
@@ -959,8 +959,8 @@ export const jscolor = {
     var THIS = this;
     var modeID = this.pickerMode.toLowerCase() === "hvs" ? 1 : 0;
     var abortBlur = false;
-    var valueElement = jscolor.fetchElement(this.valueElement),
-      styleElement = jscolor.fetchElement(this.styleElement);
+    var valueElement = mxJSColor.fetchElement(this.valueElement),
+      styleElement = mxJSColor.fetchElement(this.styleElement);
     var holdPad = false,
       holdSld = false;
     var leaveValue = 1 << 0,
@@ -969,10 +969,10 @@ export const jscolor = {
       leaveSld = 1 << 3;
 
     // target
-    /*jscolor.addEvent(target, 'focus', function() {
+    /*mxJSColor.addEvent(target, 'focus', function() {
 			if(THIS.pickerOnfocus) { THIS.showPicker(); }
 		});
-		jscolor.addEvent(target, 'blur', function() {
+		mxJSColor.addEvent(target, 'blur', function() {
 			if(!abortBlur) {
 				window.setTimeout(function(){ abortBlur || blurTarget(); abortBlur=false; }, 0);
 			} else {
@@ -986,9 +986,9 @@ export const jscolor = {
         THIS.fromString(valueElement.value, leaveValue);
         dispatchImmediateChange();
       };
-      jscolor.addEvent(valueElement, "keyup", updateField);
-      jscolor.addEvent(valueElement, "input", updateField);
-      jscolor.addEvent(valueElement, "blur", blurValue);
+      mxJSColor.addEvent(valueElement, "keyup", updateField);
+      mxJSColor.addEvent(valueElement, "input", updateField);
+      mxJSColor.addEvent(valueElement, "blur", blurValue);
       valueElement.setAttribute("autocomplete", "off");
     }
 
@@ -1004,17 +1004,17 @@ export const jscolor = {
     // require images
     switch (modeID) {
       case 0:
-        jscolor.requireImage("hs.png");
+        mxJSColor.requireImage("hs.png");
         break;
       case 1:
-        jscolor.requireImage("hv.png");
+        mxJSColor.requireImage("hv.png");
         break;
     }
-    jscolor.requireImage("cross.gif");
-    jscolor.requireImage("arrow.gif");
+    mxJSColor.requireImage("cross.gif");
+    mxJSColor.requireImage("arrow.gif");
 
     this.importColor();
   },
 };
 
-jscolor.install();
+mxJSColor.install();

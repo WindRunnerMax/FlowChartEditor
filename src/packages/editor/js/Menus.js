@@ -20,7 +20,6 @@ import {
 } from "../../core/mxgraph";
 import { Editor, FilenameDialog } from "./Editor";
 import { ColorDialog } from "./Dialogs";
-import { EditorUi } from "./EditorUi";
 
 export { Menubar, Menu, Menus };
 
@@ -840,9 +839,36 @@ Menus.prototype.addMenu = function (name, popupMenu, parent) {
 };
 
 /**
+ * Adds a menu item to insert a table cell.
+ */
+Menus.prototype.addInsertTableCellItem = function (menu, parent) {
+  var graph = this.editorUi.editor.graph;
+
+  this.addInsertTableItem(
+    menu,
+    mxUtils.bind(this, function (evt, rows, cols) {
+      var table =
+        mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt)
+          ? graph.createCrossFunctionalSwimlane(rows, cols)
+          : graph.createTable(rows, cols, null, null, mxEvent.isShiftDown(evt) ? "Table" : null);
+      var pt = mxEvent.isAltDown(evt)
+        ? graph.getFreeInsertPoint()
+        : graph.getCenterInsertPoint(graph.getBoundingBoxFromGeometry([table], true));
+      var select = graph.importCells([table], pt.x, pt.y);
+
+      if (select != null && select.length > 0) {
+        graph.scrollCellToVisible(select[0]);
+        graph.setSelectionCells(select);
+      }
+    }),
+    parent
+  );
+};
+
+/**
  * Adds a menu item to insert a table.
  */
-Menus.prototype.addInsertTableItem = function (menu, insertFn) {
+Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
   insertFn =
     insertFn != null
       ? insertFn
@@ -905,15 +931,7 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn) {
   }
 
   // Show table size dialog
-  var elt2 = menu.addItem(
-    "",
-    null,
-    mxUtils.bind(this, function (evt) {
-      if (td != null && row2 != null) {
-        insertFn(evt, row2.sectionRowIndex + 1, td.cellIndex + 1);
-      }
-    })
-  );
+  var elt2 = menu.addItem("", null, null, parent, null, null, null, true);
 
   // Quirks mode does not add cell padding if cell is empty, needs good old spacer solution
   var quirksCellHtml =
@@ -923,6 +941,7 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn) {
     var table2 = document.createElement("table");
     table2.setAttribute("border", "1");
     table2.style.borderCollapse = "collapse";
+    table2.style.borderStyle = "solid";
 
     if (!mxClient.IS_QUIRKS) {
       table2.setAttribute("cellPadding", "8");
@@ -979,12 +998,18 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn) {
   label.innerHTML = "1x1";
   elt2.firstChild.appendChild(label);
 
-  mxEvent.addListener(picker, "mouseover", function (e) {
+  function mouseover(e) {
     td = graph.getParentByName(mxEvent.getSource(e), "TD");
+    var selected = false;
 
     if (td != null) {
       row2 = graph.getParentByName(td, "TR");
-      extendPicker(picker, Math.min(20, row2.sectionRowIndex + 2), Math.min(20, td.cellIndex + 2));
+      var ext = mxEvent.isMouseEvent(e) ? 2 : 4;
+      extendPicker(
+        picker,
+        Math.min(20, row2.sectionRowIndex + ext),
+        Math.min(20, td.cellIndex + ext)
+      );
       label.innerHTML = td.cellIndex + 1 + "x" + (row2.sectionRowIndex + 1);
 
       for (var i = 0; i < picker.rows.length; i++) {
@@ -993,17 +1018,45 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn) {
         for (var j = 0; j < r.cells.length; j++) {
           var cell = r.cells[j];
 
+          if (i == row2.sectionRowIndex && j == td.cellIndex) {
+            selected = cell.style.backgroundColor == "blue";
+          }
+
           if (i <= row2.sectionRowIndex && j <= td.cellIndex) {
             cell.style.backgroundColor = "blue";
           } else {
-            cell.style.backgroundColor = "white";
+            cell.style.backgroundColor = "transparent";
           }
         }
       }
-
-      mxEvent.consume(e);
     }
-  });
+
+    mxEvent.consume(e);
+
+    return selected;
+  }
+
+  mxEvent.addGestureListeners(
+    picker,
+    null,
+    null,
+    mxUtils.bind(this, function (e) {
+      var selected = mouseover(e);
+
+      if (td != null && row2 != null && selected) {
+        insertFn(e, row2.sectionRowIndex + 1, td.cellIndex + 1);
+
+        // Async required to block event for elements under menu
+        window.setTimeout(
+          mxUtils.bind(this, function () {
+            this.editorUi.hideCurrentMenu();
+          }),
+          0
+        );
+      }
+    })
+  );
+  mxEvent.addListener(picker, "mouseover", mouseover);
 };
 
 /**
@@ -1426,19 +1479,19 @@ Menus.prototype.addPopupMenuCellItems = function (menu, cell, evt) {
     ) {
       this.addMenuItems(menu, ["-", "clearWaypoints"], null, evt);
     }
-  }
 
-  if (graph.getSelectionCount() == 1) {
-    this.addMenuItems(menu, ["-", "editData", "editLink"], null, evt);
+    if (graph.getSelectionCount() == 1) {
+      this.addMenuItems(menu, ["-", "editStyle", "editData", "editLink"], null, evt);
 
-    // Shows edit image action if there is an image in the style
-    if (
-      graph.getModel().isVertex(cell) &&
-      mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null
-    ) {
-      menu.addSeparator();
-      this.addMenuItem(menu, "image", null, evt).firstChild.nextSibling.innerHTML =
-        mxResources.get("editImage") + "...";
+      // Shows edit image action if there is an image in the style
+      if (
+        graph.getModel().isVertex(cell) &&
+        mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null
+      ) {
+        menu.addSeparator();
+        this.addMenuItem(menu, "image", null, evt).firstChild.nextSibling.innerHTML =
+          mxResources.get("editImage") + "...";
+      }
     }
   }
 };

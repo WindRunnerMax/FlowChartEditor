@@ -133,6 +133,13 @@ Editor.moveImage = mxClient.IS_SVG
   : IMAGE_PATH + "/move.png";
 
 /**
+ *
+ */
+Editor.rowMoveImage = mxClient.IS_SVG
+  ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAEBAMAAACw6DhOAAAAGFBMVEUzMzP///9tbW1QUFCKiopBQUF8fHxfX1/IXlmXAAAAFElEQVQImWNgNVdzYBAUFBRggLMAEzYBy29kEPgAAAAASUVORK5CYII="
+  : IMAGE_PATH + "/thumb_horz.png";
+
+/**
  * Images below are for lightbox and embedding toolbars.
  */
 Editor.helpImage = mxClient.IS_SVG
@@ -1504,19 +1511,22 @@ var PageSetupDialog = function (editorUi) {
     if (newBackgroundImage == null) {
       changeImageLink.removeAttribute("title");
       changeImageLink.style.fontSize = "";
-      changeImageLink.innerHTML = mxResources.get("change") + "...";
+      changeImageLink.innerHTML = mxUtils.htmlEntities(mxResources.get("change")) + "...";
     } else {
       changeImageLink.setAttribute("title", newBackgroundImage.src);
       changeImageLink.style.fontSize = "11px";
-      changeImageLink.innerHTML = newBackgroundImage.src.substring(0, 42) + "...";
+      changeImageLink.innerHTML =
+        mxUtils.htmlEntities(newBackgroundImage.src.substring(0, 42)) + "...";
     }
   }
 
   mxEvent.addListener(changeImageLink, "click", function (evt) {
-    editorUi.showBackgroundImageDialog(function (image) {
-      newBackgroundImage = image;
-      updateBackgroundImage();
-    });
+    editorUi.showBackgroundImageDialog(function (image, failed) {
+      if (!failed) {
+        newBackgroundImage = image;
+        updateBackgroundImage();
+      }
+    }, newBackgroundImage);
 
     mxEvent.consume(evt);
   });
@@ -1545,9 +1555,10 @@ var PageSetupDialog = function (editorUi) {
 
   var applyBtn = mxUtils.button(mxResources.get("apply"), function () {
     editorUi.hideDialog();
+    var gridSize = parseInt(gridSizeInput.value);
 
-    if (graph.gridSize !== gridSizeInput.value) {
-      graph.setGridSize(parseInt(gridSizeInput.value));
+    if (!isNaN(gridSize) && graph.gridSize !== gridSize) {
+      graph.setGridSize(gridSize);
     }
 
     var change = new ChangePageSetup(
@@ -1896,7 +1907,7 @@ var FilenameDialog = function (
   td = document.createElement("td");
   td.style.whiteSpace = "nowrap";
   td.style.fontSize = "10pt";
-  td.style.width = "120px";
+  td.style.width = hints ? "80px" : "120px";
   mxUtils.write(td, (label || mxResources.get("filename")) + ":");
 
   row.appendChild(td);
@@ -1995,6 +2006,19 @@ var FilenameDialog = function (
     tbody.appendChild(row);
 
     if (hints != null) {
+      if (editorUi.editor.diagramFileTypes != null) {
+        var typeSelect = FilenameDialog.createFileTypes(
+          editorUi,
+          nameInput,
+          editorUi.editor.diagramFileTypes
+        );
+        typeSelect.style.marginLeft = "6px";
+        typeSelect.style.width = "74px";
+
+        td.appendChild(typeSelect);
+        nameInput.style.width = w != null ? w - 40 + "px" : "140px";
+      }
+
       td.appendChild(FilenameDialog.createTypeHint(editorUi, nameInput, hints));
     }
   }
@@ -2077,7 +2101,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
     for (var i = 0; i < hints.length; i++) {
       if (
         hints[i].ext.length > 0 &&
-        nameInput.value.substring(nameInput.value.length - hints[i].ext.length - 1) ==
+        nameInput.value.toLowerCase().substring(nameInput.value.length - hints[i].ext.length - 1) ==
           "." + hints[i].ext
       ) {
         hint.setAttribute("src", mxClient.imageBasePath + "/warning.png");
@@ -2118,6 +2142,68 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   nameChanged();
 
   return hint;
+};
+
+/**
+ *
+ */
+FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
+  var typeSelect = document.createElement("select");
+
+  for (var i = 0; i < types.length; i++) {
+    var typeOption = document.createElement("option");
+    typeOption.setAttribute("value", i);
+    mxUtils.write(
+      typeOption,
+      mxResources.get(types[i].description) + " (." + types[i].extension + ")"
+    );
+    typeSelect.appendChild(typeOption);
+  }
+
+  mxEvent.addListener(typeSelect, "change", function (evt) {
+    var ext = types[typeSelect.value].extension;
+    var idx = nameInput.value.lastIndexOf(".");
+
+    if (idx > 0) {
+      var ext = types[typeSelect.value].extension;
+      nameInput.value = nameInput.value.substring(0, idx + 1) + ext;
+    } else {
+      nameInput.value = nameInput.value + "." + ext;
+    }
+
+    if ("createEvent" in document) {
+      var changeEvent = document.createEvent("HTMLEvents");
+      changeEvent.initEvent("change", false, true);
+      nameInput.dispatchEvent(changeEvent);
+    } else {
+      nameInput.fireEvent("onchange");
+    }
+  });
+
+  var nameInputChanged = function (evt) {
+    var idx = nameInput.value.lastIndexOf(".");
+    var active = 0;
+
+    // Finds current extension
+    if (idx > 0) {
+      var ext = nameInput.value.toLowerCase().substring(idx + 1);
+
+      for (var i = 0; i < types.length; i++) {
+        if (ext == types[i].extension) {
+          active = i;
+          break;
+        }
+      }
+    }
+
+    typeSelect.value = active;
+  };
+
+  mxEvent.addListener(nameInput, "change", nameInputChanged);
+  mxEvent.addListener(nameInput, "keyup", nameInputChanged);
+  nameInputChanged();
+
+  return typeSelect;
 };
 
 /**
@@ -2220,7 +2306,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
       if (mxClient.IS_SVG) {
         // Generates the SVG required for drawing the dynamic grid
         image = unescape(encodeURIComponent(this.createSvgGrid(gridColor)));
-        image = btoa(image);
+        image = window.btoa ? btoa(image) : Base64.encode(image, true);
         image = "url(" + "data:image/svg+xml;base64," + image + ")";
         phase = graph.gridSize * this.scale * this.gridSteps;
       } else {
@@ -2523,89 +2609,59 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
     return result;
   };
 
-  // Selects ancestors before descendants
-  var graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
-  mxGraphHandler.prototype.getInitialCellForEvent = function (me) {
-    var model = this.graph.getModel();
-    var psel = model.getParent(this.graph.getSelectionCell());
-    var cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
-    var parent = model.getParent(cell);
+  /**
+   * Selects tables before cells and rows.
+   */
+  var mxGraphHandlerIsPropagateSelectionCell = mxGraphHandler.prototype.isPropagateSelectionCell;
+  mxGraphHandler.prototype.isPropagateSelectionCell = function (cell, immediate, me) {
+    var result = false;
+    var parent = this.graph.model.getParent(cell);
 
-    if (psel == null || (psel != cell && psel != parent)) {
-      while (
-        !this.graph.isCellSelected(cell) &&
-        !this.graph.isCellSelected(parent) &&
-        model.isVertex(parent) &&
-        !this.graph.isContainer(parent)
-      ) {
-        cell = parent;
-        parent = this.graph.getModel().getParent(cell);
-      }
-    }
+    if (immediate) {
+      var geo = this.graph.getCellGeometry(cell);
 
-    return cell;
-  };
+      return (
+        !this.graph.model.isEdge(cell) &&
+        !this.graph.model.isEdge(parent) &&
+        !this.graph.isSiblingSelected(cell) &&
+        (geo == null || geo.relative || !this.graph.isContainer(parent) || this.graph.isPart(cell))
+      );
+    } else {
+      result = mxGraphHandlerIsPropagateSelectionCell.apply(this, arguments);
 
-  // Selection is delayed to mouseup if ancestor is selected
-  var graphHandlerIsDelayedSelection = mxGraphHandler.prototype.isDelayedSelection;
-  mxGraphHandler.prototype.isDelayedSelection = function (cell, me) {
-    var result = graphHandlerIsDelayedSelection.apply(this, arguments);
+      if (this.graph.isTableCell(cell) || this.graph.isTableRow(cell)) {
+        var table = parent;
 
-    if (!result) {
-      var model = this.graph.getModel();
-      var parent = model.getParent(cell);
-
-      while (parent != null) {
-        // Inconsistency for unselected parent swimlane is intended for easier moving
-        // of stack layouts where the container title section is too far away
-        if (this.graph.isCellSelected(parent) && model.isVertex(parent)) {
-          result = true;
-          break;
+        if (!this.graph.isTable(table)) {
+          table = this.graph.model.getParent(table);
         }
 
-        parent = model.getParent(parent);
+        result =
+          !this.graph.selectionCellsHandler.isHandled(table) ||
+          (this.graph.isCellSelected(table) && this.graph.isToggleEvent(me.getEvent())) ||
+          (this.graph.isCellSelected(cell) && !this.graph.isToggleEvent(me.getEvent())) ||
+          (this.graph.isTableCell(cell) && this.graph.isCellSelected(parent));
       }
     }
 
     return result;
   };
 
-  // Delayed selection of parent group
-  mxGraphHandler.prototype.selectDelayed = function (me) {
-    if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
-      var cell = me.getCell();
-
-      if (cell == null) {
-        cell = this.cell;
-      }
-
-      // Selects folded cell for hit on folding icon
-      var state = this.graph.view.getState(cell);
-
-      if (state != null && me.isSource(state.control)) {
-        this.graph.selectCellForEvent(cell, me.getEvent());
-      } else {
-        var model = this.graph.getModel();
-        var parent = model.getParent(cell);
-
-        while (!this.graph.isCellSelected(parent) && model.isVertex(parent)) {
-          cell = parent;
-          parent = model.getParent(cell);
-        }
-
-        this.graph.selectCellForEvent(cell, me.getEvent());
-      }
-    }
-  };
-
-  // Returns last selected ancestor
+  /**
+   * Returns last selected ancestor
+   */
   mxPopupMenuHandler.prototype.getCellForPopupEvent = function (me) {
     var cell = me.getCell();
     var model = this.graph.getModel();
     var parent = model.getParent(cell);
+    var state = this.graph.view.getState(parent);
+    var selected = this.graph.isCellSelected(cell);
 
-    while (model.isVertex(parent) && !this.graph.isContainer(parent)) {
-      if (this.graph.isCellSelected(parent)) {
+    while (state != null && (model.isVertex(parent) || model.isEdge(parent))) {
+      var temp = this.graph.isCellSelected(parent);
+      selected = selected || temp;
+
+      if (temp || (!selected && (this.graph.isTableCell(cell) || this.graph.isTableRow(cell)))) {
         cell = parent;
       }
 
