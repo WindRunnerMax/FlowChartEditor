@@ -1,10 +1,56 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import {
+  IMAGE_PATH,
+  OPEN_FORM,
+  MAX_AREA,
+  MAX_REQUEST_SIZE,
+  EXPORT_URL,
+  SAVE_URL,
+} from "../constant";
+import {
+  mxCodec,
+  mxConstants,
+  mxImageExport,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxRectangle,
+  mxPopupMenu,
+  mxGraphModel,
+  mxXmlCanvas2D,
+  mxForm,
+  mxCell,
+  mxXmlRequest,
+  mxWindow,
+} from "../../core/mxgraph";
+
+import { Graph } from "./Graph";
+import { Editor, Dialog, FilenameDialog } from "./Editor";
+import { jscolor } from "../jscolor/jscolor";
+import { EditorUi } from "./EditorUi";
+
+export {
+  ExportDialog,
+  TextareaDialog,
+  OpenDialog,
+  ColorDialog,
+  AboutDialog,
+  EditDataDialog,
+  OutlineWindow,
+  LayersWindow,
+};
+
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
 /**
  * Constructs a new open dialog.
  */
-const OpenDialog = function () {
+function OpenDialog() {
   const iframe = document.createElement("iframe");
   iframe.style.backgroundColor = "transparent";
   iframe.allowTransparency = "true";
@@ -22,12 +68,12 @@ const OpenDialog = function () {
   iframe.setAttribute("src", OPEN_FORM);
 
   this.container = iframe;
-};
+}
 
 /**
  * Constructs a new color dialog.
  */
-var ColorDialog = function (editorUi, color, apply, cancelFn) {
+function ColorDialog(editorUi, color, apply, cancelFn) {
   this.editorUi = editorUi;
 
   const input = document.createElement("input");
@@ -233,7 +279,7 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
   });
 
   this.container = div;
-};
+}
 
 /**
  * Creates function to apply value
@@ -447,7 +493,7 @@ ColorDialog.resetRecentColors = function () {
 /**
  * Constructs a new about dialog.
  */
-const AboutDialog = function (editorUi) {
+function AboutDialog(editorUi) {
   const div = document.createElement("div");
   div.setAttribute("align", "center");
   const h3 = document.createElement("h3");
@@ -476,12 +522,12 @@ const AboutDialog = function (editorUi) {
   div.appendChild(closeBtn);
 
   this.container = div;
-};
+}
 
 /**
  * Constructs a new textarea dialog.
  */
-const TextareaDialog = function (
+function TextareaDialog(
   editorUi,
   title,
   url,
@@ -612,7 +658,7 @@ const TextareaDialog = function (
   tbody.appendChild(row);
   table.appendChild(tbody);
   this.container = table;
-};
+}
 
 /**
  * Constructs a new edit file dialog.
@@ -767,7 +813,7 @@ EditDiagramDialog.showNewWindowOption = true;
 /**
  * Constructs a new export dialog.
  */
-var ExportDialog = function (editorUi) {
+function ExportDialog(editorUi) {
   const graph = editorUi.editor.graph;
   const bounds = graph.getGraphBounds();
   const scale = graph.view.scale;
@@ -1179,7 +1225,7 @@ var ExportDialog = function (editorUi) {
   tbody.appendChild(row);
   table.appendChild(tbody);
   this.container = table;
-};
+}
 
 /**
  * Remembers last value for border.
@@ -1286,14 +1332,14 @@ ExportDialog.saveLocalFile = function (editorUi, data, filename, format) {
     req.simulate(document, "_blank");
   } else {
     mxUtils.alert(mxResources.get("drawingTooLarge"));
-    mxUtils.popup(xml);
+    mxUtils.popup("max size");
   }
 };
 
 /**
  * Constructs a new metadata dialog.
  */
-var EditDataDialog = function (ui, cell) {
+function EditDataDialog(ui, cell) {
   const div = document.createElement("div");
   const graph = ui.editor.graph;
 
@@ -1611,7 +1657,7 @@ var EditDataDialog = function (ui, cell) {
 
   div.appendChild(buttons);
   this.container = div;
-};
+}
 
 /**
  * Optional help link.
@@ -1734,7 +1780,7 @@ const LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
 /**
  *
  */
-const OutlineWindow = function (editorUi, x, y, w, h) {
+function OutlineWindow(editorUi, x, y, w, h) {
   const graph = editorUi.editor.graph;
 
   const div = document.createElement("div");
@@ -1900,12 +1946,12 @@ const OutlineWindow = function (editorUi, x, y, w, h) {
       }
     });
   }
-};
+}
 
 /**
  *
  */
-const LayersWindow = function (editorUi, x, y, w, h) {
+function LayersWindow(editorUi, x, y, w, h) {
   const graph = editorUi.editor.graph;
 
   const div = document.createElement("div");
@@ -2460,4 +2506,4 @@ const LayersWindow = function (editorUi, x, y, w, h) {
     mxEvent.removeListener(window, "resize", resizeListener);
     this.window.destroy();
   };
-};
+}

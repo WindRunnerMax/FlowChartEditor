@@ -1,16 +1,71 @@
-/**
- * Copyright (c) 2006-2012, JGraph Ltd
- */
-// Workaround for allowing target="_blank" in HTML sanitizer
-// see https://code.google.com/p/google-caja/issues/detail?can=2&q=&colspec=ID%20Type%20Status%20Priority%20Owner%20Summary&groupby=&sort=&id=1296
-if (typeof html4 !== "undefined") {
-  html4.ATTRIBS["a::target"] = 0;
-  html4.ATTRIBS["source::src"] = 0;
-  html4.ATTRIBS["video::src"] = 0;
-  // Would be nice for tooltips but probably a security risk...
-  //html4.ATTRIBS["video::autoplay"] = 0;
-  //html4.ATTRIBS["video::autobuffer"] = 0;
-}
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import { IMAGE_PATH, urlParams, STENCIL_PATH, STYLE_PATH } from "../constant";
+import {
+  mxGraph,
+  mxCodec,
+  mxConstants,
+  mxSvgCanvas2D,
+  mxImageExport,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxRectangle,
+  mxPopupMenu,
+  mxPoint,
+  mxGraphView,
+  mxPolyline,
+  mxGraphHandler,
+  mxConnectionHandler,
+  mxRectangleShape,
+  mxPopupMenuHandler,
+  mxText,
+  mxRubberband,
+  mxGraphModel,
+  mxShape,
+  mxEdgeStyle,
+  mxEdgeHandler,
+  mxCellRenderer,
+  mxDragSource,
+  mxGuide,
+  mxImage,
+  mxGraphLayout,
+  mxCellHighlight,
+  mxLayoutManager,
+  mxCompactTreeLayout,
+  mxHierarchicalLayout,
+  mxCircleLayout,
+  mxFastOrganicLayout,
+  mxStencilRegistry,
+  mxStencil,
+  mxConstraintHandler,
+  mxEllipse,
+  mxCellState,
+  mxObjectIdentity,
+  mxDictionary,
+  mxConnectionConstraint,
+  mxCellEditor,
+  mxVertexHandler,
+  mxOutline,
+  mxPanningHandler,
+  mxElbowEdgeHandler,
+  mxImageShape,
+  mxStackLayout,
+  mxConnector,
+  mxStyleRegistry,
+  mxCell,
+  mxGeometry,
+} from "../../core/mxgraph";
+import { Editor, Dialog } from "./Editor";
+import { Sidebar } from "./Sidebar";
+
+import pako from "pako";
+import html_sanitize from "sanitize-html";
+
+export { TableLayout, Graph, HoverIcons };
 
 // Workaround for handling named HTML entities in mxUtils.parseXml
 // LATER: How to configure DOMParser to just ignore all entities?
@@ -153,7 +208,7 @@ mxShape.prototype.getConstraints = function (style, w, h) {
 /**
  * Defines graph class.
  */
-Graph = function (container, model, renderHint, stylesheet, themes, standalone) {
+function Graph(container, model, renderHint, stylesheet, themes, standalone) {
   mxGraph.call(this, container, model, renderHint, stylesheet);
 
   this.themes = themes || this.defaultThemes;
@@ -937,7 +992,7 @@ Graph = function (container, model, renderHint, stylesheet, themes, standalone) 
 
   //Create a unique offset object for each graph instance.
   this.currentTranslate = new mxPoint(0, 0);
-};
+}
 
 /**
  * Specifies if the touch UI should be used (cannot detect touch in FF so always on for Windows/Linux)
@@ -1010,11 +1065,7 @@ Graph.createSvgImage = function (w, h, data, coordWidth, coordHeight) {
     )
   );
 
-  return new mxImage(
-    "data:image/svg+xml;base64," + (window.btoa ? btoa(tmp) : Base64.encode(tmp, true)),
-    w,
-    h
-  );
+  return new mxImage("data:image/svg+xml;base64," + btoa(tmp), w, h);
 };
 
 /**
@@ -1082,7 +1133,7 @@ Graph.compress = function (data, deflate) {
       ? pako.deflate(encodeURIComponent(data), { to: "string" })
       : pako.deflateRaw(encodeURIComponent(data), { to: "string" });
 
-    return window.btoa ? btoa(tmp) : Base64.encode(tmp, true);
+    return btoa(tmp);
   }
 };
 
@@ -1093,7 +1144,7 @@ Graph.decompress = function (data, inflate, checked) {
   if (data == null || data.length == 0 || typeof pako === "undefined") {
     return data;
   } else {
-    const tmp = window.atob ? atob(data) : Base64.decode(data, true);
+    const tmp = atob(data);
 
     const inflated = decodeURIComponent(
       inflate ? pako.inflate(tmp, { to: "string" }) : pako.inflateRaw(tmp, { to: "string" })
@@ -2300,6 +2351,7 @@ Graph.prototype.replacePlaceholders = function (cell, str) {
 
   if (str != null) {
     let last = 0;
+    let match = null;
 
     while ((match = this.placeholderPattern.exec(str))) {
       const val = match[0];
@@ -3186,10 +3238,10 @@ Graph.prototype.zapGremlins = function (text) {
 /**
  * Hover icons are used for hover, vertex handler and drag from sidebar.
  */
-HoverIcons = function (graph) {
+function HoverIcons(graph) {
   this.graph = graph;
   this.init();
-};
+}
 
 /**
  * Up arrow.
@@ -6013,7 +6065,7 @@ if (typeof mxVertexHandler != "undefined") {
       mxGraph.prototype.processChange.apply(this, arguments);
 
       if (
-        change instanceof mxValueChange &&
+        change.constructor.name === "mxValueChange" &&
         change.cell != null &&
         change.cell.value != null &&
         typeof change.cell.value == "object"
@@ -6054,7 +6106,7 @@ if (typeof mxVertexHandler != "undefined") {
     Graph.prototype.replaceElement = function (elt, tagName) {
       const span = elt.ownerDocument.createElement(tagName != null ? tagName : "span");
       const attributes = Array.prototype.slice.call(elt.attributes);
-
+      let attr;
       while ((attr = attributes.pop())) {
         span.setAttribute(attr.nodeName, attr.nodeValue);
       }
@@ -7619,7 +7671,7 @@ if (typeof mxVertexHandler != "undefined") {
           el.innerHTML = html;
           let frag = document.createDocumentFragment(),
             node;
-
+          let lastNode;
           while ((node = el.firstChild)) {
             lastNode = frag.appendChild(node);
           }
@@ -7852,7 +7904,7 @@ if (typeof mxVertexHandler != "undefined") {
       try {
         if (savedSel) {
           if (window.getSelection) {
-            sel = window.getSelection();
+            const sel = window.getSelection();
             sel.removeAllRanges();
 
             for (let i = 0, len = savedSel.length; i < len; ++i) {
@@ -8270,7 +8322,7 @@ if (typeof mxVertexHandler != "undefined") {
       }
     };
 
-    mxCellEditorGetInitialValue = mxCellEditor.prototype.getInitialValue;
+    const mxCellEditorGetInitialValue = mxCellEditor.prototype.getInitialValue;
     mxCellEditor.prototype.getInitialValue = function (state, trigger) {
       if (mxUtils.getValue(state.style, "html", "0") == "0") {
         return mxCellEditorGetInitialValue.apply(this, arguments);
@@ -8287,7 +8339,7 @@ if (typeof mxVertexHandler != "undefined") {
       }
     };
 
-    mxCellEditorGetCurrentValue = mxCellEditor.prototype.getCurrentValue;
+    const mxCellEditorGetCurrentValue = mxCellEditor.prototype.getCurrentValue;
     mxCellEditor.prototype.getCurrentValue = function (state) {
       if (mxUtils.getValue(state.style, "html", "0") == "0") {
         return mxCellEditorGetCurrentValue.apply(this, arguments);

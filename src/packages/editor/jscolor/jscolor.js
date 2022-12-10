@@ -1,3 +1,6 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
 /**
  * jscolor, JavaScript Color Picker
  *
@@ -9,7 +12,7 @@
  * @link    http://jscolor.com
  */
 
-var jscolor = {
+export const jscolor = {
   dir: "", // location of jscolor directory (leave empty to autodetect)
   bindClass: "color", // class name
   binding: true, // automatic binding via <input class="...">

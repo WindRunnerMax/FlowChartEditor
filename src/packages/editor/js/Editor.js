@@ -1,4 +1,7 @@
-import { IMAGE_PATH, urlParams } from "../../core/constant";
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import { IMAGE_PATH, urlParams } from "../constant";
 
 import {
   mxEventSource,
@@ -29,10 +32,12 @@ import {
 import { ChangePageSetup } from "./EditorUi";
 import { Graph } from "./Graph";
 
+export { Editor, ErrorDialog, OpenFile, Dialog, PageSetupDialog, FilenameDialog, PrintDialog };
+
 /**
  * Editor constructor executed on page load.
  */
-const Editor = function (chromeless, themes, model, graph, editable) {
+function Editor(chromeless, themes, model, graph, editable) {
   mxEventSource.call(this);
   this.chromeless = chromeless != null ? chromeless : this.chromeless;
   this.initStencilRegistry();
@@ -79,7 +84,7 @@ const Editor = function (chromeless, themes, model, graph, editable) {
   // Sets persistent graph state defaults
   this.graph.resetViewOnRootChange = false;
   this.init();
-};
+}
 
 /**
  * Counts open editor tabs (must be global for cross-window access)
@@ -692,12 +697,12 @@ Editor.prototype.destroy = function () {
  * Class for asynchronously opening a new window and loading a file at the same
  * time. This acts as a bridge between the open dialog and the new editor.
  */
-const OpenFile = function (done) {
+function OpenFile(done) {
   this.producer = null;
   this.consumer = null;
   this.done = done;
   this.args = null;
-};
+}
 
 /**
  * Registers the editor from the new window.
@@ -1012,7 +1017,7 @@ Dialog.prototype.close = function (cancel, isEsc) {
 /**
  *
  */
-const ErrorDialog = function (
+function ErrorDialog(
   editorUi,
   title,
   message,
@@ -1114,14 +1119,14 @@ const ErrorDialog = function (
   div.appendChild(btns);
 
   this.container = div;
-};
+}
 
 /**
  * Constructs a new print dialog.
  */
-const PrintDialog = function (editorUi, title) {
+function PrintDialog(editorUi, title) {
   this.create(editorUi, title);
-};
+}
 
 /**
  * Constructs a new print dialog.
@@ -1385,7 +1390,7 @@ PrintDialog.previewEnabled = true;
 /**
  * Constructs a new page setup dialog.
  */
-const PageSetupDialog = function (editorUi) {
+function PageSetupDialog(editorUi) {
   const graph = editorUi.editor.graph;
   let row, td;
 
@@ -1574,7 +1579,7 @@ const PageSetupDialog = function (editorUi) {
 
   table.appendChild(tbody);
   this.container = table;
-};
+}
 
 /**
  *
@@ -1860,7 +1865,7 @@ PageSetupDialog.getFormats = function () {
 /**
  * Constructs a new filename dialog.
  */
-const FilenameDialog = function (
+function FilenameDialog(
   editorUi,
   filename,
   buttonText,
@@ -2043,7 +2048,7 @@ const FilenameDialog = function (
   table.appendChild(tbody);
 
   this.container = table;
-};
+}
 
 /**
  *
@@ -2604,5 +2609,3 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
     return cell;
   };
 })();
-
-export { Editor, ErrorDialog, OpenFile, Dialog, PageSetupDialog, FilenameDialog, PrintDialog };

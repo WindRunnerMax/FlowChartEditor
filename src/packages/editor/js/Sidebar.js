@@ -1,3 +1,31 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import { STENCIL_PATH, IMAGE_PATH, urlParams } from "../constant";
+import {
+  mxConstants,
+  mxResources,
+  mxEvent,
+  mxUtils,
+  mxRectangle,
+  mxPoint,
+  mxStencilRegistry,
+  mxClient,
+  mxPopupMenu,
+  mxDictionary,
+  mxCell,
+  mxGeometry,
+  mxEventObject,
+  mxStackLayout,
+  mxDragSource,
+  mxCodec,
+  mxGraphModel,
+} from "../../core/mxgraph";
+import { Graph, HoverIcons } from "./Graph";
+import { Editor, Dialog } from "./Editor";
+
+export { Sidebar };
+
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */

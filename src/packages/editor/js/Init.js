@@ -25,5 +25,5 @@ window.OPEN_FORM = window.OPEN_FORM || "open.html";
 // save a GET request. This requires that all resources be present in
 // each properties file since only one file is loaded.
 window.mxBasePath = window.mxBasePath || "../../../src";
-window.mxLanguage = window.mxLanguage || urlParams["lang"];
+window.mxLanguage = window.mxLanguage || window.urlParams["lang"];
 window.mxLanguages = window.mxLanguages || ["de"];

@@ -1,10 +1,37 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import { IMAGE_PATH, urlParams, STENCIL_PATH, STYLE_PATH } from "../constant";
+import {
+  mxConstants,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxCellRenderer,
+} from "../../core/mxgraph";
+import { Editor, Dialog, FilenameDialog, PageSetupDialog } from "./Editor";
+import { Menus } from "./Menus";
+import { Graph } from "./Graph";
+import { ChangePageSetup } from "./EditorUi";
+
+export {
+  StyleFormatPanel,
+  TextFormatPanel,
+  Format,
+  ArrangePanel,
+  BaseFormatPanel,
+  DiagramFormatPanel,
+};
+
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
-Format = function (editorUi, container) {
+function Format(editorUi, container) {
   this.editorUi = editorUi;
   this.container = container;
-};
+}
 
 /**
  * Returns information about the current selection.
@@ -556,12 +583,12 @@ Format.prototype.refresh = function () {
 /**
  * Base class for format panels.
  */
-BaseFormatPanel = function (format, editorUi, container) {
+function BaseFormatPanel(format, editorUi, container) {
   this.format = format;
   this.editorUi = editorUi;
   this.container = container;
   this.listeners = [];
-};
+}
 
 /**
  *
@@ -1453,10 +1480,10 @@ BaseFormatPanel.prototype.destroy = function () {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-ArrangePanel = function (format, editorUi, container) {
+function ArrangePanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(ArrangePanel, BaseFormatPanel);
 
@@ -2632,10 +2659,10 @@ ArrangePanel.prototype.addEdgeGeometry = function (container) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-TextFormatPanel = function (format, editorUi, container) {
+function TextFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(TextFormatPanel, BaseFormatPanel);
 
@@ -4177,7 +4204,7 @@ TextFormatPanel.prototype.addFont = function (container) {
 
               for (let i = 0; i < elts.length; i++) {
                 if (selection.containsNode(elts[i], true)) {
-                  temp = mxUtils.getCurrentStyle(elts[i]);
+                  let temp = mxUtils.getCurrentStyle(elts[i]);
                   fontSize = Math.max(getAbsoluteFontSize(temp), fontSize);
                   var lh = getRelativeLineHeight(fontSize, temp, elts[i]);
 
@@ -4387,10 +4414,10 @@ TextFormatPanel.prototype.addFont = function (container) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-StyleFormatPanel = function (format, editorUi, container) {
+function StyleFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(StyleFormatPanel, BaseFormatPanel);
 
@@ -4477,7 +4504,7 @@ StyleFormatPanel.prototype.addSvgStyles = function (container) {
       const regex = new RegExp(exp);
 
       const data = ss.style.image.substring(ss.style.image.indexOf(",") + 1);
-      const xml = window.atob ? atob(data) : Base64.decode(data, true);
+      const xml = atob(data);
       const svg = mxUtils.parseXml(xml);
 
       if (svg != null) {
@@ -4546,7 +4573,7 @@ StyleFormatPanel.prototype.addSvgRule = function (
 
             graph.setCellStyles(
               mxConstants.STYLE_IMAGE,
-              "data:image/svg+xml," + (window.btoa ? btoa(xml) : Base64.encode(xml, true)),
+              "data:image/svg+xml," + btoa(xml),
               graph.getSelectionCells()
             );
           },
@@ -6536,10 +6563,10 @@ StyleFormatPanel.prototype.addStyleOps = function (div) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-DiagramFormatPanel = function (format, editorUi, container) {
+function DiagramFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(DiagramFormatPanel, BaseFormatPanel);
 

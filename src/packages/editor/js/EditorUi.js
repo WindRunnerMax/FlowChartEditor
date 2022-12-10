@@ -1,10 +1,47 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+import { urlParams, MAX_REQUEST_SIZE, SAVE_URL } from "../constant";
+import {
+  mxConstants,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxRectangle,
+  mxPopupMenu,
+  mxPoint,
+  mxXmlRequest,
+  mxKeyHandler,
+  mxConnectionHandler,
+  mxGraphModel,
+  mxImage,
+  mxOutline,
+  mxClipboard,
+  mxStackLayout,
+  mxEventSource,
+  mxObjectCodec,
+  mxCodecRegistry,
+  mxMorphing,
+} from "../../core/mxgraph";
+import { Actions } from "./Actions";
+import { Editor, Dialog, OpenFile, FilenameDialog } from "./Editor";
+import { Sidebar } from "./Sidebar";
+import { Menus } from "./Menus";
+import { Graph, HoverIcons } from "./Graph";
+import { Toolbar } from "./Toolbar";
+import { Format } from "./Format";
+import { ErrorDialog, ColorDialog, OpenDialog, EditDataDialog } from "./Dialogs";
+
+export { ChangePageSetup, EditorUi };
+
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
 /**
  * Constructs a new graph editor
  */
-EditorUi = function (editor, container, lightbox) {
+function EditorUi(editor, container, lightbox) {
   mxEventSource.call(this);
 
   this.destroyFunctions = [];
@@ -375,7 +412,7 @@ EditorUi = function (editor, container, lightbox) {
 
     // Getter for key handler
     this.getKeyHandler = function () {
-      return keyHandler;
+      return this.keyHandler;
     };
 
     // Stores the current style and assigns it to new cells
@@ -881,7 +918,7 @@ EditorUi = function (editor, container, lightbox) {
   if (!graph.standalone) {
     this.open();
   }
-};
+}
 
 // Extends mxEventSource
 mxUtils.extend(EditorUi, mxEventSource);
@@ -1630,12 +1667,12 @@ EditorUi.prototype.initCanvas = function () {
       const fadeOut = mxUtils.bind(this, function (delay) {
         if (fadeThread != null) {
           window.clearTimeout(fadeThread);
-          fadeThead = null;
+          fadeThread = null;
         }
 
         if (fadeThread2 != null) {
           window.clearTimeout(fadeThread2);
-          fadeThead2 = null;
+          fadeThread2 = null;
         }
 
         fadeThread = window.setTimeout(
@@ -1658,12 +1695,12 @@ EditorUi.prototype.initCanvas = function () {
       const fadeIn = mxUtils.bind(this, function (opacity) {
         if (fadeThread != null) {
           window.clearTimeout(fadeThread);
-          fadeThead = null;
+          fadeThread = null;
         }
 
         if (fadeThread2 != null) {
           window.clearTimeout(fadeThread2);
-          fadeThead2 = null;
+          fadeThread2 = null;
         }
 
         this.chromelessToolbar.style.display = "";
@@ -3863,9 +3900,9 @@ EditorUi.prototype.showImageDialog = function (title, value, fn, ignoreExisting)
  * Hides the current menu.
  */
 EditorUi.prototype.showLinkDialog = function (value, btnLabel, fn) {
-  const dlg = new LinkDialog(this, value, btnLabel, fn);
-  this.showDialog(dlg.container, 420, 90, true, true);
-  dlg.init();
+  // const dlg = new LinkDialog(this, value, btnLabel, fn);
+  // this.showDialog(dlg.container, 420, 90, true, true);
+  // dlg.init();
 };
 
 /**

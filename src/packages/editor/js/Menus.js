@@ -1,10 +1,36 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import {
+  mxConstants,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxCompactTreeLayout,
+  mxHierarchicalLayout,
+  mxRadialTreeLayout,
+  mxFastOrganicLayout,
+  mxCircleLayout,
+  mxEdgeHandler,
+  mxPopupMenu,
+  mxEventSource,
+  mxMouseEvent,
+} from "../../core/mxgraph";
+import { Editor, FilenameDialog } from "./Editor";
+import { ColorDialog } from "./Dialogs";
+import { EditorUi } from "./EditorUi";
+
+export { Menubar, Menu, Menus };
+
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
 /**
  * Constructs a new graph editor
  */
-Menus = function (editorUi) {
+function Menus(editorUi) {
   this.editorUi = editorUi;
   this.menus = new Object();
   this.init();
@@ -13,7 +39,7 @@ Menus = function (editorUi) {
   if (!mxClient.IS_SVG) {
     new Image().src = this.checkmarkImage;
   }
-};
+}
 
 /**
  * Sets the default font family.

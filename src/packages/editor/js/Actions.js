@@ -1,3 +1,42 @@
+/* eslint-disable */
+/* eslint-enable no-undef, prettier/prettier */
+
+import {
+  mxConstants,
+  mxResources,
+  mxEventObject,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxRectangle,
+  mxEdgeHandler,
+  mxCell,
+  mxGeometry,
+  mxClipboard,
+  mxEventSource,
+} from "../../core/mxgraph";
+
+import { RESOURCES_PATH } from "../constant";
+import {
+  OpenFile,
+  Editor,
+  OpenDialog,
+  PageSetupDialog,
+  PrintDialog,
+  FilenameDialog,
+} from "./Editor";
+import {
+  ExportDialog,
+  EditDiagramDialog,
+  TextareaDialog,
+  LayersWindow,
+  OutlineWindow,
+  AboutDialog,
+} from "./Dialogs";
+import { ChangePageSetup } from "./EditorUi";
+
+export { Actions, Action };
+
 /**
  * Copyright (c) 2006-2020, JGraph Ltd
  * Copyright (c) 2006-2020, draw.io AG
@@ -713,7 +752,7 @@ Actions.prototype.init = function () {
         const cells = graph.getSelectionCells();
 
         for (let i = 0; i < cells.length; i++) {
-          state = graph.getView().getState(cells[i]);
+          let state = graph.getView().getState(cells[i]);
 
           if (state != null) {
             const html = mxUtils.getValue(state.style, "html", "0");
