@@ -1,8 +1,8 @@
 import styles from "./index.module.scss";
 import { FC, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
-import { convertXMLToSVG } from "src/package/utils/convert";
-import { base64ToSvgString, EditorBus, stringToSvg, stringToXml, xmlToString } from "src/package";
+import { convertXMLToSVG } from "src/packages/utils/convert";
+import { base64ToSvgString, EditorBus, stringToSvg, stringToXml, xmlToString } from "src/packages";
 export const DiagramExample: FC = () => {
   const [xmlExample, setXMLExample] = useState(XML_DATA);
   const [svgExample, setSVGExample] = useState(SVG_DATA);
@@ -59,7 +59,7 @@ export const DiagramExample: FC = () => {
 
   return (
     <div>
-      <div>XML</div>
+      <div>MxGraph XML</div>
       <div className={styles.example}>
         <div>
           <textarea cols={30} rows={10} value={xmlExample} disabled></textarea>
@@ -71,7 +71,7 @@ export const DiagramExample: FC = () => {
         <div ref={xmlExampleContainer}></div>
       </div>
 
-      <div>SVG</div>
+      <div>DrawIO SVG</div>
       <div className={styles.example}>
         <div>
           <textarea cols={30} rows={10} value={svgExample} disabled></textarea>

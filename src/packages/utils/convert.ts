@@ -1,12 +1,9 @@
 import { mxGraph, mxCodec, mxSvgCanvas2D, mxImageExport } from "../core/mxgraph";
 import { DEFAULT_STYLE_XML } from "../core/style";
+import { isString } from "./is";
 import { stringToXml } from "./xml";
 
 const XMLNS = "http://www.w3.org/2000/svg";
-const opt = Object.prototype.toString;
-const isString = (value: unknown): value is string => {
-  return opt.call(value) === "[object String]";
-};
 
 export const convertXMLToSVG = (
   xml: string | XMLDocument,

@@ -1,4 +1,4 @@
 import ReactDOM from "react-dom";
-import { App } from "./App";
+import { DiagramExample } from "./example";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<DiagramExample />, document.getElementById("root"));
