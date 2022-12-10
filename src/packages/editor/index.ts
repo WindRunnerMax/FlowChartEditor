@@ -1,3 +1,4 @@
+import "./stencils";
 import "./js/Shapes";
 
 export { Actions, Action } from "./js/Actions";

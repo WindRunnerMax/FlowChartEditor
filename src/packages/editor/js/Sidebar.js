@@ -23,6 +23,7 @@ import {
 } from "../../core/mxgraph";
 import { Graph, HoverIcons } from "./Graph";
 import { Editor, Dialog } from "./Editor";
+import { getStencil } from "../stencils";
 
 export { Sidebar };
 
@@ -121,23 +122,24 @@ Sidebar.prototype.init = function () {
 
   this.addSearchPalette(true);
   this.addGeneralPalette(true);
+  this.addStencilPalette(
+    "flowchart",
+    mxResources.get("flowchart"),
+    getStencil("flowchart.xml"),
+    ";whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2"
+  );
   this.addMiscPalette(false);
   this.addAdvancedPalette(false);
   this.addBasicPalette(dir);
   this.addStencilPalette(
     "arrows",
     mxResources.get("arrows"),
-    dir + "/arrows.xml",
+    getStencil("arrows.xml"),
     ";whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2"
   );
   this.addUmlPalette(false);
   this.addBpmnPalette(dir, false);
-  this.addStencilPalette(
-    "flowchart",
-    "Flowchart",
-    dir + "/flowchart.xml",
-    ";whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2"
-  );
+
   this.addImagePalette(
     "clipart",
     mxResources.get("clipart"),
@@ -1340,7 +1342,7 @@ Sidebar.prototype.addBasicPalette = function (dir) {
   this.addStencilPalette(
     "basic",
     mxResources.get("basic"),
-    dir + "/basic.xml",
+    getStencil("basic.xml"),
     ";whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2",
     null,
     null,
@@ -1704,7 +1706,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "shape=image;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=1;aspect=fixed;image=" +
-        this.gearImage,
+        getStencil("Gear_128x128.png").replace(";base64", ""),
       52,
       61,
       "",
@@ -1715,7 +1717,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "shape=image;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=" +
-        this.gearImage,
+        getStencil("Gear_128x128.png").replace(";base64", ""),
       50,
       60,
       "",
@@ -1725,7 +1727,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
       "strechted image icon symbol"
     ),
     this.createVertexTemplateEntry(
-      "icon;html=1;image=" + this.gearImage,
+      "icon;html=1;image=" + getStencil("Gear_128x128.png").replace(";base64", ""),
       60,
       60,
       "Icon",
@@ -1735,7 +1737,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
       "icon image symbol"
     ),
     this.createVertexTemplateEntry(
-      "label;whiteSpace=wrap;html=1;image=" + this.gearImage,
+      "label;whiteSpace=wrap;html=1;image=" + getStencil("Gear_128x128.png").replace(";base64", ""),
       140,
       60,
       "Label",
@@ -1746,7 +1748,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "label;whiteSpace=wrap;html=1;align=center;verticalAlign=bottom;spacingLeft=0;spacingBottom=4;imageAlign=center;imageVerticalAlign=top;image=" +
-        this.gearImage,
+        getStencil("Gear_128x128.png").replace(";base64", ""),
       120,
       80,
       "Label",
@@ -3748,10 +3750,6 @@ Sidebar.prototype.createItem = function (
   elt.style.height = this.thumbHeight + border + "px";
   elt.style.padding = this.thumbPadding + "px";
 
-  if (mxClient.IS_IE6) {
-    elt.style.border = "none";
-  }
-
   // Blocks default click action
   mxEvent.addListener(elt, "click", function (evt) {
     mxEvent.consume(evt);
@@ -5506,7 +5504,8 @@ Sidebar.prototype.addImagePalette = function (id, title, prefix, postfix, items,
 
       fns.push(
         this.createVertexTemplateEntry(
-          "image;html=1;labelBackgroundColor=#ffffff;image=" + prefix + item + postfix,
+          "image;html=1;labelBackgroundColor=#ffffff;image=" +
+            getStencil(item + postfix).replace(";base", ""),
           this.defaultImageWidth,
           this.defaultImageHeight,
           "",

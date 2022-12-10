@@ -1,5 +1,5 @@
 import { mxGraph, mxCodec, mxSvgCanvas2D, mxImageExport } from "../core/mxgraph";
-import { DEFAULT_STYLE_XML } from "../styles/style";
+import { DEFAULT_STYLE_XML } from "../styles/default";
 import { isString } from "./is";
 import { stringToXml } from "./xml";
 

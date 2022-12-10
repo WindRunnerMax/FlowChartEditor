@@ -64,6 +64,7 @@ import {
 } from "../../core/mxgraph";
 import { Editor, Dialog } from "./Editor";
 import { Sidebar } from "./Sidebar";
+import { getStencil } from "../stencils";
 
 import pako from "pako";
 import html_sanitize from "sanitize-html";
@@ -5448,7 +5449,7 @@ mxStencilRegistry.getStencil = function (name) {
             var fname = libs[i];
 
             if (fname.toLowerCase().substring(fname.length - 4, fname.length) == ".xml") {
-              mxStencilRegistry.loadStencilSet(fname, null);
+              mxStencilRegistry.loadStencilSet(getStencil(basename + ".xml"), null);
             } else if (fname.toLowerCase().substring(fname.length - 3, fname.length) == ".js") {
               try {
                 if (mxStencilRegistry.allowEval) {
@@ -5476,7 +5477,7 @@ mxStencilRegistry.getStencil = function (name) {
       } else {
         // Replaces '_-_' with '_'
         basename = basename.replace("_-_", "_");
-        mxStencilRegistry.loadStencilSet(STENCIL_PATH + "/" + basename + ".xml", null);
+        mxStencilRegistry.loadStencilSet(getStencil(basename + ".xml"), null);
       }
 
       result = mxStencilRegistry.stencils[name];
@@ -5509,46 +5510,25 @@ mxStencilRegistry.getBasenameForStencil = function (name) {
 // Loads the given stencil set
 mxStencilRegistry.loadStencilSet = function (stencilFile, postStencilLoad, force, async) {
   force = force != null ? force : false;
+  const stencilXML = mxUtils.parseXml(stencilFile);
+  const stencilXMLNode = stencilXML && stencilXML.documentElement;
+  if (!stencilXMLNode) return;
+
+  const stencilFileName = stencilXMLNode.getAttribute("name");
 
   // Uses additional cache for detecting previous load attempts
-  var xmlDoc = mxStencilRegistry.packages[stencilFile];
+  var xmlDoc = mxStencilRegistry.packages[stencilFileName];
 
   if (force || xmlDoc == null) {
     var install = false;
 
     if (xmlDoc == null) {
-      try {
-        if (async) {
-          mxStencilRegistry.loadStencil(
-            stencilFile,
-            mxUtils.bind(this, function (xmlDoc2) {
-              if (xmlDoc2 != null && xmlDoc2.documentElement != null) {
-                mxStencilRegistry.packages[stencilFile] = xmlDoc2;
-                install = true;
-                mxStencilRegistry.parseStencilSet(
-                  xmlDoc2.documentElement,
-                  postStencilLoad,
-                  install
-                );
-              }
-            })
-          );
-
-          return;
-        } else {
-          xmlDoc = mxStencilRegistry.loadStencil(stencilFile);
-          mxStencilRegistry.packages[stencilFile] = xmlDoc;
-          install = true;
-        }
-      } catch (e) {
-        if (window.console != null) {
-          console.log("error in loadStencilSet:", stencilFile, e);
-        }
-      }
+      mxStencilRegistry.packages[stencilFile] = stencilXML;
+      install = true;
     }
 
-    if (xmlDoc != null && xmlDoc.documentElement != null) {
-      mxStencilRegistry.parseStencilSet(xmlDoc.documentElement, postStencilLoad, install);
+    if (stencilXML != null && stencilXML.documentElement != null) {
+      mxStencilRegistry.parseStencilSet(stencilXML.documentElement, postStencilLoad, install);
     }
   }
 };

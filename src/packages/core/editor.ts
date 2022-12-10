@@ -2,7 +2,7 @@ import "../editor/styles/common.css";
 import "../editor/styles/grapheditor.css";
 import "../styles/diagram.scss";
 import { stringToXml } from "../utils/xml";
-import { DEFAULT_STYLE_XML } from "../styles/style";
+import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";
 import { mxResources } from "./mxgraph";
 import { langEN } from "../editor/resources/lang-en";

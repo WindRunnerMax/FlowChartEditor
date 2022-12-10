@@ -321,4 +321,5 @@ writingDirection=Writing Direction
 zoom=Zoom
 zoomIn=Zoom In
 zoomOut=Zoom Out
+flowchart=Flow Chart
 `;
