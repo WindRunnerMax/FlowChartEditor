@@ -47,10 +47,10 @@ function Actions(editorUi) {
  * Adds the default actions.
  */
 Actions.prototype.init = function () {
-  const ui = this.editorUi;
-  const editor = ui.editor;
-  const graph = editor.graph;
-  const isGraphEnabled = function () {
+  var ui = this.editorUi;
+  var editor = ui.editor;
+  var graph = editor.graph;
+  var isGraphEnabled = function () {
     return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
   };
 
@@ -78,7 +78,7 @@ Actions.prototype.init = function () {
     window.openFile.setConsumer(
       mxUtils.bind(this, function (xml, filename) {
         try {
-          const doc = mxUtils.parseXml(xml);
+          var doc = mxUtils.parseXml(xml);
           editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
         } catch (e) {
           mxUtils.alert(mxResources.get("invalidOrMissingFile") + ": " + e.message);
@@ -113,7 +113,7 @@ Actions.prototype.init = function () {
     ui.showDialog(new ExportDialog(ui).container, 300, 296, true, true);
   });
   this.addAction("editDiagram...", function () {
-    const dlg = new EditDiagramDialog(ui);
+    var dlg = new EditDiagramDialog(ui);
     ui.showDialog(dlg.container, 620, 420, true, false);
     dlg.init();
   });
@@ -189,23 +189,23 @@ Actions.prototype.init = function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
       graph.getModel().beginUpdate();
       try {
-        const cells = mxClipboard.paste(graph);
+        var cells = mxClipboard.paste(graph);
 
         if (cells != null) {
-          let includeEdges = true;
+          var includeEdges = true;
 
-          for (let i = 0; i < cells.length && includeEdges; i++) {
+          for (var i = 0; i < cells.length && includeEdges; i++) {
             includeEdges = includeEdges && graph.model.isEdge(cells[i]);
           }
 
-          const t = graph.view.translate;
-          const s = graph.view.scale;
-          const dx = t.x;
-          const dy = t.y;
-          let bb = null;
+          var t = graph.view.translate;
+          var s = graph.view.scale;
+          var dx = t.x;
+          var dy = t.y;
+          var bb = null;
 
           if (cells.length == 1 && includeEdges) {
-            const geo = graph.getCellGeometry(cells[0]);
+            var geo = graph.getCellGeometry(cells[0]);
 
             if (geo != null) {
               bb = geo.getTerminalPoint(true);
@@ -215,8 +215,8 @@ Actions.prototype.init = function () {
           bb = bb != null ? bb : graph.getBoundingBoxFromGeometry(cells, includeEdges);
 
           if (bb != null) {
-            const x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
-            const y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
+            var x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
+            var y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
 
             graph.cellsMoved(cells, x - bb.x, y - bb.y);
           }
@@ -230,10 +230,10 @@ Actions.prototype.init = function () {
   this.addAction(
     "copySize",
     function (evt) {
-      const cell = graph.getSelectionCell();
+      var cell = graph.getSelectionCell();
 
       if (graph.isEnabled() && cell != null && graph.getModel().isVertex(cell)) {
-        const geo = graph.getCellGeometry(cell);
+        var geo = graph.getCellGeometry(cell);
 
         if (geo != null) {
           ui.copiedSize = new mxRectangle(geo.x, geo.y, geo.width, geo.height);
@@ -252,11 +252,11 @@ Actions.prototype.init = function () {
         graph.getModel().beginUpdate();
 
         try {
-          const cells = graph.getSelectionCells();
+          var cells = graph.getSelectionCells();
 
-          for (let i = 0; i < cells.length; i++) {
+          for (var i = 0; i < cells.length; i++) {
             if (graph.getModel().isVertex(cells[i])) {
-              let geo = graph.getCellGeometry(cells[i]);
+              var geo = graph.getCellGeometry(cells[i]);
 
               if (geo != null) {
                 geo = geo.clone();
@@ -280,17 +280,17 @@ Actions.prototype.init = function () {
   function deleteCells(includeEdges) {
     // Cancels interactive operations
     graph.escape();
-    const cells = graph.getDeletableCells(graph.getSelectionCells());
+    var cells = graph.getDeletableCells(graph.getSelectionCells());
 
     if (cells != null && cells.length > 0) {
-      const parents = graph.selectParentAfterDelete ? graph.model.getParents(cells) : null;
+      var parents = graph.selectParentAfterDelete ? graph.model.getParents(cells) : null;
       graph.removeCells(cells, includeEdges);
 
       // Selects parents for easier editing of groups
       if (parents != null) {
-        const select = [];
+        var select = [];
 
-        for (let i = 0; i < parents.length; i++) {
+        for (var i = 0; i < parents.length; i++) {
           if (
             graph.model.contains(parents[i]) &&
             (graph.model.isVertex(parents[i]) || graph.model.isEdge(parents[i]))
@@ -389,7 +389,7 @@ Actions.prototype.init = function () {
       if (!graph.isSelectionEmpty()) {
         graph.getModel().beginUpdate();
         try {
-          const defaultValue = graph.isCellMovable(graph.getSelectionCell()) ? 1 : 0;
+          var defaultValue = graph.isCellMovable(graph.getSelectionCell()) ? 1 : 0;
           graph.toggleCellStyles(mxConstants.STYLE_MOVABLE, defaultValue);
           graph.toggleCellStyles(mxConstants.STYLE_RESIZABLE, defaultValue);
           graph.toggleCellStyles(mxConstants.STYLE_ROTATABLE, defaultValue);
@@ -519,7 +519,7 @@ Actions.prototype.init = function () {
   this.addAction(
     "editData...",
     function () {
-      const cell = graph.getSelectionCell() || graph.getModel().getRoot();
+      var cell = graph.getSelectionCell() || graph.getModel().getRoot();
       ui.showDataDialog(cell);
     },
     null,
@@ -529,21 +529,21 @@ Actions.prototype.init = function () {
   this.addAction(
     "editTooltip...",
     function () {
-      const graph = ui.editor.graph;
+      var graph = ui.editor.graph;
 
       if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        const cell = graph.getSelectionCell();
-        let tooltip = "";
+        var cell = graph.getSelectionCell();
+        var tooltip = "";
 
         if (mxUtils.isNode(cell.value)) {
-          const tmp = cell.value.getAttribute("tooltip");
+          var tmp = cell.value.getAttribute("tooltip");
 
           if (tmp != null) {
             tooltip = tmp;
           }
         }
 
-        const dlg = new TextareaDialog(ui, mxResources.get("editTooltip") + ":", tooltip, function (
+        var dlg = new TextareaDialog(ui, mxResources.get("editTooltip") + ":", tooltip, function (
           newValue
         ) {
           graph.setTooltipForCell(cell, newValue);
@@ -557,7 +557,7 @@ Actions.prototype.init = function () {
     "Alt+Shift+T"
   );
   this.addAction("openLink", function () {
-    const link = graph.getLinkForCell(graph.getSelectionCell());
+    var link = graph.getLinkForCell(graph.getSelectionCell());
 
     if (link != null) {
       graph.openLink(link);
@@ -566,11 +566,11 @@ Actions.prototype.init = function () {
   this.addAction(
     "editLink...",
     function () {
-      const graph = ui.editor.graph;
+      var graph = ui.editor.graph;
 
       if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        const cell = graph.getSelectionCell();
-        const value = graph.getLinkForCell(cell) || "";
+        var cell = graph.getSelectionCell();
+        var value = graph.getLinkForCell(cell) || "";
 
         ui.showLinkDialog(value, mxResources.get("apply"), function (link) {
           link = mxUtils.trim(link);
@@ -599,8 +599,8 @@ Actions.prototype.init = function () {
           link = mxUtils.trim(link);
 
           if (link.length > 0) {
-            let icon = null;
-            let title = graph.getLinkTitle(link);
+            var icon = null;
+            var title = graph.getLinkTitle(link);
 
             if (docs != null && docs.length > 0) {
               icon = docs[0].iconUrl;
@@ -612,8 +612,8 @@ Actions.prototype.init = function () {
               }
             }
 
-            const pt = graph.getFreeInsertPoint();
-            let linkCell = new mxCell(
+            var pt = graph.getFreeInsertPoint();
+            var linkCell = new mxCell(
               title,
               new mxGeometry(pt.x, pt.y, 100, 40),
               "fontColor=#0000EE;fontStyle=4;rounded=1;overflow=hidden;" +
@@ -645,22 +645,22 @@ Actions.prototype.init = function () {
   this.addAction(
     "link...",
     mxUtils.bind(this, function () {
-      const graph = ui.editor.graph;
+      var graph = ui.editor.graph;
 
       if (graph.isEnabled()) {
         if (graph.cellEditor.isContentEditing()) {
-          const elt = graph.getSelectedElement();
-          let link = graph.getParentByName(elt, "A", graph.cellEditor.textarea);
-          let oldValue = "";
+          var elt = graph.getSelectedElement();
+          var link = graph.getParentByName(elt, "A", graph.cellEditor.textarea);
+          var oldValue = "";
 
           // Workaround for FF returning the outermost selected element after double
           // click on a DOM hierarchy with a link inside (but not as topmost element)
           if (link == null && elt != null && elt.getElementsByTagName != null) {
             // Finds all links in the selected DOM and uses the link
             // where the selection text matches its text content
-            const links = elt.getElementsByTagName("a");
+            var links = elt.getElementsByTagName("a");
 
-            for (let i = 0; i < links.length && link == null; i++) {
+            for (var i = 0; i < links.length && link == null; i++) {
               if (links[i].textContent == elt.textContent) {
                 link = links[i];
               }
@@ -672,7 +672,7 @@ Actions.prototype.init = function () {
             graph.selectNode(link);
           }
 
-          const selState = graph.cellEditor.saveSelection();
+          var selState = graph.cellEditor.saveSelection();
 
           ui.showLinkDialog(
             oldValue,
@@ -696,19 +696,19 @@ Actions.prototype.init = function () {
   this.addAction(
     "autosize",
     function () {
-      const cells = graph.getSelectionCells();
+      var cells = graph.getSelectionCells();
 
       if (cells != null) {
         graph.getModel().beginUpdate();
         try {
-          for (let i = 0; i < cells.length; i++) {
-            const cell = cells[i];
+          for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
 
             if (graph.getModel().getChildCount(cell)) {
               graph.updateGroupBounds([cell], 20);
             } else {
-              const state = graph.view.getState(cell);
-              let geo = graph.getCellGeometry(cell);
+              var state = graph.view.getState(cell);
+              var geo = graph.getCellGeometry(cell);
 
               if (
                 graph.getModel().isVertex(cell) &&
@@ -735,21 +735,21 @@ Actions.prototype.init = function () {
     Editor.ctrlKey + "+Shift+Y"
   );
   this.addAction("formattedText", function () {
-    const refState = graph.getView().getState(graph.getSelectionCell());
+    var refState = graph.getView().getState(graph.getSelectionCell());
 
     if (refState != null) {
       graph.stopEditing();
-      const value = refState.style["html"] == "1" ? null : "1";
+      var value = refState.style["html"] == "1" ? null : "1";
 
       graph.getModel().beginUpdate();
       try {
-        const cells = graph.getSelectionCells();
+        var cells = graph.getSelectionCells();
 
-        for (let i = 0; i < cells.length; i++) {
+        for (var i = 0; i < cells.length; i++) {
           let state = graph.getView().getState(cells[i]);
 
           if (state != null) {
-            const html = mxUtils.getValue(state.style, "html", "0");
+            var html = mxUtils.getValue(state.style, "html", "0");
 
             if (html == "1" && value == null) {
               var label = graph.convertValueToString(state.cell);
@@ -761,7 +761,7 @@ Actions.prototype.init = function () {
               }
 
               // Removes HTML tags
-              const temp = document.createElement("div");
+              var temp = document.createElement("div");
               temp.innerHTML = label;
               label = mxUtils.extractTextWithWhitespace(temp.childNodes);
 
@@ -800,8 +800,8 @@ Actions.prototype.init = function () {
     }
   });
   this.addAction("wordWrap", function () {
-    const state = graph.getView().getState(graph.getSelectionCell());
-    let value = "wrap";
+    var state = graph.getView().getState(graph.getSelectionCell());
+    var value = "wrap";
 
     graph.stopEditing();
 
@@ -812,14 +812,14 @@ Actions.prototype.init = function () {
     graph.setCellStyles(mxConstants.STYLE_WHITE_SPACE, value);
   });
   this.addAction("rotation", function () {
-    let value = "0";
-    const state = graph.getView().getState(graph.getSelectionCell());
+    var value = "0";
+    var state = graph.getView().getState(graph.getSelectionCell());
 
     if (state != null) {
       value = state.style[mxConstants.STYLE_ROTATION] || value;
     }
 
-    const dlg = new FilenameDialog(
+    var dlg = new FilenameDialog(
       ui,
       value,
       mxResources.get("apply"),
@@ -874,19 +874,19 @@ Actions.prototype.init = function () {
   this.addAction(
     "fitWindow",
     function () {
-      const bounds = graph.isSelectionEmpty()
+      var bounds = graph.isSelectionEmpty()
         ? graph.getGraphBounds()
         : graph.getBoundingBox(graph.getSelectionCells());
-      const t = graph.view.translate;
-      const s = graph.view.scale;
+      var t = graph.view.translate;
+      var s = graph.view.scale;
       bounds.width /= s;
       bounds.height /= s;
       bounds.x = bounds.x / s - t.x;
       bounds.y = bounds.y / s - t.y;
 
-      const cw = graph.container.clientWidth - 10;
-      const ch = graph.container.clientHeight - 10;
-      const scale = Math.floor(20 * Math.min(cw / bounds.width, ch / bounds.height)) / 20;
+      var cw = graph.container.clientWidth - 10;
+      var ch = graph.container.clientHeight - 10;
+      var scale = Math.floor(20 * Math.min(cw / bounds.width, ch / bounds.height)) / 20;
       graph.zoomTo(scale);
 
       if (mxUtils.hasScrollbars(graph.container)) {
@@ -907,15 +907,15 @@ Actions.prototype.init = function () {
         this.get("pageView").funct();
       }
 
-      const fmt = graph.pageFormat;
-      const ps = graph.pageScale;
-      const cw = graph.container.clientWidth - 10;
-      const ch = graph.container.clientHeight - 10;
-      const scale = Math.floor(20 * Math.min(cw / fmt.width / ps, ch / fmt.height / ps)) / 20;
+      var fmt = graph.pageFormat;
+      var ps = graph.pageScale;
+      var cw = graph.container.clientWidth - 10;
+      var ch = graph.container.clientHeight - 10;
+      var scale = Math.floor(20 * Math.min(cw / fmt.width / ps, ch / fmt.height / ps)) / 20;
       graph.zoomTo(scale);
 
       if (mxUtils.hasScrollbars(graph.container)) {
-        const pad = graph.getPagePadding();
+        var pad = graph.getPagePadding();
         graph.container.scrollTop = pad.y * graph.view.scale - 1;
         graph.container.scrollLeft =
           Math.min(
@@ -935,16 +935,16 @@ Actions.prototype.init = function () {
         this.get("pageView").funct();
       }
 
-      const fmt = graph.pageFormat;
-      const ps = graph.pageScale;
-      const cw = graph.container.clientWidth - 10;
-      const ch = graph.container.clientHeight - 10;
+      var fmt = graph.pageFormat;
+      var ps = graph.pageScale;
+      var cw = graph.container.clientWidth - 10;
+      var ch = graph.container.clientHeight - 10;
 
-      const scale = Math.floor(20 * Math.min(cw / (2 * fmt.width) / ps, ch / fmt.height / ps)) / 20;
+      var scale = Math.floor(20 * Math.min(cw / (2 * fmt.width) / ps, ch / fmt.height / ps)) / 20;
       graph.zoomTo(scale);
 
       if (mxUtils.hasScrollbars(graph.container)) {
-        const pad = graph.getPagePadding();
+        var pad = graph.getPagePadding();
         graph.container.scrollTop = Math.min(
           pad.y,
           (graph.container.scrollHeight - graph.container.clientHeight) / 2
@@ -966,15 +966,15 @@ Actions.prototype.init = function () {
         this.get("pageView").funct();
       }
 
-      const fmt = graph.pageFormat;
-      const ps = graph.pageScale;
-      const cw = graph.container.clientWidth - 10;
+      var fmt = graph.pageFormat;
+      var ps = graph.pageScale;
+      var cw = graph.container.clientWidth - 10;
 
-      const scale = Math.floor((20 * cw) / fmt.width / ps) / 20;
+      var scale = Math.floor((20 * cw) / fmt.width / ps) / 20;
       graph.zoomTo(scale);
 
       if (mxUtils.hasScrollbars(graph.container)) {
-        const pad = graph.getPagePadding();
+        var pad = graph.getPagePadding();
         graph.container.scrollLeft = Math.min(
           pad.x * graph.view.scale,
           (graph.container.scrollWidth - graph.container.clientWidth) / 2
@@ -987,12 +987,12 @@ Actions.prototype.init = function () {
     new Action(
       mxResources.get("custom") + "...",
       mxUtils.bind(this, function () {
-        const dlg = new FilenameDialog(
+        var dlg = new FilenameDialog(
           this.editorUi,
           parseInt(graph.getView().getScale() * 100),
           mxResources.get("apply"),
           mxUtils.bind(this, function (newValue) {
-            const val = parseInt(newValue);
+            var val = parseInt(newValue);
 
             if (!isNaN(val) && val > 0) {
               graph.zoomTo(val / 100);
@@ -1011,15 +1011,15 @@ Actions.prototype.init = function () {
   this.addAction(
     "pageScale...",
     mxUtils.bind(this, function () {
-      const dlg = new FilenameDialog(
+      var dlg = new FilenameDialog(
         this.editorUi,
         parseInt(graph.pageScale * 100),
         mxResources.get("apply"),
         mxUtils.bind(this, function (newValue) {
-          const val = parseInt(newValue);
+          var val = parseInt(newValue);
 
           if (!isNaN(val) && val > 0) {
-            const change = new ChangePageSetup(ui, null, null, null, val / 100);
+            var change = new ChangePageSetup(ui, null, null, null, val / 100);
             change.ignoreColor = true;
             change.ignoreImage = true;
 
@@ -1034,7 +1034,7 @@ Actions.prototype.init = function () {
   );
 
   // Option actions
-  let action = null;
+  var action = null;
   action = this.addAction(
     "grid",
     function () {
@@ -1070,7 +1070,7 @@ Actions.prototype.init = function () {
   });
 
   action = this.addAction("collapseExpand", function () {
-    const change = new ChangePageSetup(ui);
+    var change = new ChangePageSetup(ui);
     change.ignoreColor = true;
     change.ignoreImage = true;
     change.foldingEnabled = !graph.foldingEnabled;
@@ -1148,7 +1148,7 @@ Actions.prototype.init = function () {
 
   // Help actions
   this.addAction("help", function () {
-    let ext = "";
+    var ext = "";
 
     if (mxResources.isLanguageSupported(mxClient.language)) {
       ext = "_" + mxClient.language;
@@ -1157,7 +1157,7 @@ Actions.prototype.init = function () {
     graph.openLink(RESOURCES_PATH + "/help" + ext + ".html");
   });
 
-  let showingAbout = false;
+  var showingAbout = false;
 
   this.put(
     "about",
@@ -1173,7 +1173,7 @@ Actions.prototype.init = function () {
   );
 
   // Font style actions
-  const toggleFontStyle = mxUtils.bind(this, function (key, style, fn, shortcut) {
+  var toggleFontStyle = mxUtils.bind(this, function (key, style, fn, shortcut) {
     return this.addAction(
       key,
       function () {
@@ -1184,7 +1184,7 @@ Actions.prototype.init = function () {
 
           graph.getModel().beginUpdate();
           try {
-            const cells = graph.getSelectionCells();
+            var cells = graph.getSelectionCells();
             graph.toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE, style, cells);
 
             // Removes bold and italic tags and CSS styles inside labels
@@ -1214,7 +1214,7 @@ Actions.prototype.init = function () {
               });
             }
 
-            for (let i = 0; i < cells.length; i++) {
+            for (var i = 0; i < cells.length; i++) {
               if (graph.model.getChildCount(cells[i]) == 0) {
                 graph.autoSizeCell(cells[i], false);
               }
@@ -1386,9 +1386,9 @@ Actions.prototype.init = function () {
     if (!graph.isSelectionEmpty() && graph.isEnabled()) {
       graph.getModel().beginUpdate();
       try {
-        const cells = graph.getSelectionCells();
-        const style = graph.getCurrentCellStyle(cells[0]);
-        const value = mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, "0") == "1" ? "0" : "1";
+        var cells = graph.getSelectionCells();
+        var style = graph.getCurrentCellStyle(cells[0]);
+        var value = mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, "0") == "1" ? "0" : "1";
 
         graph.setCellStyles(mxConstants.STYLE_ROUNDED, value);
         graph.setCellStyles(mxConstants.STYLE_CURVED, null);
@@ -1429,8 +1429,8 @@ Actions.prototype.init = function () {
     }
   });
   this.addAction("collapsible", function () {
-    const state = graph.view.getState(graph.getSelectionCell());
-    let value = "1";
+    var state = graph.view.getState(graph.getSelectionCell());
+    var value = "1";
 
     if (state != null && graph.getFoldingImage(state) != null) {
       value = "0";
@@ -1452,12 +1452,12 @@ Actions.prototype.init = function () {
   this.addAction(
     "editStyle...",
     mxUtils.bind(this, function () {
-      const cells = graph.getSelectionCells();
+      var cells = graph.getSelectionCells();
 
       if (cells != null && cells.length > 0) {
-        const model = graph.getModel();
+        var model = graph.getModel();
 
-        const dlg = new TextareaDialog(
+        var dlg = new TextareaDialog(
           this.editorUi,
           mxResources.get("editStyle") + ":",
           model.getStyle(cells[0]) || "",
@@ -1502,19 +1502,19 @@ Actions.prototype.init = function () {
     Editor.ctrlKey + "+Shift+R"
   );
   this.addAction("addWaypoint", function () {
-    const cell = graph.getSelectionCell();
+    var cell = graph.getSelectionCell();
 
     if (cell != null && graph.getModel().isEdge(cell)) {
-      const handler = editor.graph.selectionCellsHandler.getHandler(cell);
+      var handler = editor.graph.selectionCellsHandler.getHandler(cell);
 
       if (handler instanceof mxEdgeHandler) {
-        const t = graph.view.translate;
-        const s = graph.view.scale;
-        let dx = t.x;
-        let dy = t.y;
+        var t = graph.view.translate;
+        var s = graph.view.scale;
+        var dx = t.x;
+        var dy = t.y;
 
-        let parent = graph.getModel().getParent(cell);
-        let pgeo = graph.getCellGeometry(parent);
+        var parent = graph.getModel().getParent(cell);
+        var pgeo = graph.getCellGeometry(parent);
 
         while (graph.getModel().isVertex(parent) && pgeo != null) {
           dx += pgeo.x;
@@ -1524,8 +1524,8 @@ Actions.prototype.init = function () {
           pgeo = graph.getCellGeometry(parent);
         }
 
-        const x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
-        const y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
+        var x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
+        var y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
 
         handler.addPointAt(handler.state, x, y);
       }
@@ -1533,7 +1533,7 @@ Actions.prototype.init = function () {
   });
   this.addAction("removeWaypoint", function () {
     // TODO: Action should run with "this" set to action
-    const rmWaypointAction = ui.actions.get("removeWaypoint");
+    var rmWaypointAction = ui.actions.get("removeWaypoint");
 
     if (rmWaypointAction.handler != null) {
       // NOTE: Popupevent handled and action updated in Menus.createPopupMenu
@@ -1543,18 +1543,18 @@ Actions.prototype.init = function () {
   this.addAction(
     "clearWaypoints",
     function () {
-      let cells = graph.getSelectionCells();
+      var cells = graph.getSelectionCells();
 
       if (cells != null) {
         cells = graph.addAllEdges(cells);
 
         graph.getModel().beginUpdate();
         try {
-          for (let i = 0; i < cells.length; i++) {
-            const cell = cells[i];
+          for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
 
             if (graph.getModel().isEdge(cell)) {
-              let geo = graph.getCellGeometry(cell);
+              var geo = graph.getCellGeometry(cell);
 
               if (geo != null) {
                 geo = geo.clone();
@@ -1609,15 +1609,15 @@ Actions.prototype.init = function () {
   );
   this.addAction("image...", function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
-      const title = mxResources.get("image") + " (" + mxResources.get("url") + "):";
-      const state = graph.getView().getState(graph.getSelectionCell());
-      let value = "";
+      var title = mxResources.get("image") + " (" + mxResources.get("url") + "):";
+      var state = graph.getView().getState(graph.getSelectionCell());
+      var value = "";
 
       if (state != null) {
         value = state.style[mxConstants.STYLE_IMAGE] || value;
       }
 
-      const selectionState = graph.cellEditor.saveSelection();
+      var selectionState = graph.cellEditor.saveSelection();
 
       ui.showImageDialog(
         title,
@@ -1628,16 +1628,16 @@ Actions.prototype.init = function () {
             graph.cellEditor.restoreSelection(selectionState);
             graph.insertImage(newValue, w, h);
           } else {
-            let cells = graph.getSelectionCells();
+            var cells = graph.getSelectionCells();
 
             if (newValue != null && (newValue.length > 0 || cells.length > 0)) {
-              let select = null;
+              var select = null;
 
               graph.getModel().beginUpdate();
               try {
                 // Inserts new cell if no cell is selected
                 if (cells.length == 0) {
-                  const pt = graph.getFreeInsertPoint();
+                  var pt = graph.getFreeInsertPoint();
                   cells = [
                     graph.insertVertex(
                       graph.getDefaultParent(),
@@ -1661,7 +1661,7 @@ Actions.prototype.init = function () {
                 );
 
                 // Sets shape only if not already shape with image (label or image)
-                const style = graph.getCurrentCellStyle(cells[0]);
+                var style = graph.getCurrentCellStyle(cells[0]);
 
                 if (
                   style[mxConstants.STYLE_SHAPE] != "image" &&
@@ -1674,8 +1674,8 @@ Actions.prototype.init = function () {
 
                 if (graph.getSelectionCount() == 1) {
                   if (w != null && h != null) {
-                    const cell = cells[0];
-                    let geo = graph.getModel().getGeometry(cell);
+                    var cell = cells[0];
+                    var geo = graph.getModel().getGeometry(cell);
 
                     if (geo != null) {
                       geo = geo.clone();
@@ -1781,7 +1781,7 @@ Actions.prototype.init = function () {
  * Registers the given action under the given name.
  */
 Actions.prototype.addAction = function (key, funct, enabled, iconCls, shortcut) {
-  let title;
+  var title;
 
   if (key.substring(key.length - 3) == "...") {
     key = key.substring(0, key.length - 3);

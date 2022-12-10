@@ -1,0 +1,16 @@
+.diagram-container {
+  display: block;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10005;
+}
+
+.mxPopupMenu {
+  background: #fff !important;
+  border: unset !important;
+  border-radius: 4px;
+  padding: 3px;
+}

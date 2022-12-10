@@ -1,6 +1,4 @@
-// https://github.com/jgraph/mxgraph-js
-// b30fd0353838c53eb08c4
-// python3 -m http.server 9000
+import "./js/Shapes";
 
 export { Actions, Action } from "./js/Actions";
 export {
@@ -40,3 +38,7 @@ export { TableLayout, Graph, HoverIcons } from "./js/Graph";
 export { Menubar, Menu, Menus } from "./js/Menus";
 export { Sidebar } from "./js/Sidebar";
 export { Toolbar } from "./js/Toolbar";
+
+// https://github.com/jgraph/mxgraph-js
+// b30fd0353838c53eb08c4
+// python3 -m http.server 9000

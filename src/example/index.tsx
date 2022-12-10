@@ -3,6 +3,10 @@ import { FC, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
 import { convertXMLToSVG } from "src/packages/utils/convert";
 import { base64ToSvgString, EditorBus, stringToSvg, stringToXml, xmlToString } from "src/packages";
+import { startEdit } from "src/packages/core/editor";
+
+startEdit();
+
 export const DiagramExample: FC = () => {
   const [xmlExample, setXMLExample] = useState(XML_DATA);
   const [svgExample, setSVGExample] = useState(SVG_DATA);

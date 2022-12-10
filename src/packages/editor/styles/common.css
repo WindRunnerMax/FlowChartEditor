@@ -1,0 +1,193 @@
+/* stylelint-disable */
+div.mxRubberband {
+  background: #07f;
+  border-color: #00f;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.mxCellEditor {
+  background: url(data:image/gif;base64,R0lGODlhMAAwAIAAAP///wAAACH5BAEAAAAALAAAAAAwADAAAAIxhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8egpAAA7);
+  /* _background: url('../images/transparent.gif'); */
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0;
+  display: inline-block;
+  margin: 0;
+  min-width: 1px;
+  overflow: visible;
+  padding: 0;
+  position: absolute;
+  resize: none;
+  word-wrap: normal;
+}
+
+.mxPlainTextEditor * {
+  margin: 0;
+  padding: 0;
+}
+
+div.mxWindow {
+  background: url(data:image/gif;base64,R0lGODlhGgAUAIAAAOzs7PDw8CH5BAAAAAAALAAAAAAaABQAAAIijI+py70Ao5y02lud3lzhD4ZUR5aPiKajyZbqq7YyB9dhAQA7);
+  /* _background: url('../images/window.gif'); */
+  border: 1px solid #c3c3c3;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+}
+
+table.mxWindow {
+  border-collapse: collapse;
+  font-family: Arial;
+  font-size: 8pt;
+  table-layout: fixed;
+}
+
+td.mxWindowTitle {
+  background: url(data:image/gif;base64,R0lGODlhFwAXAMQAANfX18rKyuHh4c7OzsDAwMHBwc/Pz+Li4uTk5NHR0dvb2+jo6O/v79/f3/n5+dnZ2dbW1uPj44yMjNPT0+Dg4N3d3ebm5szMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAAXABcAAAWQICESxWiW5Ck6bOu+MMvMdG3f86LvfO/rlqBwSCwaj8ikUohoOp/QaDNCrVqvWKpgezhsv+AwmEIum89ocmPNbrvf64p8Tq/b5Yq8fs/v5x+AgYKDhIAAh4iJiouHEI6PkJGSjhOVlpeYmZUJnJ2en6CcBqMDpaanqKgXq6ytrq+rAbKztLW2shK5uru8vbkhADs=)  repeat-x;
+  /* _background: url('../images/window-title.gif') repeat-x; */
+  color: black;
+  font-weight: bold;
+  height: 13px;
+  overflow: hidden;
+  padding: 2px;
+  padding-bottom: 6px;
+  padding-top: 4px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.mxWindowPane {
+  padding: 0;
+  vertical-align: top;
+}
+
+div.mxWindowPane {
+  overflow: hidden;
+  position: relative;
+}
+
+td.mxWindowPane td {
+  font-family: Arial;
+  font-size: 8pt;
+}
+
+td.mxWindowPane input,
+td.mxWindowPane select,
+td.mxWindowPane textarea,
+td.mxWindowPane radio {
+  border-color: #8c8c8c;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial;
+  font-size: 8pt;
+  padding: 1px;
+}
+
+td.mxWindowPane button {
+  background: url(data:image/gif;base64,R0lGODlhCgATALMAAP7+/t7e3vj4+Ojo6OXl5e/v7/n5+fb29vPz8/39/e3t7fHx8e7u7v///wAAAAAAACH5BAAAAAAALAAAAAAKABMAAAQ2MMlJhb0Y6c2X/2AhjiRjnqiirizqMkEsz0Rt30Ou7y8K/ouDcEg0GI9IgHLJbDif0Kh06owAADs=) repeat-x;
+  /* _background: url('../images/button.gif') repeat-x; */
+  float: left;
+  font-family: Arial;
+  font-size: 8pt;
+  padding: 2px;
+}
+
+img.mxToolbarItem {
+  border-width: 1px;
+  margin-bottom: 6px;
+  margin-right: 6px;
+}
+
+select.mxToolbarCombo {
+  border-style: inset;
+  border-width: 2px;
+  vertical-align: top;
+}
+
+div.mxToolbarComboContainer {
+  padding: 2px;
+}
+
+img.mxToolbarMode {
+  border-width: 0;
+  margin: 2px;
+  margin-bottom: 4px;
+  margin-right: 4px;
+}
+
+img.mxToolbarModeSelected {
+  border-style: inset;
+  border-width: 2px;
+  margin: 0;
+  margin-bottom: 2px;
+  margin-right: 2px;
+}
+
+div.mxTooltip {
+  background: #ffc;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  color: black;
+  cursor: default;
+  font-family: Arial;
+  font-size: 8pt;
+  padding: 4px;
+  position: absolute;
+}
+
+div.mxPopupMenu {
+  background: url(data:image/gif;base64,R0lGODlhGgAUAIAAAOzs7PDw8CH5BAAAAAAALAAAAAAaABQAAAIijI+py70Ao5y02lud3lzhD4ZUR5aPiKajyZbqq7YyB9dhAQA7);
+  /* _background: url('../images/window.gif'); */
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  position: absolute;
+}
+
+table.mxPopupMenu {
+  border-collapse: collapse;
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+tr.mxPopupMenuItem {
+  color: black;
+  cursor: pointer;
+}
+
+tr.mxPopupMenuItemHover {
+  background-color: #006;
+  color: #fff;
+  cursor: pointer;
+}
+
+td.mxPopupMenuItem {
+  font-family: Arial;
+  font-size: 8pt;
+  padding: 2px 30px 2px 10px;
+  white-space: nowrap;
+}
+
+td.mxPopupMenuIcon {
+  background-color: #d0d0d0;
+  padding: 2px 4px;
+}
+
+.mxDisabled {
+  cursor: default !important;
+  opacity: 0.2 !important;
+}

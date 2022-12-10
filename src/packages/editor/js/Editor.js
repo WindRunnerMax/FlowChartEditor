@@ -35,9 +35,12 @@ import { Graph } from "./Graph";
 export { Editor, ErrorDialog, OpenFile, Dialog, PageSetupDialog, FilenameDialog, PrintDialog };
 
 /**
+ * Copyright (c) 2006-2012, JGraph Ltd
+ */
+/**
  * Editor constructor executed on page load.
  */
-function Editor(chromeless, themes, model, graph, editable) {
+const Editor = function (chromeless, themes, model, graph, editable) {
   mxEventSource.call(this);
   this.chromeless = chromeless != null ? chromeless : this.chromeless;
   this.initStencilRegistry();
@@ -67,7 +70,7 @@ function Editor(chromeless, themes, model, graph, editable) {
 
   // Updates modified state if graph changes
   this.graphChangeListener = function (sender, eventObject) {
-    const edit = eventObject != null ? eventObject.getProperty("edit") : null;
+    var edit = eventObject != null ? eventObject.getProperty("edit") : null;
 
     if (edit == null || !edit.ignoreEdit) {
       this.setModified(true);
@@ -84,7 +87,7 @@ function Editor(chromeless, themes, model, graph, editable) {
   // Sets persistent graph state defaults
   this.graph.resetViewOnRootChange = false;
   this.init();
-}
+};
 
 /**
  * Counts open editor tabs (must be global for cross-window access)
@@ -95,7 +98,7 @@ Editor.pageCounter = 0;
 // were opened from another domain then this will fail.
 (function () {
   try {
-    let op = window;
+    var op = window;
 
     while (
       op.opener != null &&
@@ -387,7 +390,7 @@ Editor.prototype.getEditBlankUrl = function (params) {
  *
  */
 Editor.prototype.editAsNew = function (xml, title) {
-  let p = title != null ? "?title=" + encodeURIComponent(title) : "";
+  var p = title != null ? "?title=" + encodeURIComponent(title) : "";
 
   if (urlParams["ui"] != null) {
     p += (p.length > 0 ? "&" : "?") + "ui=" + urlParams["ui"];
@@ -397,9 +400,9 @@ Editor.prototype.editAsNew = function (xml, title) {
     typeof window.postMessage !== "undefined" &&
     (document.documentMode == null || document.documentMode >= 10)
   ) {
-    let wnd = null;
+    var wnd = null;
 
-    const l = mxUtils.bind(this, function (evt) {
+    var l = mxUtils.bind(this, function (evt) {
       if (evt.data == "ready" && evt.source == wnd) {
         mxEvent.removeListener(window, "message", l);
         wnd.postMessage(xml, "*");
@@ -421,7 +424,7 @@ Editor.prototype.editAsNew = function (xml, title) {
  * Sets the XML node for the current diagram.
  */
 Editor.prototype.createGraph = function (themes, model) {
-  const graph = new Graph(null, model, null, null, themes);
+  var graph = new Graph(null, model, null, null, themes);
   graph.transparentBackground = false;
 
   // Opens all links in a new window while editing
@@ -475,7 +478,7 @@ Editor.prototype.readGraphState = function (node) {
     this.graph.cellRenderer.forceControlClickHandler = this.graph.foldingEnabled;
   }
 
-  const ps = parseFloat(node.getAttribute("pageScale"));
+  var ps = parseFloat(node.getAttribute("pageScale"));
 
   if (!isNaN(ps) && ps > 0) {
     this.graph.pageScale = ps;
@@ -484,7 +487,7 @@ Editor.prototype.readGraphState = function (node) {
   }
 
   if (!this.graph.isLightboxView() && !this.graph.isViewer()) {
-    const pv = node.getAttribute("page");
+    var pv = node.getAttribute("page");
 
     if (pv != null) {
       this.graph.pageVisible = pv != "0";
@@ -498,15 +501,15 @@ Editor.prototype.readGraphState = function (node) {
   this.graph.pageBreaksVisible = this.graph.pageVisible;
   this.graph.preferPageSize = this.graph.pageBreaksVisible;
 
-  const pw = parseFloat(node.getAttribute("pageWidth"));
-  const ph = parseFloat(node.getAttribute("pageHeight"));
+  var pw = parseFloat(node.getAttribute("pageWidth"));
+  var ph = parseFloat(node.getAttribute("pageHeight"));
 
   if (!isNaN(pw) && !isNaN(ph)) {
     this.graph.pageFormat = new mxRectangle(0, 0, pw, ph);
   }
 
   // Loads the persistent state settings
-  const bg = node.getAttribute("background");
+  var bg = node.getAttribute("background");
 
   if (bg != null && bg.length > 0) {
     this.graph.background = bg;
@@ -520,7 +523,7 @@ Editor.prototype.readGraphState = function (node) {
  */
 Editor.prototype.setGraphXml = function (node) {
   if (node != null) {
-    const dec = new mxCodec(node.ownerDocument);
+    var dec = new mxCodec(node.ownerDocument);
 
     if (node.nodeName == "mxGraphModel") {
       this.graph.model.beginUpdate();
@@ -540,7 +543,7 @@ Editor.prototype.setGraphXml = function (node) {
       this.resetGraph();
 
       // Workaround for invalid XML output in Firefox 20 due to bug in mxUtils.getXml
-      const wrapper = dec.document.createElement("mxGraphModel");
+      var wrapper = dec.document.createElement("mxGraphModel");
       wrapper.appendChild(node);
 
       dec.decode(wrapper, this.graph.getModel());
@@ -567,10 +570,10 @@ Editor.prototype.setGraphXml = function (node) {
  */
 Editor.prototype.getGraphXml = function (ignoreSelection) {
   ignoreSelection = ignoreSelection != null ? ignoreSelection : true;
-  let node = null;
+  var node = null;
 
   if (ignoreSelection) {
-    const enc = new mxCodec(mxUtils.createXmlDocument());
+    var enc = new mxCodec(mxUtils.createXmlDocument());
     node = enc.encode(this.graph.getModel());
   } else {
     node = this.graph.encodeCells(
@@ -606,7 +609,7 @@ Editor.prototype.getGraphXml = function (ignoreSelection) {
  * Keeps the graph container in sync with the persistent graph state
  */
 Editor.prototype.updateGraphComponents = function () {
-  const graph = this.graph;
+  var graph = this.graph;
 
   if (graph.container != null) {
     graph.view.validateBackground();
@@ -634,15 +637,15 @@ Editor.prototype.setFilename = function (value) {
  * Creates and returns a new undo manager.
  */
 Editor.prototype.createUndoManager = function () {
-  const graph = this.graph;
-  const undoMgr = new mxUndoManager();
+  var graph = this.graph;
+  var undoMgr = new mxUndoManager();
 
   this.undoListener = function (sender, evt) {
     undoMgr.undoableEditHappened(evt.getProperty("edit"));
   };
 
   // Installs the command history
-  const listener = mxUtils.bind(this, function () {
+  var listener = mxUtils.bind(this, function (sender, evt) {
     this.undoListener.apply(this, arguments);
   });
 
@@ -650,8 +653,8 @@ Editor.prototype.createUndoManager = function () {
   graph.getView().addListener(mxEvent.UNDO, listener);
 
   // Keeps the selection in sync with the history
-  const undoHandler = function (sender, evt) {
-    const cand = graph.getSelectionCellsForChanges(
+  var undoHandler = function (sender, evt) {
+    var cand = graph.getSelectionCellsForChanges(
       evt.getProperty("edit").changes,
       function (change) {
         // Only selects changes to the cell hierarchy
@@ -660,9 +663,10 @@ Editor.prototype.createUndoManager = function () {
     );
 
     if (cand.length > 0) {
-      const cells = [];
+      var model = graph.getModel();
+      var cells = [];
 
-      for (let i = 0; i < cand.length; i++) {
+      for (var i = 0; i < cand.length; i++) {
         if (graph.view.getState(cand[i]) != null) {
           cells.push(cand[i]);
         }
@@ -697,12 +701,12 @@ Editor.prototype.destroy = function () {
  * Class for asynchronously opening a new window and loading a file at the same
  * time. This acts as a bridge between the open dialog and the new editor.
  */
-function OpenFile(done) {
+const OpenFile = function (done) {
   this.producer = null;
   this.consumer = null;
   this.done = done;
   this.args = null;
-}
+};
 
 /**
  * Registers the editor from the new window.
@@ -763,7 +767,7 @@ function Dialog(
   onResize,
   ignoreBgClick
 ) {
-  let dx = 0;
+  var dx = 0;
 
   if (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) {
     // Adds padding as a workaround for box model in older IE versions
@@ -774,19 +778,19 @@ function Dialog(
   w += dx;
   h += dx;
 
-  let w0 = w;
-  let h0 = h;
+  var w0 = w;
+  var h0 = h;
 
-  const ds = mxUtils.getDocumentSize();
+  var ds = mxUtils.getDocumentSize();
 
   // Workaround for print dialog offset in viewer lightbox
   if (window.innerHeight != null) {
     ds.height = window.innerHeight;
   }
 
-  let dh = ds.height;
-  let left = Math.max(1, Math.round((ds.width - w - 64) / 2));
-  let top = Math.max(1, Math.round((dh - h - editorUi.footerHeight) / 3));
+  var dh = ds.height;
+  var left = Math.max(1, Math.round((ds.width - w - 64) / 2));
+  var top = Math.max(1, Math.round((dh - h - editorUi.footerHeight) / 3));
 
   // Keeps window size inside available space
   if (!mxClient.IS_QUIRKS) {
@@ -816,7 +820,7 @@ function Dialog(
     }
   }
 
-  const origin = mxUtils.getDocumentScrollOrigin(document);
+  var origin = mxUtils.getDocumentScrollOrigin(document);
   this.bg.style.left = origin.x + "px";
   this.bg.style.top = origin.y + "px";
   left += origin.x;
@@ -826,8 +830,8 @@ function Dialog(
     document.body.appendChild(this.bg);
   }
 
-  const div = editorUi.createDiv(transparent ? "geTransDialog" : "geDialog");
-  const pos = this.getPosition(left, top, w, h);
+  var div = editorUi.createDiv(transparent ? "geTransDialog" : "geDialog");
+  var pos = this.getPosition(left, top, w, h);
   left = pos.x;
   top = pos.y;
 
@@ -846,7 +850,7 @@ function Dialog(
   }
 
   if (closable) {
-    const img = document.createElement("img");
+    var img = document.createElement("img");
 
     img.setAttribute("src", Dialog.prototype.closeImage);
     img.setAttribute("title", mxResources.get("close"));
@@ -867,15 +871,15 @@ function Dialog(
     this.dialogImg = img;
 
     if (!ignoreBgClick) {
-      let mouseDownSeen = false;
+      var mouseDownSeen = false;
 
       mxEvent.addGestureListeners(
         this.bg,
-        mxUtils.bind(this, function () {
+        mxUtils.bind(this, function (evt) {
           mouseDownSeen = true;
         }),
         null,
-        mxUtils.bind(this, function () {
+        mxUtils.bind(this, function (evt) {
           if (mouseDownSeen) {
             editorUi.hideDialog(true);
             mouseDownSeen = false;
@@ -887,7 +891,7 @@ function Dialog(
 
   this.resizeListener = mxUtils.bind(this, function () {
     if (onResize != null) {
-      const newWH = onResize();
+      var newWH = onResize();
 
       if (newWH != null) {
         w0 = w = newWH.w;
@@ -895,7 +899,7 @@ function Dialog(
       }
     }
 
-    const ds = mxUtils.getDocumentSize();
+    var ds = mxUtils.getDocumentSize();
     dh = ds.height;
     this.bg.style.height = dh + "px";
 
@@ -904,7 +908,7 @@ function Dialog(
     w = document.body != null ? Math.min(w0, document.body.scrollWidth - 64) : w0;
     h = Math.min(h0, dh - 64);
 
-    const pos = this.getPosition(left, top, w, h);
+    var pos = this.getPosition(left, top, w, h);
     left = pos.x;
     top = pos.y;
 
@@ -1017,7 +1021,7 @@ Dialog.prototype.close = function (cancel, isEsc) {
 /**
  *
  */
-function ErrorDialog(
+var ErrorDialog = function (
   editorUi,
   title,
   message,
@@ -1032,11 +1036,11 @@ function ErrorDialog(
 ) {
   hide = hide != null ? hide : true;
 
-  const div = document.createElement("div");
+  var div = document.createElement("div");
   div.style.textAlign = "center";
 
   if (title != null) {
-    const hd = document.createElement("div");
+    var hd = document.createElement("div");
     hd.style.padding = "0px";
     hd.style.margin = "0px";
     hd.style.fontSize = "18px";
@@ -1052,18 +1056,18 @@ function ErrorDialog(
     div.appendChild(hd);
   }
 
-  const p2 = document.createElement("div");
+  var p2 = document.createElement("div");
   p2.style.lineHeight = "1.2em";
   p2.style.padding = "6px";
   p2.innerHTML = message;
   div.appendChild(p2);
 
-  const btns = document.createElement("div");
+  var btns = document.createElement("div");
   btns.style.marginTop = "12px";
   btns.style.textAlign = "center";
 
   if (retry != null) {
-    const retryBtn = mxUtils.button(mxResources.get("tryAgain"), function () {
+    var retryBtn = mxUtils.button(mxResources.get("tryAgain"), function () {
       editorUi.hideDialog();
       retry();
     });
@@ -1074,7 +1078,7 @@ function ErrorDialog(
   }
 
   if (buttonText3 != null) {
-    const btn3 = mxUtils.button(buttonText3, function () {
+    var btn3 = mxUtils.button(buttonText3, function () {
       if (fn3 != null) {
         fn3();
       }
@@ -1084,7 +1088,7 @@ function ErrorDialog(
     btns.appendChild(btn3);
   }
 
-  const btn = mxUtils.button(buttonText, function () {
+  var btn = mxUtils.button(buttonText, function () {
     if (hide) {
       editorUi.hideDialog();
     }
@@ -1098,7 +1102,7 @@ function ErrorDialog(
   btns.appendChild(btn);
 
   if (buttonText2 != null) {
-    const mainBtn = mxUtils.button(buttonText2, function () {
+    var mainBtn = mxUtils.button(buttonText2, function () {
       if (hide) {
         editorUi.hideDialog();
       }
@@ -1119,37 +1123,37 @@ function ErrorDialog(
   div.appendChild(btns);
 
   this.container = div;
-}
+};
 
 /**
  * Constructs a new print dialog.
  */
-function PrintDialog(editorUi, title) {
+var PrintDialog = function (editorUi, title) {
   this.create(editorUi, title);
-}
+};
 
 /**
  * Constructs a new print dialog.
  */
 PrintDialog.prototype.create = function (editorUi) {
-  const graph = editorUi.editor.graph;
-  let row, td;
+  var graph = editorUi.editor.graph;
+  var row, td;
 
-  const table = document.createElement("table");
+  var table = document.createElement("table");
   table.style.width = "100%";
   table.style.height = "100%";
-  const tbody = document.createElement("tbody");
+  var tbody = document.createElement("tbody");
 
   row = document.createElement("tr");
 
-  const onePageCheckBox = document.createElement("input");
+  var onePageCheckBox = document.createElement("input");
   onePageCheckBox.setAttribute("type", "checkbox");
   td = document.createElement("td");
   td.setAttribute("colspan", "2");
   td.style.fontSize = "10pt";
   td.appendChild(onePageCheckBox);
 
-  let span = document.createElement("span");
+  var span = document.createElement("span");
   mxUtils.write(span, " " + mxResources.get("fitPage"));
   td.appendChild(span);
 
@@ -1168,13 +1172,13 @@ PrintDialog.prototype.create = function (editorUi) {
 
   row = row.cloneNode(false);
 
-  const pageCountCheckBox = document.createElement("input");
+  var pageCountCheckBox = document.createElement("input");
   pageCountCheckBox.setAttribute("type", "checkbox");
   td = document.createElement("td");
   td.style.fontSize = "10pt";
   td.appendChild(pageCountCheckBox);
 
-  span = document.createElement("span");
+  var span = document.createElement("span");
   mxUtils.write(span, " " + mxResources.get("posterPrint") + ":");
   td.appendChild(span);
 
@@ -1186,7 +1190,7 @@ PrintDialog.prototype.create = function (editorUi) {
 
   row.appendChild(td);
 
-  const pageCountInput = document.createElement("input");
+  var pageCountInput = document.createElement("input");
   pageCountInput.setAttribute("value", "1");
   pageCountInput.setAttribute("type", "number");
   pageCountInput.setAttribute("min", "1");
@@ -1218,7 +1222,7 @@ PrintDialog.prototype.create = function (editorUi) {
   row.appendChild(td);
 
   td = document.createElement("td");
-  const pageScaleInput = document.createElement("input");
+  var pageScaleInput = document.createElement("input");
   pageScaleInput.setAttribute("value", "100 %");
   pageScaleInput.setAttribute("size", "5");
   pageScaleInput.style.width = "50px";
@@ -1235,8 +1239,8 @@ PrintDialog.prototype.create = function (editorUi) {
 
   // Overall scale for print-out to account for print borders in dialogs etc
   function preview(print) {
-    let autoOrigin = onePageCheckBox.checked || pageCountCheckBox.checked;
-    let printScale = parseInt(pageScaleInput.value) / 100;
+    var autoOrigin = onePageCheckBox.checked || pageCountCheckBox.checked;
+    var printScale = parseInt(pageScaleInput.value) / 100;
 
     if (isNaN(printScale)) {
       printScale = 1;
@@ -1246,11 +1250,11 @@ PrintDialog.prototype.create = function (editorUi) {
     // Workaround to match available paper size in actual print output
     printScale *= 0.75;
 
-    let pf = graph.pageFormat || mxConstants.PAGE_FORMAT_A4_PORTRAIT;
-    let scale = 1 / graph.pageScale;
+    var pf = graph.pageFormat || mxConstants.PAGE_FORMAT_A4_PORTRAIT;
+    var scale = 1 / graph.pageScale;
 
     if (autoOrigin) {
-      const pageCount = onePageCheckBox.checked ? 1 : parseInt(pageCountInput.value);
+      var pageCount = onePageCheckBox.checked ? 1 : parseInt(pageCountInput.value);
 
       if (!isNaN(pageCount)) {
         scale = mxUtils.getScaleForPageCount(pageCount, graph, pf);
@@ -1258,9 +1262,10 @@ PrintDialog.prototype.create = function (editorUi) {
     }
 
     // Negative coordinates are cropped or shifted if page visible
-    const border = 0;
-    let x0 = 0;
-    let y0 = 0;
+    var gb = graph.getGraphBounds();
+    var border = 0;
+    var x0 = 0;
+    var y0 = 0;
 
     // Applies print scale
     pf = mxRectangle.fromRectangle(pf);
@@ -1270,14 +1275,14 @@ PrintDialog.prototype.create = function (editorUi) {
 
     // Starts at first visible page
     if (!autoOrigin && graph.pageVisible) {
-      const layout = graph.getPageLayout();
+      var layout = graph.getPageLayout();
       x0 -= layout.x * pf.width;
       y0 -= layout.y * pf.height;
     } else {
       autoOrigin = true;
     }
 
-    const preview = PrintDialog.createPrintPreview(graph, scale, pf, border, x0, y0, autoOrigin);
+    var preview = PrintDialog.createPrintPreview(graph, scale, pf, border, x0, y0, autoOrigin);
     preview.open();
 
     if (print) {
@@ -1285,7 +1290,7 @@ PrintDialog.prototype.create = function (editorUi) {
     }
   }
 
-  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
   });
   cancelBtn.className = "geBtn";
@@ -1295,7 +1300,7 @@ PrintDialog.prototype.create = function (editorUi) {
   }
 
   if (PrintDialog.previewEnabled) {
-    const previewBtn = mxUtils.button(mxResources.get("preview"), function () {
+    var previewBtn = mxUtils.button(mxResources.get("preview"), function () {
       editorUi.hideDialog();
       preview(false);
     });
@@ -1303,7 +1308,7 @@ PrintDialog.prototype.create = function (editorUi) {
     td.appendChild(previewBtn);
   }
 
-  const printBtn = mxUtils.button(
+  var printBtn = mxUtils.button(
     mxResources.get(!PrintDialog.previewEnabled ? "ok" : "print"),
     function () {
       editorUi.hideDialog();
@@ -1330,7 +1335,7 @@ PrintDialog.prototype.create = function (editorUi) {
 PrintDialog.printPreview = function (preview) {
   try {
     if (preview.wnd != null) {
-      const printFn = function () {
+      var printFn = function () {
         preview.wnd.focus();
         preview.wnd.print();
         preview.wnd.close();
@@ -1354,11 +1359,11 @@ PrintDialog.printPreview = function (preview) {
  * Constructs a new print dialog.
  */
 PrintDialog.createPrintPreview = function (graph, scale, pf, border, x0, y0, autoOrigin) {
-  const preview = new mxPrintPreview(graph, scale, pf, border, x0, y0);
+  var preview = new mxPrintPreview(graph, scale, pf, border, x0, y0);
   preview.title = mxResources.get("preview");
   preview.printBackgroundImage = true;
   preview.autoOrigin = autoOrigin;
-  let bg = graph.background;
+  var bg = graph.background;
 
   if (bg == null || bg == "" || bg == mxConstants.NONE) {
     bg = "#ffffff";
@@ -1366,7 +1371,7 @@ PrintDialog.createPrintPreview = function (graph, scale, pf, border, x0, y0, aut
 
   preview.backgroundColor = bg;
 
-  const writeHead = preview.writeHead;
+  var writeHead = preview.writeHead;
 
   // Adds a border in the preview
   preview.writeHead = function (doc) {
@@ -1390,14 +1395,14 @@ PrintDialog.previewEnabled = true;
 /**
  * Constructs a new page setup dialog.
  */
-function PageSetupDialog(editorUi) {
-  const graph = editorUi.editor.graph;
-  let row, td;
+var PageSetupDialog = function (editorUi) {
+  var graph = editorUi.editor.graph;
+  var row, td;
 
-  const table = document.createElement("table");
+  var table = document.createElement("table");
   table.style.width = "100%";
   table.style.height = "100%";
-  const tbody = document.createElement("tbody");
+  var tbody = document.createElement("tbody");
 
   row = document.createElement("tr");
 
@@ -1412,7 +1417,7 @@ function PageSetupDialog(editorUi) {
   td.style.verticalAlign = "top";
   td.style.fontSize = "10pt";
 
-  const accessor = PageSetupDialog.addPageFormatPanel(td, "pagesetupdialog", graph.pageFormat);
+  var accessor = PageSetupDialog.addPageFormatPanel(td, "pagesetupdialog", graph.pageFormat);
 
   row.appendChild(td);
   tbody.appendChild(row);
@@ -1427,9 +1432,9 @@ function PageSetupDialog(editorUi) {
   td = document.createElement("td");
   td.style.whiteSpace = "nowrap";
 
-  const backgroundInput = document.createElement("input");
+  var backgroundInput = document.createElement("input");
   backgroundInput.setAttribute("type", "text");
-  const backgroundButton = document.createElement("button");
+  var backgroundButton = document.createElement("button");
 
   backgroundButton.style.width = "18px";
   backgroundButton.style.height = "18px";
@@ -1437,7 +1442,7 @@ function PageSetupDialog(editorUi) {
   backgroundButton.style.backgroundPosition = "center center";
   backgroundButton.style.backgroundRepeat = "no-repeat";
 
-  let newBackgroundColor = graph.background;
+  var newBackgroundColor = graph.background;
 
   function updateBackgroundColor() {
     if (newBackgroundColor == null || newBackgroundColor == mxConstants.NONE) {
@@ -1463,7 +1468,7 @@ function PageSetupDialog(editorUi) {
 
   mxUtils.write(td, mxResources.get("gridSize") + ":");
 
-  const gridSizeInput = document.createElement("input");
+  var gridSizeInput = document.createElement("input");
   gridSizeInput.setAttribute("type", "number");
   gridSizeInput.setAttribute("min", "0");
   gridSizeInput.style.width = "40px";
@@ -1473,7 +1478,7 @@ function PageSetupDialog(editorUi) {
   td.appendChild(gridSizeInput);
 
   mxEvent.addListener(gridSizeInput, "change", function () {
-    const value = parseInt(gridSizeInput.value);
+    var value = parseInt(gridSizeInput.value);
     gridSizeInput.value = Math.max(1, isNaN(value) ? graph.getGridSize() : value);
   });
 
@@ -1488,12 +1493,12 @@ function PageSetupDialog(editorUi) {
   row.appendChild(td);
   td = document.createElement("td");
 
-  const changeImageLink = document.createElement("a");
+  var changeImageLink = document.createElement("a");
   changeImageLink.style.textDecoration = "underline";
   changeImageLink.style.cursor = "pointer";
   changeImageLink.style.color = "#a0a0a0";
 
-  let newBackgroundImage = graph.backgroundImage;
+  var newBackgroundImage = graph.backgroundImage;
 
   function updateBackgroundImage() {
     if (newBackgroundImage == null) {
@@ -1529,7 +1534,7 @@ function PageSetupDialog(editorUi) {
   td.style.paddingTop = "16px";
   td.setAttribute("align", "right");
 
-  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
   });
   cancelBtn.className = "geBtn";
@@ -1538,14 +1543,14 @@ function PageSetupDialog(editorUi) {
     td.appendChild(cancelBtn);
   }
 
-  const applyBtn = mxUtils.button(mxResources.get("apply"), function () {
+  var applyBtn = mxUtils.button(mxResources.get("apply"), function () {
     editorUi.hideDialog();
 
     if (graph.gridSize !== gridSizeInput.value) {
       graph.setGridSize(parseInt(gridSizeInput.value));
     }
 
-    const change = new ChangePageSetup(
+    var change = new ChangePageSetup(
       editorUi,
       newBackgroundColor,
       newBackgroundImage,
@@ -1553,8 +1558,8 @@ function PageSetupDialog(editorUi) {
     );
     change.ignoreColor = graph.background == newBackgroundColor;
 
-    const oldSrc = graph.backgroundImage != null ? graph.backgroundImage.src : null;
-    const newSrc = newBackgroundImage != null ? newBackgroundImage.src : null;
+    var oldSrc = graph.backgroundImage != null ? graph.backgroundImage.src : null;
+    var newSrc = newBackgroundImage != null ? newBackgroundImage.src : null;
 
     change.ignoreImage = oldSrc === newSrc;
 
@@ -1579,29 +1584,29 @@ function PageSetupDialog(editorUi) {
 
   table.appendChild(tbody);
   this.container = table;
-}
+};
 
 /**
  *
  */
 PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pageFormatListener) {
-  const formatName = "format-" + namePostfix;
+  var formatName = "format-" + namePostfix;
 
-  const portraitCheckBox = document.createElement("input");
+  var portraitCheckBox = document.createElement("input");
   portraitCheckBox.setAttribute("name", formatName);
   portraitCheckBox.setAttribute("type", "radio");
   portraitCheckBox.setAttribute("value", "portrait");
 
-  const landscapeCheckBox = document.createElement("input");
+  var landscapeCheckBox = document.createElement("input");
   landscapeCheckBox.setAttribute("name", formatName);
   landscapeCheckBox.setAttribute("type", "radio");
   landscapeCheckBox.setAttribute("value", "landscape");
 
-  const paperSizeSelect = document.createElement("select");
+  var paperSizeSelect = document.createElement("select");
   paperSizeSelect.style.marginBottom = "8px";
   paperSizeSelect.style.width = "202px";
 
-  const formatDiv = document.createElement("div");
+  var formatDiv = document.createElement("div");
   formatDiv.style.marginLeft = "4px";
   formatDiv.style.width = "210px";
   formatDiv.style.height = "24px";
@@ -1609,7 +1614,7 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
   portraitCheckBox.style.marginRight = "6px";
   formatDiv.appendChild(portraitCheckBox);
 
-  const portraitSpan = document.createElement("span");
+  var portraitSpan = document.createElement("span");
   portraitSpan.style.maxWidth = "100px";
   mxUtils.write(portraitSpan, mxResources.get("portrait"));
   formatDiv.appendChild(portraitSpan);
@@ -1618,23 +1623,23 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
   landscapeCheckBox.style.marginRight = "6px";
   formatDiv.appendChild(landscapeCheckBox);
 
-  const landscapeSpan = document.createElement("span");
+  var landscapeSpan = document.createElement("span");
   landscapeSpan.style.width = "100px";
   mxUtils.write(landscapeSpan, mxResources.get("landscape"));
   formatDiv.appendChild(landscapeSpan);
 
-  const customDiv = document.createElement("div");
+  var customDiv = document.createElement("div");
   customDiv.style.marginLeft = "4px";
   customDiv.style.width = "210px";
   customDiv.style.height = "24px";
 
-  const widthInput = document.createElement("input");
+  var widthInput = document.createElement("input");
   widthInput.setAttribute("size", "7");
   widthInput.style.textAlign = "right";
   customDiv.appendChild(widthInput);
   mxUtils.write(customDiv, " in x ");
 
-  const heightInput = document.createElement("input");
+  var heightInput = document.createElement("input");
   heightInput.setAttribute("size", "7");
   heightInput.style.textAlign = "right";
   customDiv.appendChild(heightInput);
@@ -1643,27 +1648,27 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
   formatDiv.style.display = "none";
   customDiv.style.display = "none";
 
-  const pf = new Object();
-  const formats = PageSetupDialog.getFormats();
+  var pf = new Object();
+  var formats = PageSetupDialog.getFormats();
 
-  for (let i = 0; i < formats.length; i++) {
-    const f = formats[i];
+  for (var i = 0; i < formats.length; i++) {
+    var f = formats[i];
     pf[f.key] = f;
 
-    const paperSizeOption = document.createElement("option");
+    var paperSizeOption = document.createElement("option");
     paperSizeOption.setAttribute("value", f.key);
     mxUtils.write(paperSizeOption, f.title);
     paperSizeSelect.appendChild(paperSizeOption);
   }
 
-  let customSize = false;
+  var customSize = false;
 
   function listener(sender, evt, force) {
     if (force || (widthInput != document.activeElement && heightInput != document.activeElement)) {
-      let detected = false;
+      var detected = false;
 
-      for (let i = 0; i < formats.length; i++) {
-        const f = formats[i];
+      for (var i = 0; i < formats.length; i++) {
+        var f = formats[i];
 
         // Special case where custom was chosen
         if (customSize) {
@@ -1736,10 +1741,10 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
   div.appendChild(formatDiv);
   div.appendChild(customDiv);
 
-  let currentPageFormat = pageFormat;
+  var currentPageFormat = pageFormat;
 
-  const update = function (evt, selectChanged) {
-    const f = pf[paperSizeSelect.value];
+  var update = function (evt, selectChanged) {
+    var f = pf[paperSizeSelect.value];
 
     if (f.format != null) {
       widthInput.value = f.format.width / 100;
@@ -1751,19 +1756,19 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
       customDiv.style.display = "";
     }
 
-    const wi = parseFloat(widthInput.value);
+    var wi = parseFloat(widthInput.value);
 
     if (isNaN(wi) || wi <= 0) {
       widthInput.value = pageFormat.width / 100;
     }
 
-    const hi = parseFloat(heightInput.value);
+    var hi = parseFloat(heightInput.value);
 
     if (isNaN(hi) || hi <= 0) {
       heightInput.value = pageFormat.height / 100;
     }
 
-    let newPageFormat = new mxRectangle(
+    var newPageFormat = new mxRectangle(
       0,
       0,
       Math.floor(parseFloat(widthInput.value) * 100),
@@ -1865,7 +1870,7 @@ PageSetupDialog.getFormats = function () {
 /**
  * Constructs a new filename dialog.
  */
-function FilenameDialog(
+var FilenameDialog = function (
   editorUi,
   filename,
   buttonText,
@@ -1880,10 +1885,10 @@ function FilenameDialog(
   w
 ) {
   closeOnBtn = closeOnBtn != null ? closeOnBtn : true;
-  let row, td;
+  var row, td;
 
-  const table = document.createElement("table");
-  const tbody = document.createElement("tbody");
+  var table = document.createElement("table");
+  var tbody = document.createElement("tbody");
   table.style.marginTop = "8px";
 
   row = document.createElement("tr");
@@ -1896,12 +1901,12 @@ function FilenameDialog(
 
   row.appendChild(td);
 
-  const nameInput = document.createElement("input");
+  var nameInput = document.createElement("input");
   nameInput.setAttribute("value", filename || "");
   nameInput.style.marginLeft = "4px";
   nameInput.style.width = w != null ? w + "px" : "180px";
 
-  const genericBtn = mxUtils.button(buttonText, function () {
+  var genericBtn = mxUtils.button(buttonText, function () {
     if (validateFn == null || validateFn(nameInput.value)) {
       if (closeOnBtn) {
         editorUi.hideDialog();
@@ -1928,10 +1933,11 @@ function FilenameDialog(
     // Installs drag and drop handler for links
     if (Graph.fileSupport) {
       // Setup the dnd listeners
-      const dlg = table.parentNode;
+      var dlg = table.parentNode;
 
       if (dlg != null) {
-        let dropElt = null;
+        var graph = editorUi.editor.graph;
+        var dropElt = null;
 
         mxEvent.addListener(dlg, "dragleave", function (evt) {
           if (dropElt != null) {
@@ -2009,7 +2015,7 @@ function FilenameDialog(
   td.style.whiteSpace = "nowrap";
   td.setAttribute("align", "right");
 
-  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
 
     if (cancelFn != null) {
@@ -2023,7 +2029,7 @@ function FilenameDialog(
   }
 
   if (helpLink != null) {
-    const helpBtn = mxUtils.button(mxResources.get("help"), function () {
+    var helpBtn = mxUtils.button(mxResources.get("help"), function () {
       editorUi.editor.graph.openLink(helpLink);
     });
 
@@ -2048,7 +2054,7 @@ function FilenameDialog(
   table.appendChild(tbody);
 
   this.container = table;
-}
+};
 
 /**
  *
@@ -2059,16 +2065,16 @@ FilenameDialog.filenameHelpLink = null;
  *
  */
 FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
-  const hint = document.createElement("img");
+  var hint = document.createElement("img");
   hint.style.cssText =
     "vertical-align:top;height:16px;width:16px;margin-left:4px;background-repeat:no-repeat;background-position:center bottom;cursor:pointer;";
   mxUtils.setOpacity(hint, 70);
 
-  const nameChanged = function () {
+  var nameChanged = function () {
     hint.setAttribute("src", Editor.helpImage);
     hint.setAttribute("title", mxResources.get("help"));
 
-    for (let i = 0; i < hints.length; i++) {
+    for (var i = 0; i < hints.length; i++) {
       if (
         hints[i].ext.length > 0 &&
         nameInput.value.substring(nameInput.value.length - hints[i].ext.length - 1) ==
@@ -2084,7 +2090,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   mxEvent.addListener(nameInput, "keyup", nameChanged);
   mxEvent.addListener(nameInput, "change", nameChanged);
   mxEvent.addListener(hint, "click", function (evt) {
-    const title = hint.getAttribute("title");
+    var title = hint.getAttribute("title");
 
     if (hint.getAttribute("src") == Editor.helpImage) {
       ui.editor.graph.openLink(FilenameDialog.filenameHelpLink);
@@ -2120,15 +2126,15 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 (function () {
   // Uses HTML for background pages (to support grid background image)
   mxGraphView.prototype.validateBackgroundPage = function () {
-    const graph = this.graph;
+    var graph = this.graph;
 
     if (graph.container != null && !graph.transparentBackground) {
       if (graph.pageVisible) {
-        const bounds = this.getBackgroundPageBounds();
+        var bounds = this.getBackgroundPageBounds();
 
         if (this.backgroundPageShape == null) {
           // Finds first element in graph container
-          let firstChild = graph.container.firstChild;
+          var firstChild = graph.container.firstChild;
 
           while (firstChild != null && firstChild.nodeType != mxConstants.NODETYPE_ELEMENT) {
             firstChild = firstChild.nextSibling;
@@ -2198,18 +2204,18 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
   // Updates the CSS of the background to draw the grid
   mxGraphView.prototype.validateBackgroundStyles = function () {
-    const graph = this.graph;
-    const color =
+    var graph = this.graph;
+    var color =
       graph.background == null || graph.background == mxConstants.NONE
         ? graph.defaultPageBackgroundColor
         : graph.background;
-    const gridColor =
+    var gridColor =
       color != null && this.gridColor != color.toLowerCase() ? this.gridColor : "#ffffff";
-    let image = "none";
-    let position = "";
+    var image = "none";
+    var position = "";
 
     if (graph.isGridEnabled()) {
-      let phase = 10;
+      var phase = 10;
 
       if (mxClient.IS_SVG) {
         // Generates the SVG required for drawing the dynamic grid
@@ -2222,11 +2228,11 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
         image = "url(" + this.gridImage + ")";
       }
 
-      let x0 = 0;
-      let y0 = 0;
+      var x0 = 0;
+      var y0 = 0;
 
       if (graph.view.backgroundPageShape != null) {
-        const bds = this.getBackgroundPageBounds();
+        var bds = this.getBackgroundPageBounds();
 
         x0 = 1 + bds.x;
         y0 = 1 + bds.y;
@@ -2240,7 +2246,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
         "px";
     }
 
-    let canvas = graph.view.canvas;
+    var canvas = graph.view.canvas;
 
     if (canvas.ownerSVGElement != null) {
       canvas = canvas.ownerSVGElement;
@@ -2263,19 +2269,19 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
   // Returns the SVG required for painting the background grid.
   mxGraphView.prototype.createSvgGrid = function (color) {
-    let tmp = this.graph.gridSize * this.scale;
+    var tmp = this.graph.gridSize * this.scale;
 
     while (tmp < this.minGridSize) {
       tmp *= 2;
     }
 
-    const tmp2 = this.gridSteps * tmp;
+    var tmp2 = this.gridSteps * tmp;
 
     // Small grid lines
-    const d = [];
+    var d = [];
 
-    for (let i = 1; i < this.gridSteps; i++) {
-      const tmp3 = i * tmp;
+    for (var i = 1; i < this.gridSteps; i++) {
+      var tmp3 = i * tmp;
       d.push(
         "M 0 " + tmp3 + " L " + tmp2 + " " + tmp3 + " M " + tmp3 + " 0 L " + tmp3 + " " + tmp2
       );
@@ -2283,8 +2289,8 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
     // KNOWN: Rounding errors for certain scales (eg. 144%, 121% in Chrome, FF and Safari). Workaround
     // in Chrome is to use 100% for the svg size, but this results in blurred grid for large diagrams.
-    const size = tmp2;
-    const svg =
+    var size = tmp2;
+    var svg =
       '<svg width="' +
       size +
       '" height="' +
@@ -2315,19 +2321,19 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Adds panning for the grid with no page view and disabled scrollbars
-  const mxGraphPanGraph = mxGraph.prototype.panGraph;
+  var mxGraphPanGraph = mxGraph.prototype.panGraph;
   mxGraph.prototype.panGraph = function (dx, dy) {
     mxGraphPanGraph.apply(this, arguments);
 
     if (this.shiftPreview1 != null) {
-      let canvas = this.view.canvas;
+      var canvas = this.view.canvas;
 
       if (canvas.ownerSVGElement != null) {
         canvas = canvas.ownerSVGElement;
       }
 
-      const phase = this.gridSize * this.view.scale * this.view.gridSteps;
-      const position =
+      var phase = this.gridSize * this.view.scale * this.view.gridSteps;
+      var position =
         -Math.round(phase - mxUtils.mod(this.view.translate.x * this.view.scale + dx, phase)) +
         "px " +
         -Math.round(phase - mxUtils.mod(this.view.translate.y * this.view.scale + dy, phase)) +
@@ -2338,24 +2344,24 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
   // Draws page breaks only within the page
   mxGraph.prototype.updatePageBreaks = function (visible, width, height) {
-    const scale = this.view.scale;
-    const tr = this.view.translate;
-    const fmt = this.pageFormat;
-    const ps = scale * this.pageScale;
+    var scale = this.view.scale;
+    var tr = this.view.translate;
+    var fmt = this.pageFormat;
+    var ps = scale * this.pageScale;
 
-    const bounds2 = this.view.getBackgroundPageBounds();
+    var bounds2 = this.view.getBackgroundPageBounds();
 
     width = bounds2.width;
     height = bounds2.height;
-    const bounds = new mxRectangle(scale * tr.x, scale * tr.y, fmt.width * ps, fmt.height * ps);
+    var bounds = new mxRectangle(scale * tr.x, scale * tr.y, fmt.width * ps, fmt.height * ps);
 
     // Does not show page breaks if the scale is too small
     visible = visible && Math.min(bounds.width, bounds.height) > this.minPageBreakDist;
 
-    const horizontalCount = visible ? Math.ceil(height / bounds.height) - 1 : 0;
-    const verticalCount = visible ? Math.ceil(width / bounds.width) - 1 : 0;
-    const right = bounds2.x + width;
-    const bottom = bounds2.y + height;
+    var horizontalCount = visible ? Math.ceil(height / bounds.height) - 1 : 0;
+    var verticalCount = visible ? Math.ceil(width / bounds.width) - 1 : 0;
+    var right = bounds2.x + width;
+    var bottom = bounds2.y + height;
 
     if (this.horizontalPageBreaks == null && horizontalCount > 0) {
       this.horizontalPageBreaks = [];
@@ -2365,12 +2371,12 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
       this.verticalPageBreaks = [];
     }
 
-    const drawPageBreaks = mxUtils.bind(this, function (breaks) {
+    var drawPageBreaks = mxUtils.bind(this, function (breaks) {
       if (breaks != null) {
-        const count = breaks == this.horizontalPageBreaks ? horizontalCount : verticalCount;
+        var count = breaks == this.horizontalPageBreaks ? horizontalCount : verticalCount;
 
-        for (let i = 0; i <= count; i++) {
-          const pts =
+        for (var i = 0; i <= count; i++) {
+          var pts =
             breaks == this.horizontalPageBreaks
               ? [
                   new mxPoint(
@@ -2391,7 +2397,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
             breaks[i].points = pts;
             breaks[i].redraw();
           } else {
-            const pageBreak = new mxPolyline(pts, this.pageBreakColor);
+            var pageBreak = new mxPolyline(pts, this.pageBreakColor);
             pageBreak.dialect = this.dialect;
             pageBreak.isDashed = this.pageBreakDashed;
             pageBreak.pointerEvents = false;
@@ -2402,7 +2408,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
           }
         }
 
-        for (let i = count; i < breaks.length; i++) {
+        for (var i = count; i < breaks.length; i++) {
           breaks[i].destroy();
         }
 
@@ -2415,12 +2421,12 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Disables removing relative children from parents
-  const mxGraphHandlerShouldRemoveCellsFromParent =
+  var mxGraphHandlerShouldRemoveCellsFromParent =
     mxGraphHandler.prototype.shouldRemoveCellsFromParent;
-  mxGraphHandler.prototype.shouldRemoveCellsFromParent = function (parent, cells) {
-    for (let i = 0; i < cells.length; i++) {
+  mxGraphHandler.prototype.shouldRemoveCellsFromParent = function (parent, cells, evt) {
+    for (var i = 0; i < cells.length; i++) {
       if (this.graph.getModel().isVertex(cells[i])) {
-        const geo = this.graph.getCellGeometry(cells[i]);
+        var geo = this.graph.getCellGeometry(cells[i]);
 
         if (geo != null && geo.relative) {
           return false;
@@ -2432,11 +2438,11 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Overrides to ignore hotspot only for target terminal
-  const mxConnectionHandlerCreateMarker = mxConnectionHandler.prototype.createMarker;
+  var mxConnectionHandlerCreateMarker = mxConnectionHandler.prototype.createMarker;
   mxConnectionHandler.prototype.createMarker = function () {
-    const marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
+    var marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 
-    marker.intersects = mxUtils.bind(this, function () {
+    marker.intersects = mxUtils.bind(this, function (state, evt) {
       if (this.isConnecting()) {
         return true;
       }
@@ -2454,29 +2460,29 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
   // Fits the number of background pages to the graph
   mxGraphView.prototype.getBackgroundPageBounds = function () {
-    const gb = this.getGraphBounds();
+    var gb = this.getGraphBounds();
 
     // Computes unscaled, untranslated graph bounds
-    const x = gb.width > 0 ? gb.x / this.scale - this.translate.x : 0;
-    const y = gb.height > 0 ? gb.y / this.scale - this.translate.y : 0;
-    const w = gb.width / this.scale;
-    const h = gb.height / this.scale;
+    var x = gb.width > 0 ? gb.x / this.scale - this.translate.x : 0;
+    var y = gb.height > 0 ? gb.y / this.scale - this.translate.y : 0;
+    var w = gb.width / this.scale;
+    var h = gb.height / this.scale;
 
-    const fmt = this.graph.pageFormat;
-    const ps = this.graph.pageScale;
+    var fmt = this.graph.pageFormat;
+    var ps = this.graph.pageScale;
 
-    const pw = fmt.width * ps;
-    const ph = fmt.height * ps;
+    var pw = fmt.width * ps;
+    var ph = fmt.height * ps;
 
-    const x0 = Math.floor(Math.min(0, x) / pw);
-    const y0 = Math.floor(Math.min(0, y) / ph);
-    const xe = Math.ceil(Math.max(1, x + w) / pw);
-    const ye = Math.ceil(Math.max(1, y + h) / ph);
+    var x0 = Math.floor(Math.min(0, x) / pw);
+    var y0 = Math.floor(Math.min(0, y) / ph);
+    var xe = Math.ceil(Math.max(1, x + w) / pw);
+    var ye = Math.ceil(Math.max(1, y + h) / ph);
 
-    const rows = xe - x0;
-    const cols = ye - y0;
+    var rows = xe - x0;
+    var cols = ye - y0;
 
-    const bounds = new mxRectangle(
+    var bounds = new mxRectangle(
       this.scale * (this.translate.x + x0 * pw),
       this.scale * (this.translate.y + y0 * ph),
       this.scale * rows * pw,
@@ -2487,7 +2493,7 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Add panning for background page in VML
-  const graphPanGraph = mxGraph.prototype.panGraph;
+  var graphPanGraph = mxGraph.prototype.panGraph;
   mxGraph.prototype.panGraph = function (dx, dy) {
     graphPanGraph.apply(this, arguments);
 
@@ -2504,9 +2510,9 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   /**
    * Consumes click events for disabled menu items.
    */
-  const mxPopupMenuAddItem = mxPopupMenu.prototype.addItem;
+  var mxPopupMenuAddItem = mxPopupMenu.prototype.addItem;
   mxPopupMenu.prototype.addItem = function (title, image, funct, parent, iconCls, enabled) {
-    const result = mxPopupMenuAddItem.apply(this, arguments);
+    var result = mxPopupMenuAddItem.apply(this, arguments);
 
     if (enabled != null && !enabled) {
       mxEvent.addListener(result, "mousedown", function (evt) {
@@ -2518,12 +2524,12 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Selects ancestors before descendants
-  const graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
-  mxGraphHandler.prototype.getInitialCellForEvent = function () {
-    const model = this.graph.getModel();
-    const psel = model.getParent(this.graph.getSelectionCell());
-    let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
-    let parent = model.getParent(cell);
+  var graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
+  mxGraphHandler.prototype.getInitialCellForEvent = function (me) {
+    var model = this.graph.getModel();
+    var psel = model.getParent(this.graph.getSelectionCell());
+    var cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
+    var parent = model.getParent(cell);
 
     if (psel == null || (psel != cell && psel != parent)) {
       while (
@@ -2541,13 +2547,13 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   };
 
   // Selection is delayed to mouseup if ancestor is selected
-  const graphHandlerIsDelayedSelection = mxGraphHandler.prototype.isDelayedSelection;
-  mxGraphHandler.prototype.isDelayedSelection = function (cell) {
-    let result = graphHandlerIsDelayedSelection.apply(this, arguments);
+  var graphHandlerIsDelayedSelection = mxGraphHandler.prototype.isDelayedSelection;
+  mxGraphHandler.prototype.isDelayedSelection = function (cell, me) {
+    var result = graphHandlerIsDelayedSelection.apply(this, arguments);
 
     if (!result) {
-      const model = this.graph.getModel();
-      let parent = model.getParent(cell);
+      var model = this.graph.getModel();
+      var parent = model.getParent(cell);
 
       while (parent != null) {
         // Inconsistency for unselected parent swimlane is intended for easier moving
@@ -2567,20 +2573,20 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
   // Delayed selection of parent group
   mxGraphHandler.prototype.selectDelayed = function (me) {
     if (!this.graph.popupMenuHandler.isPopupTrigger(me)) {
-      let cell = me.getCell();
+      var cell = me.getCell();
 
       if (cell == null) {
         cell = this.cell;
       }
 
       // Selects folded cell for hit on folding icon
-      const state = this.graph.view.getState(cell);
+      var state = this.graph.view.getState(cell);
 
       if (state != null && me.isSource(state.control)) {
         this.graph.selectCellForEvent(cell, me.getEvent());
       } else {
-        const model = this.graph.getModel();
-        let parent = model.getParent(cell);
+        var model = this.graph.getModel();
+        var parent = model.getParent(cell);
 
         while (!this.graph.isCellSelected(parent) && model.isVertex(parent)) {
           cell = parent;
@@ -2594,9 +2600,9 @@ FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
 
   // Returns last selected ancestor
   mxPopupMenuHandler.prototype.getCellForPopupEvent = function (me) {
-    let cell = me.getCell();
-    const model = this.graph.getModel();
-    let parent = model.getParent(cell);
+    var cell = me.getCell();
+    var model = this.graph.getModel();
+    var parent = model.getParent(cell);
 
     while (model.isVertex(parent) && !this.graph.isContainer(parent)) {
       if (this.graph.isCellSelected(parent)) {
