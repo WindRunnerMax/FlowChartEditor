@@ -16,11 +16,13 @@ export class DiagramEditor {
   private editor: Editor | null;
   private editorUi: EditorUi | null;
   private diagramContainer: HTMLElement;
+  private scrollTop: number;
 
   constructor(
     private container: HTMLElement,
     private createExitButton: (container: HTMLDivElement) => void
   ) {
+    this.scrollTop = 0;
     this.editor = null;
     this.editorUi = null;
     this.diagramContainer = document.createElement("div");
@@ -33,6 +35,9 @@ export class DiagramEditor {
     onXMLChange?: (xml: Element) => void
   ): void => {
     this.container.appendChild(this.diagramContainer);
+    this.scrollTop = document.documentElement.scrollTop;
+    this.container.style.overflow = "hidden";
+    document.documentElement.scrollTop = 0;
     mxResources.parse(lang);
     this.editor = new Editor(false, themes);
     this.editorUi = new EditorUi(this.editor, this.diagramContainer, null, this.createExitButton);
@@ -45,6 +50,8 @@ export class DiagramEditor {
   };
 
   public exit = (): void => {
+    this.container.style.overflow = "";
+    document.documentElement.scrollTop = this.scrollTop;
     mxEvent.removeAllListeners(window);
     mxEvent.removeAllListeners(document);
     this.editor && this.editor.destroy();

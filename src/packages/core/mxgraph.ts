@@ -11,9 +11,9 @@ declare global {
 }
 
 window.mxBasePath = "static";
-window.mxLoadResources = true;
+window.mxLoadResources = false;
 window.mxForceIncludes = false;
-window.mxLoadStylesheets = true;
+window.mxLoadStylesheets = false;
 window.mxResourceExtension = ".txt";
 
 const mx = factory({

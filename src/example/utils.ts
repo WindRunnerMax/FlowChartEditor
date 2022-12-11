@@ -5,6 +5,7 @@ export const clearElement = (element: HTMLElement | null): void => {
 export const getDrawIOSvgString = (xml: XMLDocument) => {
   return xmlToString(xml.documentElement.firstChild?.firstChild || null);
 };
+
 export const xmlToString = (xml: Node | null): string | null => {
   if (!xml) return null;
   try {
