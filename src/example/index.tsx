@@ -2,10 +2,14 @@ import styles from "./index.module.scss";
 import { FC, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
 import { convertXMLToSVG } from "src/packages/utils/convert";
-import { base64ToSvgString, EditorBus, stringToSvg, stringToXml, xmlToString } from "src/packages";
-import { startEdit } from "src/packages/core/editor";
+import { base64ToSvgString, EditorBus, stringToSvg, stringToXml } from "src/packages";
+import { DiagramEditor } from "src/packages/core/editor";
+import { getLanguage } from "src/packages/editor/i18n";
+import { clearElement, getDrawIOSvgString } from "./utils";
 
-startEdit();
+getLanguage("en").then(res => {
+  new DiagramEditor(document.body).start(res, stringToXml(XML_DATA), console.log);
+});
 
 export const DiagramExample: FC = () => {
   const [xmlExample, setXMLExample] = useState(XML_DATA);
@@ -17,7 +21,7 @@ export const DiagramExample: FC = () => {
     const div = xmlExampleContainer.current;
     if (div) {
       const svg = convertXMLToSVG(xml);
-      div.childNodes.forEach(node => div.removeChild(node));
+      clearElement(div);
       svg && div.appendChild(svg);
     }
   };
@@ -26,7 +30,7 @@ export const DiagramExample: FC = () => {
     const div = svgExampleContainer.current;
     if (div) {
       const svg = stringToSvg(svgString);
-      div.childNodes.forEach(node => div.removeChild(node));
+      clearElement(div);
       svg && div.appendChild(svg);
     }
   };
@@ -35,9 +39,9 @@ export const DiagramExample: FC = () => {
     const bus = new EditorBus({
       data: xmlExample,
       onSave: (xml: string) => {
-        const xmlNode = stringToXml(xml);
-        if (xmlNode) {
-          const str = xmlToString(xmlNode.documentElement.firstChild?.firstChild || null) || xml;
+        const xmlDocument = stringToXml(xml);
+        if (xmlDocument) {
+          const str = getDrawIOSvgString(xmlDocument) || xml;
           setXMLExample(str);
           convertXML(str);
         }
