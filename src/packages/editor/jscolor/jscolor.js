@@ -1,7 +1,10 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier */
 import { mxClient } from "../../core/mxgraph";
-
+import arrow from "./arrow.gif";
+import cross from "./cross.gif";
+import hs from "./hs.png";
+import hv from "./hv.png";
 /**
  * jscolor, JavaScript Color Picker
  *
@@ -13,12 +16,7 @@ import { mxClient } from "../../core/mxgraph";
  * @link    http://jscolor.com
  */
 
-const base64 = {
-  arrow: require("./arrow.gif").default,
-  cross: require("./cross.gif").default,
-  hs: require("./hs.png").default,
-  hv: require("./hv.png").default,
-};
+const base64 = { arrow, cross, hs, hv };
 
 export const mxJSColor = {
   dir: "", // location of jscolor directory (leave empty to autodetect)
@@ -958,11 +956,7 @@ export const mxJSColor = {
 
     function dispatchImmediateChange() {
       if (THIS.onImmediateChange) {
-        if (typeof THIS.onImmediateChange === "string") {
-          eval(THIS.onImmediateChange);
-        } else {
-          THIS.onImmediateChange(THIS);
-        }
+        THIS.onImmediateChange(THIS);
       }
     }
 

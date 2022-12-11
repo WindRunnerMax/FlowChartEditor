@@ -1,16 +1,16 @@
 import "./js/Shapes";
 import { mxWindow } from "../core/mxgraph";
+import close from "./images/close.gif";
+import normalize from "./images/normalize.gif";
+import maximize from "./images/maximize.gif";
+import minimize from "./images/minimize.gif";
+import resize from "./images/close.gif";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-mxWindow.prototype.closeImage = require("./images/close.gif").default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-mxWindow.prototype.normalizeImage = require("./images/normalize.gif").default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-mxWindow.prototype.maximizeImage = require("./images/maximize.gif").default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-mxWindow.prototype.minimizeImage = require("./images/minimize.gif").default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-mxWindow.prototype.resizeImage = require("./images/resize.gif").default;
+mxWindow.prototype.closeImage = close;
+mxWindow.prototype.normalizeImage = normalize;
+mxWindow.prototype.maximizeImage = maximize;
+mxWindow.prototype.minimizeImage = minimize;
+mxWindow.prototype.resizeImage = resize;
 
 export { Actions, Action } from "./js/Actions";
 export {
