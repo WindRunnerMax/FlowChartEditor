@@ -1,5 +1,16 @@
-import "./stencils";
 import "./js/Shapes";
+import { mxWindow } from "../core/mxgraph";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+mxWindow.prototype.closeImage = require("./images/close.gif").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+mxWindow.prototype.normalizeImage = require("./images/normalize.gif").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+mxWindow.prototype.maximizeImage = require("./images/maximize.gif").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+mxWindow.prototype.minimizeImage = require("./images/minimize.gif").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+mxWindow.prototype.resizeImage = require("./images/resize.gif").default;
 
 export { Actions, Action } from "./js/Actions";
 export {
