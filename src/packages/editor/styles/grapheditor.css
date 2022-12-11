@@ -2,7 +2,6 @@
 
 .geEditor {
   border: none;
-  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   margin: 0;
 }
@@ -12,9 +11,9 @@
 }
 
 .geEditor input,
-select,
-textarea,
-button {
+.geEditor select,
+.geEditor textarea,
+.geEditor button {
   font-size: inherit;
 }
 
@@ -880,7 +879,6 @@ html table.mxPopupMenu {
 }
 
 html td.mxPopupMenuItem {
-  font-family: 'Helvetica Neue', Helvetica, 'Arial Unicode MS', Arial;
   font-size: 10pt;
   padding: 7px 30px;
 }
@@ -924,7 +922,6 @@ table.mxPopupMenu tr {
 
 html td.mxWindowTitle {
   color: rgb(112, 112, 112);
-  font-family: 'Helvetica Neue', Helvetica, 'Arial Unicode MS', Arial;
   font-size: 12px;
   padding: 4px;
   text-align: left;
@@ -1036,7 +1033,6 @@ html td.mxWindowTitle {
   border-radius: 3px;
   color: #888;
   float: right;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 15px;
   height: 40px;
   line-height: 36px;
@@ -1078,7 +1074,6 @@ html td.mxWindowTitle {
   border: 1px solid #ccc;
   border-radius: 0 0 5px 5px;
   box-sizing: border-box;
-  font-family: Helvetica;
   font-size: 14px;
   height: 52px;
   line-height: 17px;
@@ -1130,7 +1125,6 @@ html td.mxWindowTitle {
 .geTempDlgNewDiagramlbl {
   color: #333;
   cursor: pointer;
-  font-family: Helvetica;
   font-size: 14px;
   font-weight: bold;
   height: 17px;
@@ -1147,7 +1141,6 @@ html td.mxWindowTitle {
 
 .geTemplatesLbl {
   color: #6d6d6d;
-  font-family: Helvetica;
   font-size: 14px;
   font-weight: bold;
   height: 17px;
@@ -1159,7 +1152,6 @@ html td.mxWindowTitle {
 .geTemplateCatLink {
   color: #3d72ad;
   cursor: pointer;
-  font-family: Helvetica;
   font-size: 14px;
   height: 17px;
   line-height: 17px;
@@ -1174,7 +1166,6 @@ html td.mxWindowTitle {
 
 .geTempDlgNewDiagramCatLbl {
   color: #fff;
-  font-family: Helvetica;
   font-size: 14px;
   font-weight: bold;
   height: 17px;
@@ -1202,7 +1193,6 @@ html td.mxWindowTitle {
   color: #ddd;
   cursor: pointer;
   float: right;
-  font-family: Helvetica;
   font-size: 14px;
   line-height: 17px;
   margin-right: 30px;
@@ -1238,7 +1228,6 @@ html td.mxWindowTitle {
 .geTempDlgNewDiagramCatItemLbl {
   color: #fff;
   cursor: pointer;
-  font-family: Helvetica;
   font-size: 14px;
   height: 17px;
   line-height: 17px;
@@ -1267,7 +1256,6 @@ html td.mxWindowTitle {
   box-sizing: border-box;
   color: #666;
   display: inline-block;
-  font-family: Helvetica;
   font-size: 14px;
   font-weight: bold;
   height: 17px;
@@ -1289,7 +1277,6 @@ html td.mxWindowTitle {
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-family: Helvetica;
   font-size: 14px;
   line-height: 17px;
   padding: 4px;
@@ -1428,7 +1415,6 @@ html td.mxWindowTitle {
 .geTempDlgDiagramTileLbl {
   color: #333;
   cursor: pointer;
-  font-family: Helvetica;
   font-size: 14px;
   height: 17px;
   line-height: 17px;
