@@ -11,12 +11,16 @@ const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
   stringToXml(DEFAULT_STYLE_XML) as XMLDocument
 ).documentElement;
+
 export class DiagramEditor {
   private editor: Editor | null;
   private editorUi: EditorUi | null;
   private diagramContainer: HTMLElement;
 
-  constructor(private container: HTMLElement) {
+  constructor(
+    private container: HTMLElement,
+    private createExitButton: (container: HTMLDivElement) => void
+  ) {
     this.editor = null;
     this.editorUi = null;
     this.diagramContainer = document.createElement("div");
@@ -31,7 +35,7 @@ export class DiagramEditor {
     this.container.appendChild(this.diagramContainer);
     mxResources.parse(lang);
     this.editor = new Editor(false, themes);
-    this.editorUi = new EditorUi(this.editor, this.diagramContainer);
+    this.editorUi = new EditorUi(this.editor, this.diagramContainer, null, this.createExitButton);
     if (init) {
       this.editorUi.editor.setGraphXml(init.documentElement);
     }

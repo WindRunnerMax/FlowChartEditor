@@ -1,15 +1,18 @@
 import styles from "./index.module.scss";
 import { FC, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
-import { convertXMLToSVG } from "src/packages/utils/convert";
-import { base64ToSvgString, EditorBus, stringToSvg, stringToXml } from "src/packages";
-import { DiagramEditor } from "src/packages/core/editor";
-import { getLanguage } from "src/packages/editor/i18n";
-import { clearElement, getDrawIOSvgString } from "./utils";
-
-getLanguage("en").then(res => {
-  new DiagramEditor(document.body).start(res, stringToXml(XML_DATA), console.log);
-});
+import {
+  base64ToSvgString,
+  DiagramEditor,
+  DiagramViewer,
+  EditorBus,
+  getLanguage,
+  stringToSvg,
+  stringToXml,
+  xmlToString,
+} from "src/packages";
+import { clearElement } from "./utils";
+import ReactDOM from "react-dom";
 
 export const DiagramExample: FC = () => {
   const [xmlExample, setXMLExample] = useState(XML_DATA);
@@ -20,7 +23,8 @@ export const DiagramExample: FC = () => {
   const convertXML = (xml: string = xmlExample) => {
     const div = xmlExampleContainer.current;
     if (div) {
-      const svg = convertXMLToSVG(xml);
+      const diagramViewer = new DiagramViewer(stringToXml(xml));
+      const svg = diagramViewer.renderSVG(null, 1, 1);
       clearElement(div);
       svg && div.appendChild(svg);
     }
@@ -36,18 +40,22 @@ export const DiagramExample: FC = () => {
   };
 
   const editXML = () => {
-    const bus = new EditorBus({
-      data: xmlExample,
-      onSave: (xml: string) => {
-        const xmlDocument = stringToXml(xml);
-        if (xmlDocument) {
-          const str = getDrawIOSvgString(xmlDocument) || xml;
-          setXMLExample(str);
-          convertXML(str);
-        }
-      },
+    const renderExit = (el: HTMLDivElement) => {
+      ReactDOM.render(
+        <div onClick={diagramEditor.exit} className="diagram-exit-btn">
+          Exit
+        </div>,
+        el
+      );
+    };
+    const diagramEditor = new DiagramEditor(document.body, renderExit);
+    getLanguage("en").then(res => {
+      diagramEditor.start(res, stringToXml(xmlExample), (xml: Node) => {
+        const xmlString = xmlToString(xml);
+        xmlString && setXMLExample(xmlString);
+        xmlString && convertXML(xmlString);
+      });
     });
-    bus.startEdit();
   };
 
   const editSVG = () => {

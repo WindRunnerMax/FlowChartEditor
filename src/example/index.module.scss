@@ -15,3 +15,10 @@ body {
     }
   }
 }
+
+:global {
+  .diagram-container .diagram-exit-btn {
+    cursor: pointer;
+    margin-right: 10px;
+  }
+}

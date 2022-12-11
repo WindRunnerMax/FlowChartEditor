@@ -43,7 +43,7 @@ export { ChangePageSetup, EditorUi };
 /**
  * Constructs a new graph editor
  */
-const EditorUi = function (editor, container, lightbox) {
+const EditorUi = function (editor, container, lightbox, renderExitButton) {
   mxEventSource.call(this);
 
   this.destroyFunctions = [];
@@ -90,6 +90,8 @@ const EditorUi = function (editor, container, lightbox) {
     this.createDivs();
     this.createUi();
     this.refresh();
+
+    renderExitButton && renderExitButton(this.exitButton);
 
     // Disables HTML and text selection
     var textEditing = mxUtils.bind(this, function (evt) {
@@ -3302,7 +3304,9 @@ EditorUi.prototype.createUi = function () {
     : this.menus.createMenubar(this.createDiv("geMenubar"));
 
   if (this.menubar != null) {
+    this.exitButton = this.createDiv("diagram-exit");
     this.menubarContainer.appendChild(this.menubar.container);
+    this.menubarContainer.appendChild(this.exitButton);
   }
 
   // Adds status bar in menubar

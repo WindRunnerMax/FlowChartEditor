@@ -18,3 +18,13 @@
 .mxWindow {
   z-index: 10006 !important;
 }
+
+.geMenubarContainer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .geMenubar {
+    width: auto;
+  }
+}
