@@ -58,7 +58,8 @@ function Editor(chromeless, themes, model, graph, editable) {
   };
 
   // Sets the status and fires a statusChanged event
-  this.setStatus = function (value) {
+  this.setStatus = value => {
+    // + Bind Editor(this)
     this.status = value;
     this.fireEvent(new mxEventObject("statusChanged"));
   };

@@ -30,7 +30,7 @@ import {
 
 import { Graph } from "./Graph";
 import { Editor, Dialog, FilenameDialog } from "./Editor";
-import { mxJSColor } from "../jscolor/jscolor";
+import { mxJSColor, mxColor } from "../jscolor/jscolor";
 import { EditorUi } from "./EditorUi";
 
 export {
@@ -112,7 +112,7 @@ function ColorDialog(editorUi, color, apply, cancelFn) {
     }
   };
 
-  const picker = new mxJSColor.color(input);
+  const picker = new mxColor(input);
   picker.pickerOnfocus = false;
   picker.showPicker();
 
