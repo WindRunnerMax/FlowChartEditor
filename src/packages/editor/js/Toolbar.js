@@ -486,15 +486,6 @@ Toolbar.prototype.addTableDropDown = function () {
     elt.getElementsByTagName("img")[0].style.top = "5px";
   }
 
-  // Connects to insert menu enabled state
-  const menu = this.editorUi.menus.get("insert");
-
-  if (menu != null) {
-    menu.addListener("stateChanged", function () {
-      elt.setEnabled(menu.enabled);
-    });
-  }
-
   return elt;
 };
 
@@ -836,53 +827,8 @@ Toolbar.prototype.createTextToolbar = function () {
 
   this.addSeparator();
 
-  const insertMenu = this.addMenuFunction(
-    "",
-    mxResources.get("insert"),
-    true,
-    mxUtils.bind(this, function (menu) {
-      menu.addItem(
-        mxResources.get("insertLink"),
-        null,
-        mxUtils.bind(this, function () {
-          this.editorUi.actions.get("link").funct();
-        })
-      );
-
-      menu.addItem(
-        mxResources.get("insertImage"),
-        null,
-        mxUtils.bind(this, function () {
-          this.editorUi.actions.get("image").funct();
-        })
-      );
-
-      menu.addItem(
-        mxResources.get("insertHorizontalRule"),
-        null,
-        mxUtils.bind(this, function () {
-          document.execCommand("inserthorizontalrule", false, null);
-        })
-      );
-    })
-  );
-
-  insertMenu.style.whiteSpace = "nowrap";
-  insertMenu.style.overflow = "hidden";
-  insertMenu.style.position = "relative";
-  insertMenu.innerHTML =
-    '<div class="geSprite geSprite-plus" style="margin-left:-4px;margin-top:-3px;"></div>' +
-    this.dropdownImageHtml;
-  insertMenu.style.width = mxClient.IS_QUIRKS ? "36px" : "16px";
-
-  // Fix for item size in kennedy theme
-  if (EditorUi.compactUi) {
-    insertMenu.getElementsByTagName("img")[0].style.left = "24px";
-    insertMenu.getElementsByTagName("img")[0].style.top = "5px";
-    insertMenu.style.width = mxClient.IS_QUIRKS ? "50px" : "30px";
-  }
-
-  this.addSeparator();
+  // - Insert Image Menu
+  // - Insert Link Menu
 
   // KNOWN: All table stuff does not work with undo/redo
   // KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems

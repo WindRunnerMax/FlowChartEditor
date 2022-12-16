@@ -22,5 +22,6 @@ module.exports = {
         "ignorePseudoClasses": ["global"]
       }
     ],
+    "selector-no-qualifying-type": null
   }
 }

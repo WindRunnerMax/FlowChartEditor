@@ -637,14 +637,9 @@ Menus.prototype.init = function () {
       })
     )
   ).isEnabled = isGraphEnabled;
-  this.put(
-    "insert",
-    new Menu(
-      mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(menu, ["insertLink", "insertImage"], parent);
-      })
-    )
-  );
+
+  // - Insert Image/Link Group
+
   this.put(
     "view",
     new Menu(
@@ -719,30 +714,7 @@ Menus.prototype.init = function () {
       })
     )
   );
-  this.put(
-    "file",
-    new Menu(
-      mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(
-          menu,
-          [
-            "new",
-            "open",
-            "-",
-            "save",
-            "saveAs",
-            "-",
-            "import",
-            "export",
-            "-",
-            "pageSetup",
-            "print",
-          ],
-          parent
-        );
-      })
-    )
-  );
+  // - File Menu
   this.put(
     "edit",
     new Menu(
@@ -758,15 +730,6 @@ Menus.prototype.init = function () {
           "-",
           "duplicate",
           "-",
-          "editData",
-          "editTooltip",
-          "editStyle",
-          "-",
-          "edit",
-          "-",
-          "editLink",
-          "openLink",
-          "-",
           "selectVertices",
           "selectEdges",
           "selectAll",
@@ -781,18 +744,11 @@ Menus.prototype.init = function () {
     "extras",
     new Menu(
       mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(menu, ["copyConnect", "collapseExpand", "-", "editDiagram"]);
+        this.addMenuItems(menu, ["copyConnect", "collapseExpand"]);
       })
     )
   );
-  this.put(
-    "help",
-    new Menu(
-      mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(menu, ["help", "-", "about"]);
-      })
-    )
-  );
+  // - Help Menu
 };
 
 /**
@@ -1487,19 +1443,8 @@ Menus.prototype.addPopupMenuCellItems = function (menu, cell, evt) {
       this.addMenuItems(menu, ["-", "clearWaypoints"], null, evt);
     }
 
-    if (graph.getSelectionCount() == 1) {
-      this.addMenuItems(menu, ["-", "editStyle", "editData", "editLink"], null, evt);
-
-      // Shows edit image action if there is an image in the style
-      if (
-        graph.getModel().isVertex(cell) &&
-        mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null
-      ) {
-        menu.addSeparator();
-        this.addMenuItem(menu, "image", null, evt).firstChild.nextSibling.innerHTML =
-          mxResources.get("editImage") + "...";
-      }
-    }
+    // - Edit Image Menu
+    // - Edit Link Menu
   }
 };
 

@@ -18,7 +18,11 @@
 }
 
 .geEditor input {
-  border-width: 2px;
+  border-width: 1px;
+}
+
+.geEditor input[name="format-formatpanel"]{
+  margin-top: 1px;
 }
 
 .geEditor select {

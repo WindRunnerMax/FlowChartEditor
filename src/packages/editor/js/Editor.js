@@ -1622,6 +1622,7 @@ PageSetupDialog.addPageFormatPanel = function (div, namePostfix, pageFormat, pag
   formatDiv.style.marginLeft = "4px";
   formatDiv.style.width = "210px";
   formatDiv.style.height = "24px";
+  formatDiv.className = "form-options-line";
 
   portraitCheckBox.style.marginRight = "6px";
   formatDiv.appendChild(portraitCheckBox);

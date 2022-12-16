@@ -6,6 +6,25 @@
   top: 0;
   width: 100%;
   z-index: 10005;
+
+  .geMenubarContainer {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .geMenubar {
+      width: auto;
+
+      .geItem {
+        margin: 0 7px;
+      }
+    }
+  }
+
+  .form-options-line {
+    align-items: center;
+    display: flex;
+  }
 }
 
 .mxPopupMenu {
@@ -17,14 +36,4 @@
 
 .mxWindow {
   z-index: 10006 !important;
-}
-
-.geMenubarContainer {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-
-  .geMenubar {
-    width: auto;
-  }
 }

@@ -901,6 +901,7 @@ BaseFormatPanel.prototype.createOption = function (label, isCheckedFn, setChecke
   div.style.overflow = "hidden";
   div.style.width = "200px";
   div.style.height = mxClient.IS_QUIRKS ? "27px" : "18px";
+  div.className = "form-options-line";
 
   const cb = document.createElement("input");
   cb.setAttribute("type", "checkbox");
@@ -1071,6 +1072,7 @@ BaseFormatPanel.prototype.createColorOption = function (
   const cb = document.createElement("input");
   cb.setAttribute("type", "checkbox");
   cb.style.margin = "0px 6px 0px 0px";
+  div.className = "form-options-line";
 
   if (!hideCheckbox) {
     div.appendChild(cb);
@@ -1838,35 +1840,8 @@ ArrangePanel.prototype.addGroupOps = function (div) {
       mxUtils.br(div);
     }
 
-    btn = mxUtils.button(
-      mxResources.get("editData"),
-      mxUtils.bind(this, function (evt) {
-        this.editorUi.actions.get("editData").funct();
-      })
-    );
-
-    btn.setAttribute(
-      "title",
-      mxResources.get("editData") + " (" + this.editorUi.actions.get("editData").shortcut + ")"
-    );
-    btn.style.width = "100px";
-    btn.style.marginBottom = "2px";
-    div.appendChild(btn);
-    count++;
-
-    btn = mxUtils.button(
-      mxResources.get("editLink"),
-      mxUtils.bind(this, function (evt) {
-        this.editorUi.actions.get("editLink").funct();
-      })
-    );
-
-    btn.setAttribute("title", mxResources.get("editLink"));
-    btn.style.width = "100px";
-    btn.style.marginLeft = "2px";
-    btn.style.marginBottom = "2px";
-    div.appendChild(btn);
-    count++;
+    // - Edit Image Button
+    // - Edit Link Button
   }
 
   if (count == 0) {
@@ -6814,7 +6789,7 @@ DiagramFormatPanel.prototype.addGridOption = function (container) {
   if (mxClient.IS_SVG) {
     input.style.marginTop = "-2px";
     input.style.right = "84px";
-    stepper.style.marginTop = "-16px";
+    stepper.style.marginTop = "-2px";
     stepper.style.right = "72px";
 
     const panel = this.createColorOption(

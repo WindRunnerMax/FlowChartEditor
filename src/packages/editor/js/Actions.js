@@ -502,16 +502,7 @@ Actions.prototype.init = function () {
     null,
     "F2/Enter"
   );
-  this.addAction(
-    "editData...",
-    function () {
-      const cell = graph.getSelectionCell() || graph.getModel().getRoot();
-      ui.showDataDialog(cell);
-    },
-    null,
-    null,
-    Editor.ctrlKey + "+M"
-  );
+
   this.addAction(
     "editTooltip...",
     function () {
@@ -542,143 +533,10 @@ Actions.prototype.init = function () {
     null,
     "Alt+Shift+T"
   );
-  this.addAction("openLink", function () {
-    const link = graph.getLinkForCell(graph.getSelectionCell());
 
-    if (link != null) {
-      graph.openLink(link);
-    }
-  });
-  this.addAction(
-    "editLink...",
-    function () {
-      const graph = ui.editor.graph;
+  // - Insert Image Action
+  // - Insert Link Action
 
-      if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        const cell = graph.getSelectionCell();
-        const value = graph.getLinkForCell(cell) || "";
-
-        ui.showLinkDialog(value, mxResources.get("apply"), function (link) {
-          link = mxUtils.trim(link);
-          graph.setLinkForCell(cell, link.length > 0 ? link : null);
-        });
-      }
-    },
-    null,
-    null,
-    "Alt+Shift+L"
-  );
-  this.put(
-    "insertImage",
-    new Action(mxResources.get("image") + "...", function () {
-      if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
-        graph.clearSelection();
-        ui.actions.get("image").funct();
-      }
-    })
-  ).isEnabled = isGraphEnabled;
-  this.put(
-    "insertLink",
-    new Action(mxResources.get("link") + "...", function () {
-      if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
-        ui.showLinkDialog("", mxResources.get("insert"), function (link, docs) {
-          link = mxUtils.trim(link);
-
-          if (link.length > 0) {
-            let icon = null;
-            let title = graph.getLinkTitle(link);
-
-            if (docs != null && docs.length > 0) {
-              icon = docs[0].iconUrl;
-              title = docs[0].name || docs[0].type;
-              title = title.charAt(0).toUpperCase() + title.substring(1);
-
-              if (title.length > 30) {
-                title = title.substring(0, 30) + "...";
-              }
-            }
-
-            const pt = graph.getFreeInsertPoint();
-            let linkCell = new mxCell(
-              title,
-              new mxGeometry(pt.x, pt.y, 100, 40),
-              "fontColor=#0000EE;fontStyle=4;rounded=1;overflow=hidden;" +
-                (icon != null
-                  ? "shape=label;imageWidth=16;imageHeight=16;spacingLeft=26;align=left;image=" +
-                    icon
-                  : "spacing=10;")
-            );
-            linkCell.vertex = true;
-
-            graph.setLinkForCell(linkCell, link);
-            graph.cellSizeUpdated(linkCell, true);
-
-            graph.getModel().beginUpdate();
-            try {
-              linkCell = graph.addCell(linkCell);
-              graph.fireEvent(new mxEventObject("cellsInserted", "cells", [linkCell]));
-            } finally {
-              graph.getModel().endUpdate();
-            }
-
-            graph.setSelectionCell(linkCell);
-            graph.scrollCellToVisible(graph.getSelectionCell());
-          }
-        });
-      }
-    })
-  ).isEnabled = isGraphEnabled;
-  this.addAction(
-    "link...",
-    mxUtils.bind(this, function () {
-      const graph = ui.editor.graph;
-
-      if (graph.isEnabled()) {
-        if (graph.cellEditor.isContentEditing()) {
-          const elt = graph.getSelectedElement();
-          let link = graph.getParentByName(elt, "A", graph.cellEditor.textarea);
-          let oldValue = "";
-
-          // Workaround for FF returning the outermost selected element after double
-          // click on a DOM hierarchy with a link inside (but not as topmost element)
-          if (link == null && elt != null && elt.getElementsByTagName != null) {
-            // Finds all links in the selected DOM and uses the link
-            // where the selection text matches its text content
-            const links = elt.getElementsByTagName("a");
-
-            for (let i = 0; i < links.length && link == null; i++) {
-              if (links[i].textContent == elt.textContent) {
-                link = links[i];
-              }
-            }
-          }
-
-          if (link != null && link.nodeName == "A") {
-            oldValue = link.getAttribute("href") || "";
-            graph.selectNode(link);
-          }
-
-          const selState = graph.cellEditor.saveSelection();
-
-          ui.showLinkDialog(
-            oldValue,
-            mxResources.get("apply"),
-            mxUtils.bind(this, function (value) {
-              graph.cellEditor.restoreSelection(selState);
-
-              if (value != null) {
-                graph.insertLink(value);
-              }
-            })
-          );
-        } else if (graph.isSelectionEmpty()) {
-          this.get("insertLink").funct();
-        } else {
-          this.get("editLink").funct();
-        }
-      }
-    })
-  ).isEnabled = isGraphEnabled;
   this.addAction(
     "autosize",
     function () {

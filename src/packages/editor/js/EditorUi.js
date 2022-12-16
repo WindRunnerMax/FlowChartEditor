@@ -1083,9 +1083,6 @@ EditorUi.prototype.init = function () {
       ui.updateActionStates();
     };
 
-    // Hack to make editLink available in vertex handler
-    graph.editLink = ui.actions.get("editLink").funct;
-
     this.updateActionStates();
     this.initClipboard();
     this.initCanvas();
@@ -3006,9 +3003,7 @@ EditorUi.prototype.updateActionStates = function () {
     "underline",
     "delete",
     "duplicate",
-    "editStyle",
     "editTooltip",
-    "editLink",
     "backgroundColor",
     "borderColor",
     "edit",
@@ -3081,18 +3076,12 @@ EditorUi.prototype.updateActionStates = function () {
   const foldable = graph.getSelectionCount() == 1 && graph.isCellFoldable(graph.getSelectionCell());
   this.actions.get("expand").setEnabled(foldable);
   this.actions.get("collapse").setEnabled(foldable);
-  this.actions.get("editLink").setEnabled(graph.getSelectionCount() == 1);
-  this.actions
-    .get("openLink")
-    .setEnabled(
-      graph.getSelectionCount() == 1 && graph.getLinkForCell(graph.getSelectionCell()) != null
-    );
+
   this.actions.get("guides").setEnabled(graph.isEnabled());
   this.actions.get("grid").setEnabled(!this.editor.chromeless || this.editor.editable);
 
   const unlocked = graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent());
   this.menus.get("layout").setEnabled(unlocked);
-  this.menus.get("insert").setEnabled(unlocked);
   this.menus.get("direction").setEnabled(unlocked && vertexSelected);
   this.menus.get("align").setEnabled(unlocked && vertexSelected && graph.getSelectionCount() > 1);
   this.menus
@@ -4066,7 +4055,6 @@ EditorUi.prototype.createOutline = function (wnd) {
 EditorUi.prototype.altShiftActions = {
   67: "clearWaypoints", // Alt+Shift+C
   65: "connectionArrows", // Alt+Shift+A
-  76: "editLink", // Alt+Shift+L
   80: "connectionPoints", // Alt+Shift+P
   84: "editTooltip", // Alt+Shift+T
   86: "pasteSize", // Alt+Shift+V

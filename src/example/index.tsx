@@ -45,13 +45,13 @@ export const DiagramExample: FC = () => {
       const renderExit = (el: HTMLDivElement) => {
         ReactDOM.render(
           <div onClick={diagramEditor.exit} className="diagram-exit-btn">
-            Exit
+            退出
           </div>,
           el
         );
       };
       const diagramEditor = new diagram.DiagramEditor(document.body, renderExit);
-      diagram.getLanguage("en").then(res => {
+      diagram.getLanguage("zh").then(res => {
         diagramEditor.start(res, stringToXml(xmlExample), (xml: Node) => {
           const xmlString = xmlToString(xml);
           xmlString && setXMLExample(xmlString);

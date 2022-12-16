@@ -10532,50 +10532,6 @@ if (typeof mxVertexHandler != "undefined") {
 
           if (link != null) {
             this.linkHint.appendChild(this.graph.createLinkForHint(link));
-
-            if (this.graph.isEnabled() && typeof this.graph.editLink === "function") {
-              const changeLink = document.createElement("img");
-              changeLink.setAttribute("src", Editor.editImage);
-              changeLink.setAttribute("title", mxResources.get("editLink"));
-              changeLink.setAttribute("width", "11");
-              changeLink.setAttribute("height", "11");
-              changeLink.style.marginLeft = "10px";
-              changeLink.style.marginBottom = "-1px";
-              changeLink.style.cursor = "pointer";
-              this.linkHint.appendChild(changeLink);
-
-              mxEvent.addListener(
-                changeLink,
-                "click",
-                mxUtils.bind(this, function (evt) {
-                  this.graph.setSelectionCell(this.state.cell);
-                  this.graph.editLink();
-                  mxEvent.consume(evt);
-                })
-              );
-
-              const removeLink = document.createElement("img");
-              removeLink.setAttribute("src", Dialog.prototype.clearImage);
-              removeLink.setAttribute(
-                "title",
-                mxResources.get("removeIt", [mxResources.get("link")])
-              );
-              removeLink.setAttribute("width", "13");
-              removeLink.setAttribute("height", "10");
-              removeLink.style.marginLeft = "4px";
-              removeLink.style.marginBottom = "-1px";
-              removeLink.style.cursor = "pointer";
-              this.linkHint.appendChild(removeLink);
-
-              mxEvent.addListener(
-                removeLink,
-                "click",
-                mxUtils.bind(this, function (evt) {
-                  this.graph.setLinkForCell(this.state.cell, null);
-                  mxEvent.consume(evt);
-                })
-              );
-            }
           }
 
           if (links != null) {
