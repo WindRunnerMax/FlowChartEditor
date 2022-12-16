@@ -4,7 +4,7 @@ import { SVG_DATA, XML_DATA } from "./constant";
 import { base64ToSvgString, stringToSvg, stringToXml, xmlToString } from "./utils";
 import { clearElement } from "./utils";
 import ReactDOM from "react-dom";
-import { loadDiagram } from "./diagram-loader";
+import { diagramLoader } from "./diagram-loader";
 
 export const DiagramExample: FC = () => {
   const [loading, setLoading] = useState(true);
@@ -14,15 +14,15 @@ export const DiagramExample: FC = () => {
   const svgExampleContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    loadDiagram().then(() => {
+    diagramLoader().then(() => {
       setLoading(false);
-    }); // Only Preload Diagram
+    }); // Preload Diagram
   }, []);
 
   const convertXML = (xml: string = xmlExample) => {
     const div = xmlExampleContainer.current;
     if (div) {
-      loadDiagram().then(diagram => {
+      diagramLoader().then(diagram => {
         const diagramViewer = new diagram.DiagramViewer(stringToXml(xml));
         const svg = diagramViewer.renderSVG(null, 1, 1);
         clearElement(div);
@@ -41,7 +41,7 @@ export const DiagramExample: FC = () => {
   };
 
   const editXML = () => {
-    loadDiagram().then(diagram => {
+    diagramLoader().then(diagram => {
       const renderExit = (el: HTMLDivElement) => {
         ReactDOM.render(
           <div onClick={diagramEditor.exit} className="diagram-exit-btn">
@@ -62,7 +62,7 @@ export const DiagramExample: FC = () => {
   };
 
   const editSVG = () => {
-    loadDiagram().then(diagram => {
+    diagramLoader().then(diagram => {
       const bus = new diagram.EditorBus({
         data: svgExample,
         format: "xmlsvg",

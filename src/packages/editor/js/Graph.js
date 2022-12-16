@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier */
 
-import { IMAGE_PATH, urlParams, STENCIL_PATH, STYLE_PATH } from "../constant";
+import { IMAGE_PATH, urlParams, STYLE_PATH } from "../constant";
 import {
   mxGraph,
   mxCodec,

@@ -24,6 +24,7 @@ import {
 import { Graph, HoverIcons } from "./Graph";
 import { Editor, Dialog } from "./Editor";
 import { getStencil } from "../stencils";
+import Gear_128x128 from "../stencils/clipart/Gear_128x128";
 
 export { Sidebar };
 
@@ -243,7 +244,7 @@ Sidebar.prototype.dropTargetDelay = 200;
 /**
  * Specifies the URL of the gear image.
  */
-Sidebar.prototype.gearImage = STENCIL_PATH + "/clipart/Gear_128x128.png";
+Sidebar.prototype.gearImage = Gear_128x128;
 
 /**
  * Specifies the width of the thumbnails.
@@ -1710,7 +1711,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "shape=image;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=1;aspect=fixed;image=" +
-        getStencil("Gear_128x128.png").replace(";base64", ""),
+        Gear_128x128,
       52,
       61,
       "",
@@ -1721,7 +1722,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "shape=image;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;imageAspect=0;image=" +
-        getStencil("Gear_128x128.png").replace(";base64", ""),
+        Gear_128x128,
       50,
       60,
       "",
@@ -1731,7 +1732,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
       "strechted image icon symbol"
     ),
     this.createVertexTemplateEntry(
-      "icon;html=1;image=" + getStencil("Gear_128x128.png").replace(";base64", ""),
+      "icon;html=1;image=" + Gear_128x128,
       60,
       60,
       "Icon",
@@ -1741,7 +1742,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
       "icon image symbol"
     ),
     this.createVertexTemplateEntry(
-      "label;whiteSpace=wrap;html=1;image=" + getStencil("Gear_128x128.png").replace(";base64", ""),
+      "label;whiteSpace=wrap;html=1;image=" + Gear_128x128,
       140,
       60,
       "Label",
@@ -1752,7 +1753,7 @@ Sidebar.prototype.addMiscPalette = function (expand) {
     ),
     this.createVertexTemplateEntry(
       "label;whiteSpace=wrap;html=1;align=center;verticalAlign=bottom;spacingLeft=0;spacingBottom=4;imageAlign=center;imageVerticalAlign=top;image=" +
-        getStencil("Gear_128x128.png").replace(";base64", ""),
+        Gear_128x128,
       120,
       80,
       "Label",
