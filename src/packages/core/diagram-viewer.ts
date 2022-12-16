@@ -1,8 +1,8 @@
-import { stringToXml } from "../utils/xml";
+import { stringToXml, xmlToString } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Graph } from "../editor";
 import { mxCodec } from "./mxgraph";
-import { svgToString } from "../utils/svg";
+import { stringToSvg, svgToString } from "../utils/svg";
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -72,3 +72,5 @@ export const downloadSVG = (
     }
   });
 };
+
+export { stringToXml, svgToString, xmlToString, stringToSvg };

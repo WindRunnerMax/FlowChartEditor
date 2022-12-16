@@ -1,11 +1,11 @@
 import "../editor/styles/common.css";
 import "../editor/styles/grapheditor.css";
 import "../styles/diagram.scss";
-import { stringToXml } from "../utils/xml";
+import { stringToXml, xmlToString } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";
 import { mxEvent, mxResources } from "./mxgraph";
-import { Language } from "../editor/i18n";
+import { getLanguage, Language } from "../editor/i18n";
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -59,3 +59,5 @@ export class DiagramEditor {
     this.container.removeChild(this.diagramContainer);
   };
 }
+
+export { stringToXml, getLanguage, xmlToString };
