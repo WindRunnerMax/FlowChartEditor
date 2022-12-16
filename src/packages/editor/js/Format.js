@@ -28,10 +28,10 @@ export {
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
  */
-const Format = function (editorUi, container) {
+function Format(editorUi, container) {
   this.editorUi = editorUi;
   this.container = container;
-};
+}
 
 /**
  * Returns information about the current selection.
@@ -602,12 +602,12 @@ Format.prototype.refresh = function () {
 /**
  * Base class for format panels.
  */
-const BaseFormatPanel = function (format, editorUi, container) {
+function BaseFormatPanel(format, editorUi, container) {
   this.format = format;
   this.editorUi = editorUi;
   this.container = container;
   this.listeners = [];
-};
+}
 
 /**
  *
@@ -1499,10 +1499,10 @@ BaseFormatPanel.prototype.destroy = function () {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-const ArrangePanel = function (format, editorUi, container) {
+function ArrangePanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(ArrangePanel, BaseFormatPanel);
 
@@ -2715,10 +2715,10 @@ ArrangePanel.prototype.addEdgeGeometry = function (container) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-const TextFormatPanel = function (format, editorUi, container) {
+function TextFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(TextFormatPanel, BaseFormatPanel);
 
@@ -4260,7 +4260,7 @@ TextFormatPanel.prototype.addFont = function (container) {
 
               for (let i = 0; i < elts.length; i++) {
                 if (selection.containsNode(elts[i], true)) {
-                  let temp = mxUtils.getCurrentStyle(elts[i]);
+                  const temp = mxUtils.getCurrentStyle(elts[i]);
                   fontSize = Math.max(getAbsoluteFontSize(temp), fontSize);
                   var lh = getRelativeLineHeight(fontSize, temp, elts[i]);
 
@@ -4470,10 +4470,10 @@ TextFormatPanel.prototype.addFont = function (container) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-const StyleFormatPanel = function (format, editorUi, container) {
+function StyleFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(StyleFormatPanel, BaseFormatPanel);
 
@@ -6578,10 +6578,10 @@ StyleFormatPanel.prototype.addStyleOps = function (div) {
 /**
  * Adds the label menu items to the given menu and parent.
  */
-const DiagramFormatPanel = function (format, editorUi, container) {
+function DiagramFormatPanel(format, editorUi, container) {
   BaseFormatPanel.call(this, format, editorUi, container);
   this.init();
-};
+}
 
 mxUtils.extend(DiagramFormatPanel, BaseFormatPanel);
 

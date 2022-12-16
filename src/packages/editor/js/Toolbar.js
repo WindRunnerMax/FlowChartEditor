@@ -77,13 +77,13 @@ Toolbar.prototype.staticElements = null;
  * Adds the toolbar elements.
  */
 Toolbar.prototype.init = function () {
-  var sw = screen.width;
+  let sw = screen.width;
 
   // Takes into account initial compact mode
   sw -= screen.height > 740 ? 56 : 0;
 
   if (sw >= 700) {
-    var formatMenu = this.addMenu(
+    const formatMenu = this.addMenu(
       "",
       mxResources.get("view") + " (" + mxResources.get("panTooltip") + ")",
       true,
@@ -95,7 +95,7 @@ Toolbar.prototype.init = function () {
     this.addSeparator();
   }
 
-  var viewMenu = this.addMenu(
+  const viewMenu = this.addMenu(
     "",
     mxResources.get("zoom") + " (Alt+Mousewheel)",
     true,
@@ -371,8 +371,8 @@ Toolbar.prototype.addTableDropDown = function () {
     mxResources.get("table"),
     false,
     mxUtils.bind(this, function (menu) {
-      var graph = this.editorUi.editor.graph;
-      var cell = graph.getSelectionCell();
+      const graph = this.editorUi.editor.graph;
+      const cell = graph.getSelectionCell();
 
       if (!graph.isTableCell(cell) && !graph.isTableRow(cell) && !graph.isTable(cell)) {
         this.editorUi.menus.addInsertTableCellItem(menu);
@@ -487,7 +487,7 @@ Toolbar.prototype.addTableDropDown = function () {
   }
 
   // Connects to insert menu enabled state
-  var menu = this.editorUi.menus.get("insert");
+  const menu = this.editorUi.menus.get("insert");
 
   if (menu != null) {
     menu.addListener("stateChanged", function () {
@@ -570,9 +570,9 @@ Toolbar.prototype.setFontSize = function (value) {
  * Hides the current menu.
  */
 Toolbar.prototype.createTextToolbar = function () {
-  var graph = this.editorUi.editor.graph;
+  const graph = this.editorUi.editor.graph;
 
-  var styleElt = this.addMenu("", mxResources.get("style"), true, "formatBlock");
+  const styleElt = this.addMenu("", mxResources.get("style"), true, "formatBlock");
   styleElt.style.position = "relative";
   styleElt.style.whiteSpace = "nowrap";
   styleElt.style.overflow = "hidden";
@@ -621,7 +621,7 @@ Toolbar.prototype.createTextToolbar = function () {
     this.sizeMenu.getElementsByTagName("img")[0].style.top = "5px";
   }
 
-  var elts = this.addItems(["-", "undo", "redo", "-", "bold", "italic", "underline"]);
+  const elts = this.addItems(["-", "undo", "redo", "-", "bold", "italic", "underline"]);
   elts[1].setAttribute(
     "title",
     mxResources.get("undo") + " (" + this.editorUi.actions.get("undo").shortcut + ")"
@@ -645,7 +645,7 @@ Toolbar.prototype.createTextToolbar = function () {
 
   // KNOWN: Lost focus after click on submenu with text (not icon) in quirks and IE8. This is because the TD seems
   // to catch the focus on click in these browsers. NOTE: Workaround in mxPopupMenu for icon items (without text).
-  var alignMenu = this.addMenuFunction(
+  const alignMenu = this.addMenuFunction(
     "",
     mxResources.get("align"),
     false,
@@ -752,7 +752,7 @@ Toolbar.prototype.createTextToolbar = function () {
     alignMenu.getElementsByTagName("img")[0].style.top = "5px";
   }
 
-  var formatMenu = this.addMenuFunction(
+  const formatMenu = this.addMenuFunction(
     "",
     mxResources.get("format"),
     false,
@@ -836,7 +836,7 @@ Toolbar.prototype.createTextToolbar = function () {
 
   this.addSeparator();
 
-  var insertMenu = this.addMenuFunction(
+  const insertMenu = this.addMenuFunction(
     "",
     mxResources.get("insert"),
     true,
@@ -892,18 +892,18 @@ Toolbar.prototype.createTextToolbar = function () {
     mxResources.get("table"),
     false,
     mxUtils.bind(this, function (menu) {
-      var elt = graph.getSelectedElement();
-      var cell = graph.getParentByNames(elt, ["TD", "TH"], graph.cellEditor.text2);
-      var row = graph.getParentByName(elt, "TR", graph.cellEditor.text2);
+      let elt = graph.getSelectedElement();
+      const cell = graph.getParentByNames(elt, ["TD", "TH"], graph.cellEditor.text2);
+      const row = graph.getParentByName(elt, "TR", graph.cellEditor.text2);
 
       if (row == null) {
         function createTable(rows, cols) {
-          var html = ["<table>"];
+          const html = ["<table>"];
 
-          for (var i = 0; i < rows; i++) {
+          for (let i = 0; i < rows; i++) {
             html.push("<tr>");
 
-            for (var j = 0; j < cols; j++) {
+            for (let j = 0; j < cols; j++) {
               html.push("<td><br></td>");
             }
 
@@ -917,7 +917,7 @@ Toolbar.prototype.createTextToolbar = function () {
 
         this.editorUi.menus.addInsertTableItem(menu);
       } else {
-        var table = graph.getParentByName(row, "TABLE", graph.cellEditor.text2);
+        const table = graph.getParentByName(row, "TABLE", graph.cellEditor.text2);
 
         elt = menu.addItem(
           "",
@@ -1016,7 +1016,7 @@ Toolbar.prototype.createTextToolbar = function () {
           null,
           mxUtils.bind(this, function () {
             // Converts rgb(r,g,b) values
-            var color = table.style.borderColor.replace(
+            const color = table.style.borderColor.replace(
               /\brgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g,
               function ($0, $1, $2, $3) {
                 return (
@@ -1049,7 +1049,7 @@ Toolbar.prototype.createTextToolbar = function () {
           null,
           mxUtils.bind(this, function () {
             // Converts rgb(r,g,b) values
-            var color = table.style.backgroundColor.replace(
+            const color = table.style.backgroundColor.replace(
               /\brgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g,
               function ($0, $1, $2, $3) {
                 return (
@@ -1077,9 +1077,9 @@ Toolbar.prototype.createTextToolbar = function () {
           "",
           null,
           mxUtils.bind(this, function () {
-            var value = table.getAttribute("cellPadding") || 0;
+            const value = table.getAttribute("cellPadding") || 0;
 
-            var dlg = new FilenameDialog(
+            const dlg = new FilenameDialog(
               this.editorUi,
               value,
               mxResources.get("apply"),
@@ -1162,8 +1162,8 @@ Toolbar.prototype.hideMenu = function () {
  * Adds a label to the toolbar.
  */
 Toolbar.prototype.addMenu = function (label, tooltip, showLabels, name, c, showAll, ignoreState) {
-  var menu = this.editorUi.menus.get(name);
-  var elt = this.addMenuFunction(
+  const menu = this.editorUi.menus.get(name);
+  const elt = this.addMenuFunction(
     label,
     tooltip,
     showLabels,
@@ -1208,7 +1208,7 @@ Toolbar.prototype.addMenuFunctionInContainer = function (
   funct,
   showAll
 ) {
-  var elt = showLabels ? this.createLabel(label) : this.createButton(label);
+  const elt = showLabels ? this.createLabel(label) : this.createButton(label);
   this.initElement(elt, tooltip);
   this.addMenuHandler(elt, showLabels, funct, showAll);
   container.appendChild(elt);
@@ -1221,7 +1221,7 @@ Toolbar.prototype.addMenuFunctionInContainer = function (
  */
 Toolbar.prototype.addSeparator = function (c) {
   c = c != null ? c : this.container;
-  var elt = document.createElement("div");
+  const elt = document.createElement("div");
   elt.className = "geSeparator";
   c.appendChild(elt);
 
@@ -1232,10 +1232,10 @@ Toolbar.prototype.addSeparator = function (c) {
  * Adds given action item
  */
 Toolbar.prototype.addItems = function (keys, c, ignoreDisabled) {
-  var items = [];
+  const items = [];
 
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
 
     if (key == "-") {
       items.push(this.addSeparator(c));
@@ -1251,11 +1251,11 @@ Toolbar.prototype.addItems = function (keys, c, ignoreDisabled) {
  * Adds given action item
  */
 Toolbar.prototype.addItem = function (sprite, key, c, ignoreDisabled) {
-  var action = this.editorUi.actions.get(key);
-  var elt = null;
+  const action = this.editorUi.actions.get(key);
+  let elt = null;
 
   if (action != null) {
-    var tooltip = action.label;
+    let tooltip = action.label;
 
     if (action.shortcut != null) {
       tooltip += " (" + action.shortcut + ")";
@@ -1279,7 +1279,7 @@ Toolbar.prototype.addItem = function (sprite, key, c, ignoreDisabled) {
  * Adds a button to the toolbar.
  */
 Toolbar.prototype.addButton = function (classname, tooltip, funct, c) {
-  var elt = this.createButton(classname);
+  const elt = this.createButton(classname);
   c = c != null ? c : this.container;
 
   this.initElement(elt, tooltip);
@@ -1305,7 +1305,7 @@ Toolbar.prototype.initElement = function (elt, tooltip) {
  * Adds enabled state with setter to DOM node (avoids JS wrapper).
  */
 Toolbar.prototype.addEnabledState = function (elt) {
-  var classname = elt.className;
+  const classname = elt.className;
 
   elt.setEnabled = function (value) {
     elt.enabled = value;
@@ -1348,10 +1348,10 @@ Toolbar.prototype.addClickHandler = function (elt, funct) {
  * Creates and returns a new button.
  */
 Toolbar.prototype.createButton = function (classname) {
-  var elt = document.createElement("a");
+  const elt = document.createElement("a");
   elt.className = "geButton";
 
-  var inner = document.createElement("div");
+  const inner = document.createElement("div");
 
   if (classname != null) {
     inner.className = "geSprite " + classname;
@@ -1366,7 +1366,7 @@ Toolbar.prototype.createButton = function (classname) {
  * Creates and returns a new button.
  */
 Toolbar.prototype.createLabel = function (label, tooltip) {
-  var elt = document.createElement("a");
+  const elt = document.createElement("a");
   elt.className = "geLabel";
   mxUtils.write(elt, label);
 
@@ -1378,9 +1378,9 @@ Toolbar.prototype.createLabel = function (label, tooltip) {
  */
 Toolbar.prototype.addMenuHandler = function (elt, showLabels, funct, showAll) {
   if (funct != null) {
-    var graph = this.editorUi.editor.graph;
-    var menu = null;
-    var show = true;
+    const graph = this.editorUi.editor.graph;
+    let menu = null;
+    let show = true;
 
     mxEvent.addListener(
       elt,
@@ -1394,7 +1394,7 @@ Toolbar.prototype.addMenuHandler = function (elt, showLabels, funct, showAll) {
           menu.labels = showLabels;
           menu.autoExpand = true;
 
-          var offset = mxUtils.getOffset(elt);
+          const offset = mxUtils.getOffset(elt);
           menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
           this.editorUi.setCurrentMenu(menu, elt);
 

@@ -29,7 +29,7 @@ export { Menubar, Menu, Menus };
 /**
  * Constructs a new graph editor
  */
-const Menus = function (editorUi) {
+function Menus(editorUi) {
   this.editorUi = editorUi;
   this.menus = new Object();
   this.init();
@@ -38,7 +38,7 @@ const Menus = function (editorUi) {
   if (!mxClient.IS_SVG) {
     new Image().src = this.checkmarkImage;
   }
-};
+}
 
 /**
  * Sets the default font family.
@@ -74,8 +74,8 @@ Menus.prototype.defaultFonts = [
  * Adds the label menu items to the given menu and parent.
  */
 Menus.prototype.init = function () {
-  var graph = this.editorUi.editor.graph;
-  var isGraphEnabled = mxUtils.bind(graph, graph.isEnabled);
+  const graph = this.editorUi.editor.graph;
+  const isGraphEnabled = mxUtils.bind(graph, graph.isEnabled);
 
   this.customFonts = [];
   this.customFontSizes = [];
@@ -84,8 +84,8 @@ Menus.prototype.init = function () {
     "fontFamily",
     new Menu(
       mxUtils.bind(this, function (menu, parent) {
-        var addItem = mxUtils.bind(this, function (fontname) {
-          var tr = this.styleChange(
+        const addItem = mxUtils.bind(this, function (fontname) {
+          const tr = this.styleChange(
             menu,
             fontname,
             [mxConstants.STYLE_FONTFAMILY],
@@ -200,9 +200,9 @@ Menus.prototype.init = function () {
     "fontSize",
     new Menu(
       mxUtils.bind(this, function (menu, parent) {
-        var sizes = [6, 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72];
+        const sizes = [6, 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72];
 
-        var addItem = mxUtils.bind(this, function (fontsize) {
+        const addItem = mxUtils.bind(this, function (fontsize) {
           this.styleChange(
             menu,
             fontsize,
@@ -218,9 +218,9 @@ Menus.prototype.init = function () {
                 // Changes the css font size of the first font element inside the in-place editor with size 3
                 // hopefully the above element that we've just created. LATER: Check for new element using
                 // previous result of getElementsByTagName (see other actions)
-                var elts = graph.cellEditor.textarea.getElementsByTagName("font");
+                const elts = graph.cellEditor.textarea.getElementsByTagName("font");
 
-                for (var i = 0; i < elts.length; i++) {
+                for (let i = 0; i < elts.length; i++) {
                   if (elts[i].getAttribute("size") == "3") {
                     elts[i].removeAttribute("size");
                     elts[i].style.fontSize = fontsize + "px";
@@ -380,8 +380,8 @@ Menus.prototype.init = function () {
     "layout",
     new Menu(
       mxUtils.bind(this, function (menu, parent) {
-        var promptSpacing = mxUtils.bind(this, function (defaultValue, fn) {
-          var dlg = new FilenameDialog(
+        const promptSpacing = mxUtils.bind(this, function (defaultValue, fn) {
+          const dlg = new FilenameDialog(
             this.editorUi,
             defaultValue,
             mxResources.get("apply"),
@@ -398,10 +398,10 @@ Menus.prototype.init = function () {
           mxResources.get("horizontalFlow"),
           null,
           mxUtils.bind(this, function () {
-            var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+            const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
 
             this.editorUi.executeLayout(function () {
-              var selectionCells = graph.getSelectionCells();
+              const selectionCells = graph.getSelectionCells();
               layout.execute(
                 graph.getDefaultParent(),
                 selectionCells.length == 0 ? null : selectionCells
@@ -414,10 +414,10 @@ Menus.prototype.init = function () {
           mxResources.get("verticalFlow"),
           null,
           mxUtils.bind(this, function () {
-            var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_NORTH);
+            const layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_NORTH);
 
             this.editorUi.executeLayout(function () {
-              var selectionCells = graph.getSelectionCells();
+              const selectionCells = graph.getSelectionCells();
               layout.execute(
                 graph.getDefaultParent(),
                 selectionCells.length == 0 ? null : selectionCells
@@ -431,8 +431,8 @@ Menus.prototype.init = function () {
           mxResources.get("horizontalTree"),
           null,
           mxUtils.bind(this, function () {
-            var tmp = graph.getSelectionCell();
-            var roots = null;
+            let tmp = graph.getSelectionCell();
+            let roots = null;
 
             if (tmp == null || graph.getModel().getChildCount(tmp) == 0) {
               if (graph.getModel().getEdgeCount(tmp) == 0) {
@@ -447,7 +447,7 @@ Menus.prototype.init = function () {
             }
 
             if (tmp != null) {
-              var layout = new mxCompactTreeLayout(graph, true);
+              const layout = new mxCompactTreeLayout(graph, true);
               layout.edgeRouting = false;
               layout.levelDistance = 30;
 
@@ -469,8 +469,8 @@ Menus.prototype.init = function () {
           mxResources.get("verticalTree"),
           null,
           mxUtils.bind(this, function () {
-            var tmp = graph.getSelectionCell();
-            var roots = null;
+            let tmp = graph.getSelectionCell();
+            let roots = null;
 
             if (tmp == null || graph.getModel().getChildCount(tmp) == 0) {
               if (graph.getModel().getEdgeCount(tmp) == 0) {
@@ -485,7 +485,7 @@ Menus.prototype.init = function () {
             }
 
             if (tmp != null) {
-              var layout = new mxCompactTreeLayout(graph, false);
+              const layout = new mxCompactTreeLayout(graph, false);
               layout.edgeRouting = false;
               layout.levelDistance = 30;
 
@@ -507,8 +507,8 @@ Menus.prototype.init = function () {
           mxResources.get("radialTree"),
           null,
           mxUtils.bind(this, function () {
-            var tmp = graph.getSelectionCell();
-            var roots = null;
+            let tmp = graph.getSelectionCell();
+            let roots = null;
 
             if (tmp == null || graph.getModel().getChildCount(tmp) == 0) {
               if (graph.getModel().getEdgeCount(tmp) == 0) {
@@ -523,7 +523,7 @@ Menus.prototype.init = function () {
             }
 
             if (tmp != null) {
-              var layout = new mxRadialTreeLayout(graph, false);
+              const layout = new mxRadialTreeLayout(graph, false);
               layout.levelDistance = 80;
               layout.autoRadius = true;
 
@@ -554,7 +554,7 @@ Menus.prototype.init = function () {
           mxResources.get("organic"),
           null,
           mxUtils.bind(this, function () {
-            var layout = new mxFastOrganicLayout(graph);
+            const layout = new mxFastOrganicLayout(graph);
 
             promptSpacing(
               layout.forceConstant,
@@ -562,7 +562,7 @@ Menus.prototype.init = function () {
                 layout.forceConstant = newValue;
 
                 this.editorUi.executeLayout(function () {
-                  var tmp = graph.getSelectionCell();
+                  let tmp = graph.getSelectionCell();
 
                   if (tmp == null || graph.getModel().getChildCount(tmp) == 0) {
                     tmp = graph.getDefaultParent();
@@ -583,10 +583,10 @@ Menus.prototype.init = function () {
           mxResources.get("circle"),
           null,
           mxUtils.bind(this, function () {
-            var layout = new mxCircleLayout(graph);
+            const layout = new mxCircleLayout(graph);
 
             this.editorUi.executeLayout(function () {
-              var tmp = graph.getSelectionCell();
+              let tmp = graph.getSelectionCell();
 
               if (tmp == null || graph.getModel().getChildCount(tmp) == 0) {
                 tmp = graph.getDefaultParent();
@@ -696,9 +696,9 @@ Menus.prototype.init = function () {
     new Menu(
       mxUtils.bind(this, function (menu, parent) {
         this.addMenuItems(menu, ["resetView", "-"], parent);
-        var scales = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
+        const scales = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
 
-        for (var i = 0; i < scales.length; i++) {
+        for (let i = 0; i < scales.length; i++) {
           (function (scale) {
             menu.addItem(
               scale * 100 + "%",
@@ -815,13 +815,20 @@ Menus.prototype.get = function (name) {
  * Adds the given submenu.
  */
 Menus.prototype.addSubmenu = function (name, menu, parent, label) {
-  var entry = this.get(name);
+  const entry = this.get(name);
 
   if (entry != null) {
-    var enabled = entry.isEnabled();
+    const enabled = entry.isEnabled();
 
     if (menu.showDisabled || enabled) {
-      var submenu = menu.addItem(label || mxResources.get(name), null, null, parent, null, enabled);
+      const submenu = menu.addItem(
+        label || mxResources.get(name),
+        null,
+        null,
+        parent,
+        null,
+        enabled
+      );
       this.addMenu(name, menu, submenu);
     }
   }
@@ -831,7 +838,7 @@ Menus.prototype.addSubmenu = function (name, menu, parent, label) {
  * Adds the label menu items to the given menu and parent.
  */
 Menus.prototype.addMenu = function (name, popupMenu, parent) {
-  var menu = this.get(name);
+  const menu = this.get(name);
 
   if (menu != null && (popupMenu.showDisabled || menu.isEnabled())) {
     this.get(name).execute(popupMenu, parent);
@@ -842,19 +849,19 @@ Menus.prototype.addMenu = function (name, popupMenu, parent) {
  * Adds a menu item to insert a table cell.
  */
 Menus.prototype.addInsertTableCellItem = function (menu, parent) {
-  var graph = this.editorUi.editor.graph;
+  const graph = this.editorUi.editor.graph;
 
   this.addInsertTableItem(
     menu,
     mxUtils.bind(this, function (evt, rows, cols) {
-      var table =
+      const table =
         mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt)
           ? graph.createCrossFunctionalSwimlane(rows, cols)
           : graph.createTable(rows, cols, null, null, mxEvent.isShiftDown(evt) ? "Table" : null);
-      var pt = mxEvent.isAltDown(evt)
+      const pt = mxEvent.isAltDown(evt)
         ? graph.getFreeInsertPoint()
         : graph.getCenterInsertPoint(graph.getBoundingBoxFromGeometry([table], true));
-      var select = graph.importCells([table], pt.x, pt.y);
+      const select = graph.importCells([table], pt.x, pt.y);
 
       if (select != null && select.length > 0) {
         graph.scrollCellToVisible(select[0]);
@@ -873,16 +880,16 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
     insertFn != null
       ? insertFn
       : mxUtils.bind(this, function (evt, rows, cols) {
-          var graph = this.editorUi.editor.graph;
-          var td = graph.getParentByName(mxEvent.getSource(evt), "TD");
+          const graph = this.editorUi.editor.graph;
+          const td = graph.getParentByName(mxEvent.getSource(evt), "TD");
 
           if (td != null && graph.cellEditor.textarea != null) {
-            var row2 = graph.getParentByName(td, "TR");
+            const row2 = graph.getParentByName(td, "TR");
 
             // To find the new link, we create a list of all existing links first
             // LATER: Refactor for reuse with code for finding inserted image below
-            var tmp = graph.cellEditor.textarea.getElementsByTagName("table");
-            var oldTables = [];
+            const tmp = graph.cellEditor.textarea.getElementsByTagName("table");
+            const oldTables = [];
 
             for (var i = 0; i < tmp.length; i++) {
               oldTables.push(tmp[i]);
@@ -893,7 +900,7 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
             graph.pasteHtmlAtCaret(createTable(rows, cols));
 
             // Moves cursor to first table cell
-            var newTables = graph.cellEditor.textarea.getElementsByTagName("table");
+            const newTables = graph.cellEditor.textarea.getElementsByTagName("table");
 
             if (newTables.length == oldTables.length + 1) {
               // Inverse order in favor of appended tables
@@ -908,17 +915,17 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
         });
 
   // KNOWN: Does not work in IE8 standards and quirks
-  var graph = this.editorUi.editor.graph;
-  var row2 = null;
-  var td = null;
+  const graph = this.editorUi.editor.graph;
+  let row2 = null;
+  let td = null;
 
   function createTable(rows, cols) {
-    var html = ["<table>"];
+    const html = ["<table>"];
 
-    for (var i = 0; i < rows; i++) {
+    for (let i = 0; i < rows; i++) {
       html.push("<tr>");
 
-      for (var j = 0; j < cols; j++) {
+      for (let j = 0; j < cols; j++) {
         html.push("<td><br></td>");
       }
 
@@ -931,14 +938,14 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
   }
 
   // Show table size dialog
-  var elt2 = menu.addItem("", null, null, parent, null, null, null, true);
+  const elt2 = menu.addItem("", null, null, parent, null, null, null, true);
 
   // Quirks mode does not add cell padding if cell is empty, needs good old spacer solution
-  var quirksCellHtml =
+  const quirksCellHtml =
     '<img src="' + mxClient.imageBasePath + "/transparent.gif" + '" width="16" height="16"/>';
 
   function createPicker(rows, cols) {
-    var table2 = document.createElement("table");
+    const table2 = document.createElement("table");
     table2.setAttribute("border", "1");
     table2.style.borderCollapse = "collapse";
     table2.style.borderStyle = "solid";
@@ -947,11 +954,11 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
       table2.setAttribute("cellPadding", "8");
     }
 
-    for (var i = 0; i < rows; i++) {
-      var row = table2.insertRow(i);
+    for (let i = 0; i < rows; i++) {
+      const row = table2.insertRow(i);
 
-      for (var j = 0; j < cols; j++) {
-        var cell = row.insertCell(-1);
+      for (let j = 0; j < cols; j++) {
+        const cell = row.insertCell(-1);
 
         if (mxClient.IS_QUIRKS) {
           cell.innerHTML = quirksCellHtml;
@@ -989,10 +996,10 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
   }
 
   elt2.firstChild.innerHTML = "";
-  var picker = createPicker(5, 5);
+  const picker = createPicker(5, 5);
   elt2.firstChild.appendChild(picker);
 
-  var label = document.createElement("div");
+  const label = document.createElement("div");
   label.style.padding = "4px";
   label.style.fontSize = Menus.prototype.defaultFontSize + "px";
   label.innerHTML = "1x1";
@@ -1000,11 +1007,11 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
 
   function mouseover(e) {
     td = graph.getParentByName(mxEvent.getSource(e), "TD");
-    var selected = false;
+    let selected = false;
 
     if (td != null) {
       row2 = graph.getParentByName(td, "TR");
-      var ext = mxEvent.isMouseEvent(e) ? 2 : 4;
+      const ext = mxEvent.isMouseEvent(e) ? 2 : 4;
       extendPicker(
         picker,
         Math.min(20, row2.sectionRowIndex + ext),
@@ -1012,11 +1019,11 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
       );
       label.innerHTML = td.cellIndex + 1 + "x" + (row2.sectionRowIndex + 1);
 
-      for (var i = 0; i < picker.rows.length; i++) {
-        var r = picker.rows[i];
+      for (let i = 0; i < picker.rows.length; i++) {
+        const r = picker.rows[i];
 
-        for (var j = 0; j < r.cells.length; j++) {
-          var cell = r.cells[j];
+        for (let j = 0; j < r.cells.length; j++) {
+          const cell = r.cells[j];
 
           if (i == row2.sectionRowIndex && j == td.cellIndex) {
             selected = cell.style.backgroundColor == "blue";
@@ -1041,7 +1048,7 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
     null,
     null,
     mxUtils.bind(this, function (e) {
-      var selected = mouseover(e);
+      const selected = mouseover(e);
 
       if (td != null && row2 != null && selected) {
         insertFn(e, row2.sectionRowIndex + 1, td.cellIndex + 1);
@@ -1067,20 +1074,20 @@ Menus.prototype.edgeStyleChange = function (menu, label, keys, values, sprite, p
     label,
     null,
     mxUtils.bind(this, function () {
-      var graph = this.editorUi.editor.graph;
+      const graph = this.editorUi.editor.graph;
       graph.stopEditing(false);
 
       graph.getModel().beginUpdate();
       try {
-        var cells = graph.getSelectionCells();
-        var edges = [];
+        const cells = graph.getSelectionCells();
+        const edges = [];
 
-        for (var i = 0; i < cells.length; i++) {
-          var cell = cells[i];
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i];
 
           if (graph.getModel().isEdge(cell)) {
             if (reset) {
-              var geo = graph.getCellGeometry(cell);
+              let geo = graph.getCellGeometry(cell);
 
               // Resets all edge points
               if (geo != null) {
@@ -1090,7 +1097,7 @@ Menus.prototype.edgeStyleChange = function (menu, label, keys, values, sprite, p
               }
             }
 
-            for (var j = 0; j < keys.length; j++) {
+            for (let j = 0; j < keys.length; j++) {
               graph.setCellStyles(keys[j], values[j], [cell]);
             }
 
@@ -1114,13 +1121,13 @@ Menus.prototype.edgeStyleChange = function (menu, label, keys, values, sprite, p
  * Adds a style change item to the given menu.
  */
 Menus.prototype.styleChange = function (menu, label, keys, values, sprite, parent, fn, post) {
-  var apply = this.createStyleChangeFunction(keys, values);
+  const apply = this.createStyleChangeFunction(keys, values);
 
   return menu.addItem(
     label,
     null,
     mxUtils.bind(this, function () {
-      var graph = this.editorUi.editor.graph;
+      const graph = this.editorUi.editor.graph;
 
       if (fn != null && graph.cellEditor.isContentEditing()) {
         fn();
@@ -1138,12 +1145,12 @@ Menus.prototype.styleChange = function (menu, label, keys, values, sprite, paren
  */
 Menus.prototype.createStyleChangeFunction = function (keys, values) {
   return mxUtils.bind(this, function (post) {
-    var graph = this.editorUi.editor.graph;
+    const graph = this.editorUi.editor.graph;
     graph.stopEditing(false);
 
     graph.getModel().beginUpdate();
     try {
-      var cells = graph.getSelectionCells();
+      const cells = graph.getSelectionCells();
 
       for (var i = 0; i < keys.length; i++) {
         graph.setCellStyles(keys[i], values[i], cells);
@@ -1197,15 +1204,15 @@ Menus.prototype.promptChange = function (
     label,
     null,
     mxUtils.bind(this, function () {
-      var graph = this.editorUi.editor.graph;
-      var value = defaultValue;
-      var state = graph.getView().getState(graph.getSelectionCell());
+      const graph = this.editorUi.editor.graph;
+      let value = defaultValue;
+      const state = graph.getView().getState(graph.getSelectionCell());
 
       if (state != null) {
         value = state.style[key] || value;
       }
 
-      var dlg = new FilenameDialog(
+      const dlg = new FilenameDialog(
         this.editorUi,
         value,
         mxResources.get("apply"),
@@ -1239,8 +1246,8 @@ Menus.prototype.promptChange = function (
  * Adds a handler for showing a menu in the given element.
  */
 Menus.prototype.pickColor = function (key, cmd, defaultValue) {
-  var graph = this.editorUi.editor.graph;
-  var h =
+  const graph = this.editorUi.editor.graph;
+  const h =
     226 +
     (Math.ceil(ColorDialog.prototype.presetColors.length / 12) +
       Math.ceil(ColorDialog.prototype.defaultColors.length / 12)) *
@@ -1248,9 +1255,9 @@ Menus.prototype.pickColor = function (key, cmd, defaultValue) {
 
   if (cmd != null && graph.cellEditor.isContentEditing()) {
     // Saves and restores text selection for in-place editor
-    var selState = graph.cellEditor.saveSelection();
+    const selState = graph.cellEditor.saveSelection();
 
-    var dlg = new ColorDialog(
+    const dlg = new ColorDialog(
       this.editorUi,
       defaultValue || "000000",
       mxUtils.bind(this, function (color) {
@@ -1269,8 +1276,8 @@ Menus.prototype.pickColor = function (key, cmd, defaultValue) {
     }
 
     this.colorDialog.currentColorKey = key;
-    var state = graph.getView().getState(graph.getSelectionCell());
-    var color = "none";
+    const state = graph.getView().getState(graph.getSelectionCell());
+    let color = "none";
 
     if (state != null) {
       color = state.style[key] || color;
@@ -1293,8 +1300,8 @@ Menus.prototype.pickColor = function (key, cmd, defaultValue) {
  * Adds a handler for showing a menu in the given element.
  */
 Menus.prototype.toggleStyle = function (key, defaultValue) {
-  var graph = this.editorUi.editor.graph;
-  var value = graph.toggleCellStyles(key, defaultValue);
+  const graph = this.editorUi.editor.graph;
+  const value = graph.toggleCellStyles(key, defaultValue);
   this.editorUi.fireEvent(
     new mxEventObject(
       "styleChanged",
@@ -1312,10 +1319,10 @@ Menus.prototype.toggleStyle = function (key, defaultValue) {
  * Creates the keyboard event handler for the current graph and history.
  */
 Menus.prototype.addMenuItem = function (menu, key, parent, trigger, sprite, label) {
-  var action = this.editorUi.actions.get(key);
+  const action = this.editorUi.actions.get(key);
 
   if (action != null && (menu.showDisabled || action.isEnabled()) && action.visible) {
-    var item = menu.addItem(
+    const item = menu.addItem(
       label || action.label,
       null,
       function () {
@@ -1344,8 +1351,8 @@ Menus.prototype.addMenuItem = function (menu, key, parent, trigger, sprite, labe
  */
 Menus.prototype.addShortcut = function (item, action) {
   if (action.shortcut != null) {
-    var td = item.firstChild.nextSibling.nextSibling;
-    var span = document.createElement("span");
+    const td = item.firstChild.nextSibling.nextSibling;
+    const span = document.createElement("span");
     span.style.color = "gray";
     mxUtils.write(span, action.shortcut);
     td.appendChild(span);
@@ -1356,7 +1363,7 @@ Menus.prototype.addShortcut = function (item, action) {
  * Creates the keyboard event handler for the current graph and history.
  */
 Menus.prototype.addMenuItems = function (menu, keys, parent, trigger, sprites) {
-  for (var i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     if (keys[i] == "-") {
       menu.addSeparator(parent);
     } else {
@@ -1414,7 +1421,7 @@ Menus.prototype.addPopupMenuStyleItems = function (menu, cell, evt) {
  * Creates the keyboard event handler for the current graph and history.
  */
 Menus.prototype.addPopupMenuArrangeItems = function (menu, cell, evt) {
-  var graph = this.editorUi.editor.graph;
+  const graph = this.editorUi.editor.graph;
 
   if (!graph.isSelectionEmpty()) {
     this.addMenuItems(menu, ["-", "toFront", "toBack"], null, evt);
@@ -1436,28 +1443,28 @@ Menus.prototype.addPopupMenuArrangeItems = function (menu, cell, evt) {
  * Creates the keyboard event handler for the current graph and history.
  */
 Menus.prototype.addPopupMenuCellItems = function (menu, cell, evt) {
-  var graph = this.editorUi.editor.graph;
+  const graph = this.editorUi.editor.graph;
   cell = graph.getSelectionCell();
-  var state = graph.view.getState(cell);
+  const state = graph.view.getState(cell);
   menu.addSeparator();
 
   if (state != null) {
-    var hasWaypoints = false;
+    let hasWaypoints = false;
 
     if (
       graph.getModel().isEdge(cell) &&
       mxUtils.getValue(state.style, mxConstants.STYLE_EDGE, null) != "entityRelationEdgeStyle" &&
       mxUtils.getValue(state.style, mxConstants.STYLE_SHAPE, null) != "arrow"
     ) {
-      var handler = graph.selectionCellsHandler.getHandler(cell);
-      var isWaypoint = false;
+      const handler = graph.selectionCellsHandler.getHandler(cell);
+      let isWaypoint = false;
 
       if (handler instanceof mxEdgeHandler && handler.bends != null && handler.bends.length > 2) {
-        var index = handler.getHandleForEvent(graph.updateMouseEvent(new mxMouseEvent(evt)));
+        const index = handler.getHandleForEvent(graph.updateMouseEvent(new mxMouseEvent(evt)));
 
         // Configures removeWaypoint action before execution
         // Using trigger parameter is cleaner but have to find waypoint here anyway.
-        var rmWaypointAction = this.editorUi.actions.get("removeWaypoint");
+        const rmWaypointAction = this.editorUi.actions.get("removeWaypoint");
         rmWaypointAction.handler = handler;
         rmWaypointAction.index = index;
 
@@ -1469,7 +1476,7 @@ Menus.prototype.addPopupMenuCellItems = function (menu, cell, evt) {
       this.addMenuItems(menu, [isWaypoint ? "removeWaypoint" : "addWaypoint"], null, evt);
 
       // Adds reset waypoints option if waypoints exist
-      var geo = graph.getModel().getGeometry(cell);
+      const geo = graph.getModel().getGeometry(cell);
       hasWaypoints = geo != null && geo.points != null && geo.points.length > 0;
     }
 
@@ -1509,12 +1516,12 @@ Menus.prototype.addPopupMenuSelectionItems = function (menu, cell, evt) {
  * Creates the keyboard event handler for the current graph and history.
  */
 Menus.prototype.createMenubar = function (container) {
-  var menubar = new Menubar(this.editorUi, container);
-  var menus = this.defaultMenuItems;
+  const menubar = new Menubar(this.editorUi, container);
+  const menus = this.defaultMenuItems;
 
   for (var i = 0; i < menus.length; i++) {
     mxUtils.bind(this, function (menu) {
-      var elt = menubar.addMenu(
+      const elt = menubar.addMenu(
         mxResources.get(menus[i]),
         mxUtils.bind(this, function () {
           // Allows extensions of menu.funct
@@ -1575,7 +1582,7 @@ Menubar.prototype.hideMenu = function () {
  * Adds a submenu to this menubar.
  */
 Menubar.prototype.addMenu = function (label, funct, before) {
-  var elt = document.createElement("a");
+  const elt = document.createElement("a");
   elt.className = "geItem";
   mxUtils.write(elt, label);
   this.addMenuHandler(elt, funct);
@@ -1594,12 +1601,12 @@ Menubar.prototype.addMenu = function (label, funct, before) {
  */
 Menubar.prototype.addMenuHandler = function (elt, funct) {
   if (funct != null) {
-    var show = true;
+    let show = true;
 
-    var clickHandler = mxUtils.bind(this, function (evt) {
+    const clickHandler = mxUtils.bind(this, function (evt) {
       if ((show && elt.enabled == null) || elt.enabled) {
         this.editorUi.editor.graph.popupMenuHandler.hideMenu();
-        var menu = new mxPopupMenu(funct);
+        const menu = new mxPopupMenu(funct);
         menu.div.className += " geMenubarMenu";
         menu.smartSeparators = true;
         menu.showDisabled = true;
@@ -1612,7 +1619,7 @@ Menubar.prototype.addMenuHandler = function (elt, funct) {
           menu.destroy();
         });
 
-        var offset = mxUtils.getOffset(elt);
+        const offset = mxUtils.getOffset(elt);
         menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
         this.editorUi.setCurrentMenu(menu, elt);
       }

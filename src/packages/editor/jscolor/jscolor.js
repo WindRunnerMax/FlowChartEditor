@@ -5,16 +5,6 @@ import arrow from "./arrow.gif";
 import cross from "./cross.gif";
 import hs from "./hs.png";
 import hv from "./hv.png";
-/**
- * jscolor, JavaScript Color Picker
- *
- * @version 1.3.13
- * @license GNU Lesser General Public License, http://www.gnu.org/copyleft/lesser.html
- * @author  Jan Odvarko, http://odvarko.cz
- * @created 2008-06-15
- * @updated 2012-01-19
- * @link    http://jscolor.com
- */
 
 const base64 = { arrow, cross, hs, hv };
 
@@ -23,10 +13,6 @@ export const mxJSColor = {
   bindClass: "color", // class name
   binding: true, // automatic binding via <input class="...">
   preloading: true, // use image preloading?
-
-  install: function () {
-    //mxJSColor.addEvent(window, 'load', mxJSColor.init);
-  },
 
   init: function () {
     if (mxJSColor.preloading) {
@@ -1020,5 +1006,3 @@ export const mxJSColor = {
     this.importColor();
   },
 };
-
-mxJSColor.install();

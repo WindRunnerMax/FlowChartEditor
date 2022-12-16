@@ -51,8 +51,8 @@ export {
 /**
  * Constructs a new open dialog.
  */
-var OpenDialog = function () {
-  var iframe = document.createElement("iframe");
+function OpenDialog() {
+  const iframe = document.createElement("iframe");
   iframe.style.backgroundColor = "transparent";
   iframe.allowTransparency = "true";
   iframe.style.borderStyle = "none";
@@ -61,22 +61,23 @@ var OpenDialog = function () {
   iframe.frameBorder = "0";
 
   // Adds padding as a workaround for box model in older IE versions
-  var dx = mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8) ? 20 : 0;
+  const dx =
+    mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8) ? 20 : 0;
 
   iframe.setAttribute("width", (Editor.useLocalStorage ? 640 : 320) + dx + "px");
   iframe.setAttribute("height", (Editor.useLocalStorage ? 480 : 220) + dx + "px");
   iframe.setAttribute("src", OPEN_FORM);
 
   this.container = iframe;
-};
+}
 
 /**
  * Constructs a new color dialog.
  */
-var ColorDialog = function (editorUi, color, apply, cancelFn) {
+function ColorDialog(editorUi, color, apply, cancelFn) {
   this.editorUi = editorUi;
 
-  var input = document.createElement("input");
+  const input = document.createElement("input");
   input.style.marginBottom = "10px";
   input.style.width = "216px";
 
@@ -86,10 +87,10 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
     document.body.appendChild(input);
   }
 
-  var applyFunction = apply != null ? apply : this.createApplyFunction();
+  const applyFunction = apply != null ? apply : this.createApplyFunction();
 
   function doApply() {
-    var color = input.value;
+    let color = input.value;
 
     // Blocks any non-alphabetic chars in colors
     if (/(^#?[a-zA-Z0-9]*$)/.test(color)) {
@@ -111,21 +112,21 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
     }
   };
 
-  var picker = new mxJSColor.color(input);
+  const picker = new mxJSColor.color(input);
   picker.pickerOnfocus = false;
   picker.showPicker();
 
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   mxJSColor.picker.box.style.position = "relative";
   mxJSColor.picker.box.style.width = "230px";
   mxJSColor.picker.box.style.height = "100px";
   mxJSColor.picker.box.style.paddingBottom = "10px";
   div.appendChild(mxJSColor.picker.box);
 
-  var center = document.createElement("center");
+  const center = document.createElement("center");
 
   function createRecentColorTable() {
-    var table = addPresets(
+    const table = addPresets(
       ColorDialog.recentColors.length == 0 ? ["FFFFFF"] : ColorDialog.recentColors,
       11,
       "FFFFFF",
@@ -138,22 +139,22 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
 
   function addPresets(presets, rowLength, defaultColor, addResetOption) {
     rowLength = rowLength != null ? rowLength : 12;
-    var table = document.createElement("table");
+    const table = document.createElement("table");
     table.style.borderCollapse = "collapse";
     table.setAttribute("cellspacing", "0");
     table.style.marginBottom = "20px";
     table.style.cellSpacing = "0px";
-    var tbody = document.createElement("tbody");
+    const tbody = document.createElement("tbody");
     table.appendChild(tbody);
 
-    var rows = presets.length / rowLength;
+    const rows = presets.length / rowLength;
 
-    for (var row = 0; row < rows; row++) {
+    for (let row = 0; row < rows; row++) {
       var tr = document.createElement("tr");
 
-      for (var i = 0; i < rowLength; i++) {
+      for (let i = 0; i < rowLength; i++) {
         (function (clr) {
-          var td = document.createElement("td");
+          const td = document.createElement("td");
           td.style.border = "1px solid black";
           td.style.padding = "0px";
           td.style.width = "16px";
@@ -192,7 +193,7 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
     }
 
     if (addResetOption) {
-      var td = document.createElement("td");
+      const td = document.createElement("td");
       td.setAttribute("title", mxResources.get("reset"));
       td.style.border = "1px solid black";
       td.style.padding = "0px";
@@ -223,18 +224,18 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
   createRecentColorTable();
 
   // Adds presets
-  var table = addPresets(this.presetColors);
+  let table = addPresets(this.presetColors);
   table.style.marginBottom = "8px";
   table = addPresets(this.defaultColors);
   table.style.marginBottom = "16px";
 
   div.appendChild(center);
 
-  var buttons = document.createElement("div");
+  const buttons = document.createElement("div");
   buttons.style.textAlign = "right";
   buttons.style.whiteSpace = "nowrap";
 
-  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
 
     if (cancelFn != null) {
@@ -247,7 +248,7 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
     buttons.appendChild(cancelBtn);
   }
 
-  var applyBtn = mxUtils.button(mxResources.get("apply"), doApply);
+  const applyBtn = mxUtils.button(mxResources.get("apply"), doApply);
   applyBtn.className = "geBtn gePrimaryBtn";
   buttons.appendChild(applyBtn);
 
@@ -283,7 +284,7 @@ var ColorDialog = function (editorUi, color, apply, cancelFn) {
   });
 
   this.container = div;
-};
+}
 
 /**
  * Creates function to apply value
@@ -446,7 +447,7 @@ ColorDialog.prototype.defaultColors = [
  */
 ColorDialog.prototype.createApplyFunction = function () {
   return mxUtils.bind(this, function (color) {
-    var graph = this.editorUi.editor.graph;
+    const graph = this.editorUi.editor.graph;
 
     graph.getModel().beginUpdate();
     try {
@@ -497,13 +498,13 @@ ColorDialog.resetRecentColors = function () {
 /**
  * Constructs a new about dialog.
  */
-var AboutDialog = function (editorUi) {
-  var div = document.createElement("div");
+function AboutDialog(editorUi) {
+  const div = document.createElement("div");
   div.setAttribute("align", "center");
-  var h3 = document.createElement("h3");
+  const h3 = document.createElement("h3");
   mxUtils.write(h3, mxResources.get("about") + " GraphEditor");
   div.appendChild(h3);
-  var img = document.createElement("img");
+  const img = document.createElement("img");
   img.style.border = "0px";
   img.setAttribute("width", "176");
   img.setAttribute("width", "151");
@@ -512,26 +513,26 @@ var AboutDialog = function (editorUi) {
   mxUtils.br(div);
   mxUtils.write(div, "Powered by mxGraph " + mxClient.VERSION);
   mxUtils.br(div);
-  var link = document.createElement("a");
+  const link = document.createElement("a");
   link.setAttribute("href", "http://www.jgraph.com/");
   link.setAttribute("target", "_blank");
   mxUtils.write(link, "www.jgraph.com");
   div.appendChild(link);
   mxUtils.br(div);
   mxUtils.br(div);
-  var closeBtn = mxUtils.button(mxResources.get("close"), function () {
+  const closeBtn = mxUtils.button(mxResources.get("close"), function () {
     editorUi.hideDialog();
   });
   closeBtn.className = "geBtn gePrimaryBtn";
   div.appendChild(closeBtn);
 
   this.container = div;
-};
+}
 
 /**
  * Constructs a new textarea dialog.
  */
-var TextareaDialog = function (
+function TextareaDialog(
   editorUi,
   title,
   url,
@@ -550,10 +551,10 @@ var TextareaDialog = function (
   w = w != null ? w : 300;
   h = h != null ? h : 120;
   noHide = noHide != null ? noHide : false;
-  var row, td;
+  let row, td;
 
-  var table = document.createElement("table");
-  var tbody = document.createElement("tbody");
+  const table = document.createElement("table");
+  const tbody = document.createElement("tbody");
 
   row = document.createElement("tr");
 
@@ -568,7 +569,7 @@ var TextareaDialog = function (
   row = document.createElement("tr");
   td = document.createElement("td");
 
-  var nameInput = document.createElement("textarea");
+  const nameInput = document.createElement("textarea");
 
   if (noWrap) {
     nameInput.setAttribute("wrap", "off");
@@ -603,7 +604,7 @@ var TextareaDialog = function (
   td.setAttribute("align", "right");
 
   if (helpLink != null) {
-    var helpBtn = mxUtils.button(mxResources.get("help"), function () {
+    const helpBtn = mxUtils.button(mxResources.get("help"), function () {
       editorUi.editor.graph.openLink(helpLink);
     });
     helpBtn.className = "geBtn";
@@ -612,9 +613,9 @@ var TextareaDialog = function (
   }
 
   if (customButtons != null) {
-    for (var i = 0; i < customButtons.length; i++) {
+    for (let i = 0; i < customButtons.length; i++) {
       (function (label, fn) {
-        var customBtn = mxUtils.button(label, function (e) {
+        const customBtn = mxUtils.button(label, function (e) {
           fn(e, nameInput);
         });
         customBtn.className = "geBtn";
@@ -624,7 +625,7 @@ var TextareaDialog = function (
     }
   }
 
-  var cancelBtn = mxUtils.button(cancelTitle || mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(cancelTitle || mxResources.get("cancel"), function () {
     editorUi.hideDialog();
 
     if (cancelFn != null) {
@@ -642,7 +643,7 @@ var TextareaDialog = function (
   }
 
   if (fn != null) {
-    var genericBtn = mxUtils.button(applyTitle || mxResources.get("apply"), function () {
+    const genericBtn = mxUtils.button(applyTitle || mxResources.get("apply"), function () {
       if (!noHide) {
         editorUi.hideDialog();
       }
@@ -662,15 +663,15 @@ var TextareaDialog = function (
   tbody.appendChild(row);
   table.appendChild(tbody);
   this.container = table;
-};
+}
 
 /**
  * Constructs a new edit file dialog.
  */
-var EditDiagramDialog = function (editorUi) {
-  var div = document.createElement("div");
+function EditDiagramDialog(editorUi) {
+  const div = document.createElement("div");
   div.style.textAlign = "right";
-  var textarea = document.createElement("textarea");
+  const textarea = document.createElement("textarea");
   textarea.setAttribute("wrap", "off");
   textarea.setAttribute("spellcheck", "false");
   textarea.setAttribute("autocorrect", "off");
@@ -696,8 +697,8 @@ var EditDiagramDialog = function (editorUi) {
       evt.preventDefault();
 
       if (evt.dataTransfer.files.length > 0) {
-        var file = evt.dataTransfer.files[0];
-        var reader = new FileReader();
+        const file = evt.dataTransfer.files[0];
+        const reader = new FileReader();
 
         reader.onload = function (e) {
           textarea.value = e.target.result;
@@ -719,7 +720,7 @@ var EditDiagramDialog = function (editorUi) {
     textarea.addEventListener("drop", handleDrop, false);
   }
 
-  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
   });
   cancelBtn.className = "geBtn";
@@ -728,18 +729,18 @@ var EditDiagramDialog = function (editorUi) {
     div.appendChild(cancelBtn);
   }
 
-  var select = document.createElement("select");
+  const select = document.createElement("select");
   select.style.width = "180px";
   select.className = "geBtn";
 
   if (editorUi.editor.graph.isEnabled()) {
-    var replaceOption = document.createElement("option");
+    const replaceOption = document.createElement("option");
     replaceOption.setAttribute("value", "replace");
     mxUtils.write(replaceOption, mxResources.get("replaceExistingDrawing"));
     select.appendChild(replaceOption);
   }
 
-  var newOption = document.createElement("option");
+  const newOption = document.createElement("option");
   newOption.setAttribute("value", "new");
   mxUtils.write(newOption, mxResources.get("openInNewWindow"));
 
@@ -748,7 +749,7 @@ var EditDiagramDialog = function (editorUi) {
   }
 
   if (editorUi.editor.graph.isEnabled()) {
-    var importOption = document.createElement("option");
+    const importOption = document.createElement("option");
     importOption.setAttribute("value", "import");
     mxUtils.write(importOption, mxResources.get("addToExistingDrawing"));
     select.appendChild(importOption);
@@ -756,10 +757,10 @@ var EditDiagramDialog = function (editorUi) {
 
   div.appendChild(select);
 
-  var okBtn = mxUtils.button(mxResources.get("ok"), function () {
+  const okBtn = mxUtils.button(mxResources.get("ok"), function () {
     // Removes all illegal control characters before parsing
-    var data = Graph.zapGremlins(mxUtils.trim(textarea.value));
-    var error = null;
+    const data = Graph.zapGremlins(mxUtils.trim(textarea.value));
+    let error = null;
 
     if (select.value == "new") {
       editorUi.hideDialog();
@@ -778,12 +779,12 @@ var EditDiagramDialog = function (editorUi) {
     } else if (select.value == "import") {
       editorUi.editor.graph.model.beginUpdate();
       try {
-        var doc = mxUtils.parseXml(data);
-        var model = new mxGraphModel();
-        var codec = new mxCodec(doc);
+        const doc = mxUtils.parseXml(data);
+        const model = new mxGraphModel();
+        const codec = new mxCodec(doc);
         codec.decode(doc.documentElement, model);
 
-        var children = model.getChildren(model.getChildAt(model.getRoot(), 0));
+        const children = model.getChildren(model.getChildAt(model.getRoot(), 0));
         editorUi.editor.graph.setSelectionCells(editorUi.editor.graph.importCells(children));
 
         // LATER: Why is hideDialog between begin-/endUpdate faster?
@@ -807,7 +808,7 @@ var EditDiagramDialog = function (editorUi) {
   }
 
   this.container = div;
-};
+}
 
 /**
  *
@@ -817,18 +818,18 @@ EditDiagramDialog.showNewWindowOption = true;
 /**
  * Constructs a new export dialog.
  */
-var ExportDialog = function (editorUi) {
-  var graph = editorUi.editor.graph;
-  var bounds = graph.getGraphBounds();
-  var scale = graph.view.scale;
+function ExportDialog(editorUi) {
+  const graph = editorUi.editor.graph;
+  const bounds = graph.getGraphBounds();
+  const scale = graph.view.scale;
 
-  var width = Math.ceil(bounds.width / scale);
-  var height = Math.ceil(bounds.height / scale);
+  const width = Math.ceil(bounds.width / scale);
+  const height = Math.ceil(bounds.height / scale);
 
-  var row, td;
+  let row, td;
 
-  var table = document.createElement("table");
-  var tbody = document.createElement("tbody");
+  const table = document.createElement("table");
+  const tbody = document.createElement("tbody");
   table.setAttribute("cellpadding", mxClient.IS_SF ? "0" : "2");
 
   row = document.createElement("tr");
@@ -840,7 +841,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var nameInput = document.createElement("input");
+  const nameInput = document.createElement("input");
   nameInput.setAttribute("value", editorUi.editor.getOrCreateFilename());
   nameInput.style.width = "180px";
 
@@ -858,15 +859,15 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var imageFormatSelect = document.createElement("select");
+  const imageFormatSelect = document.createElement("select");
   imageFormatSelect.style.width = "180px";
 
-  var pngOption = document.createElement("option");
+  const pngOption = document.createElement("option");
   pngOption.setAttribute("value", "png");
   mxUtils.write(pngOption, mxResources.get("formatPng"));
   imageFormatSelect.appendChild(pngOption);
 
-  var gifOption = document.createElement("option");
+  const gifOption = document.createElement("option");
 
   if (ExportDialog.showGifOption) {
     gifOption.setAttribute("value", "gif");
@@ -874,23 +875,23 @@ var ExportDialog = function (editorUi) {
     imageFormatSelect.appendChild(gifOption);
   }
 
-  var jpgOption = document.createElement("option");
+  const jpgOption = document.createElement("option");
   jpgOption.setAttribute("value", "jpg");
   mxUtils.write(jpgOption, mxResources.get("formatJpg"));
   imageFormatSelect.appendChild(jpgOption);
 
-  var pdfOption = document.createElement("option");
+  const pdfOption = document.createElement("option");
   pdfOption.setAttribute("value", "pdf");
   mxUtils.write(pdfOption, mxResources.get("formatPdf"));
   imageFormatSelect.appendChild(pdfOption);
 
-  var svgOption = document.createElement("option");
+  const svgOption = document.createElement("option");
   svgOption.setAttribute("value", "svg");
   mxUtils.write(svgOption, mxResources.get("formatSvg"));
   imageFormatSelect.appendChild(svgOption);
 
   if (ExportDialog.showXmlOption) {
-    var xmlOption = document.createElement("option");
+    const xmlOption = document.createElement("option");
     xmlOption.setAttribute("value", "xml");
     mxUtils.write(xmlOption, mxResources.get("formatXml"));
     imageFormatSelect.appendChild(xmlOption);
@@ -910,7 +911,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var zoomInput = document.createElement("input");
+  const zoomInput = document.createElement("input");
   zoomInput.setAttribute("type", "number");
   zoomInput.setAttribute("value", "100");
   zoomInput.style.width = "180px";
@@ -929,7 +930,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var widthInput = document.createElement("input");
+  const widthInput = document.createElement("input");
   widthInput.setAttribute("value", width);
   widthInput.style.width = "180px";
 
@@ -947,7 +948,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var heightInput = document.createElement("input");
+  const heightInput = document.createElement("input");
   heightInput.setAttribute("value", height);
   heightInput.style.width = "180px";
 
@@ -965,35 +966,35 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var dpiSelect = document.createElement("select");
+  const dpiSelect = document.createElement("select");
   dpiSelect.style.width = "180px";
 
-  var dpi100Option = document.createElement("option");
+  const dpi100Option = document.createElement("option");
   dpi100Option.setAttribute("value", "100");
   mxUtils.write(dpi100Option, "100dpi");
   dpiSelect.appendChild(dpi100Option);
 
-  var dpi200Option = document.createElement("option");
+  const dpi200Option = document.createElement("option");
   dpi200Option.setAttribute("value", "200");
   mxUtils.write(dpi200Option, "200dpi");
   dpiSelect.appendChild(dpi200Option);
 
-  var dpi300Option = document.createElement("option");
+  const dpi300Option = document.createElement("option");
   dpi300Option.setAttribute("value", "300");
   mxUtils.write(dpi300Option, "300dpi");
   dpiSelect.appendChild(dpi300Option);
 
-  var dpi400Option = document.createElement("option");
+  const dpi400Option = document.createElement("option");
   dpi400Option.setAttribute("value", "400");
   mxUtils.write(dpi400Option, "400dpi");
   dpiSelect.appendChild(dpi400Option);
 
-  var dpiCustOption = document.createElement("option");
+  const dpiCustOption = document.createElement("option");
   dpiCustOption.setAttribute("value", "custom");
   mxUtils.write(dpiCustOption, mxResources.get("custom"));
   dpiSelect.appendChild(dpiCustOption);
 
-  var customDpi = document.createElement("input");
+  const customDpi = document.createElement("input");
   customDpi.style.width = "180px";
   customDpi.style.display = "none";
   customDpi.setAttribute("value", "100");
@@ -1001,7 +1002,7 @@ var ExportDialog = function (editorUi) {
   customDpi.setAttribute("min", "50");
   customDpi.setAttribute("step", "50");
 
-  var zoomUserChanged = false;
+  let zoomUserChanged = false;
 
   mxEvent.addListener(dpiSelect, "change", function () {
     if (this.value == "custom") {
@@ -1018,7 +1019,7 @@ var ExportDialog = function (editorUi) {
   });
 
   mxEvent.addListener(customDpi, "change", function () {
-    var dpi = parseInt(customDpi.value);
+    const dpi = parseInt(customDpi.value);
 
     if (isNaN(dpi) || dpi <= 0) {
       customDpi.style.backgroundColor = "red";
@@ -1046,7 +1047,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var transparentCheckbox = document.createElement("input");
+  const transparentCheckbox = document.createElement("input");
   transparentCheckbox.setAttribute("type", "checkbox");
   transparentCheckbox.checked = graph.background == null || graph.background == mxConstants.NONE;
 
@@ -1066,7 +1067,7 @@ var ExportDialog = function (editorUi) {
 
   row.appendChild(td);
 
-  var borderInput = document.createElement("input");
+  const borderInput = document.createElement("input");
   borderInput.setAttribute("type", "number");
   borderInput.setAttribute("value", ExportDialog.lastBorderValue);
   borderInput.style.width = "180px";
@@ -1080,8 +1081,8 @@ var ExportDialog = function (editorUi) {
 
   // Handles changes in the export format
   function formatChanged() {
-    var name = nameInput.value;
-    var dot = name.lastIndexOf(".");
+    const name = nameInput.value;
+    const dot = name.lastIndexOf(".");
 
     if (dot > 0) {
       nameInput.value = name.substring(0, dot + 1) + imageFormatSelect.value;
@@ -1135,7 +1136,7 @@ var ExportDialog = function (editorUi) {
 
   mxEvent.addListener(zoomInput, "change", function () {
     zoomUserChanged = true;
-    var s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
+    const s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
     zoomInput.value = parseFloat((s * 100).toFixed(2));
 
     if (width > 0) {
@@ -1151,7 +1152,7 @@ var ExportDialog = function (editorUi) {
   });
 
   mxEvent.addListener(widthInput, "change", function () {
-    var s = parseInt(widthInput.value) / width;
+    const s = parseInt(widthInput.value) / width;
 
     if (s > 0) {
       zoomInput.value = parseFloat((s * 100).toFixed(2));
@@ -1166,7 +1167,7 @@ var ExportDialog = function (editorUi) {
   });
 
   mxEvent.addListener(heightInput, "change", function () {
-    var s = parseInt(heightInput.value) / height;
+    const s = parseInt(heightInput.value) / height;
 
     if (s > 0) {
       zoomInput.value = parseFloat((s * 100).toFixed(2));
@@ -1186,18 +1187,18 @@ var ExportDialog = function (editorUi) {
   td.style.paddingTop = "22px";
   td.colSpan = 2;
 
-  var saveBtn = mxUtils.button(
+  const saveBtn = mxUtils.button(
     mxResources.get("export"),
     mxUtils.bind(this, function () {
       if (parseInt(zoomInput.value) <= 0) {
         mxUtils.alert(mxResources.get("drawingEmpty"));
       } else {
-        var name = nameInput.value;
-        var format = imageFormatSelect.value;
-        var s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
-        var b = Math.max(0, parseInt(borderInput.value));
-        var bg = graph.background;
-        var dpi = Math.max(1, parseInt(customDpi.value));
+        const name = nameInput.value;
+        const format = imageFormatSelect.value;
+        const s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
+        const b = Math.max(0, parseInt(borderInput.value));
+        let bg = graph.background;
+        const dpi = Math.max(1, parseInt(customDpi.value));
 
         if ((format == "svg" || format == "png") && transparentCheckbox.checked) {
           bg = null;
@@ -1212,7 +1213,7 @@ var ExportDialog = function (editorUi) {
   );
   saveBtn.className = "geBtn gePrimaryBtn";
 
-  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
   });
   cancelBtn.className = "geBtn";
@@ -1229,7 +1230,7 @@ var ExportDialog = function (editorUi) {
   tbody.appendChild(row);
   table.appendChild(tbody);
   this.container = table;
-};
+}
 
 /**
  * Remembers last value for border.
@@ -1253,7 +1254,7 @@ ExportDialog.showXmlOption = true;
  * key=value, where value should be URL encoded.
  */
 ExportDialog.exportFile = function (editorUi, name, format, bg, s, b, dpi) {
-  var graph = editorUi.editor.graph;
+  const graph = editorUi.editor.graph;
 
   if (format == "xml") {
     ExportDialog.saveLocalFile(
@@ -1265,33 +1266,33 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b, dpi) {
   } else if (format == "svg") {
     ExportDialog.saveLocalFile(editorUi, mxUtils.getXml(graph.getSvg(bg, s, b)), name, format);
   } else {
-    var bounds = graph.getGraphBounds();
+    const bounds = graph.getGraphBounds();
 
     // New image export
-    var xmlDoc = mxUtils.createXmlDocument();
-    var root = xmlDoc.createElement("output");
+    const xmlDoc = mxUtils.createXmlDocument();
+    const root = xmlDoc.createElement("output");
     xmlDoc.appendChild(root);
 
     // Renders graph. Offset will be multiplied with state's scale when painting state.
-    var xmlCanvas = new mxXmlCanvas2D(root);
+    const xmlCanvas = new mxXmlCanvas2D(root);
     xmlCanvas.translate(
       Math.floor((b / s - bounds.x) / graph.view.scale),
       Math.floor((b / s - bounds.y) / graph.view.scale)
     );
     xmlCanvas.scale(s / graph.view.scale);
 
-    var imgExport = new mxImageExport();
+    const imgExport = new mxImageExport();
     imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
 
     // Puts request data together
-    var param = "xml=" + encodeURIComponent(mxUtils.getXml(root));
-    var w = Math.ceil((bounds.width * s) / graph.view.scale + 2 * b);
-    var h = Math.ceil((bounds.height * s) / graph.view.scale + 2 * b);
+    const param = "xml=" + encodeURIComponent(mxUtils.getXml(root));
+    const w = Math.ceil((bounds.width * s) / graph.view.scale + 2 * b);
+    const h = Math.ceil((bounds.height * s) / graph.view.scale + 2 * b);
 
     // Requests image if request is valid
     if (param.length <= MAX_REQUEST_SIZE && w * h < MAX_AREA) {
       editorUi.hideDialog();
-      var req = new mxXmlRequest(
+      const req = new mxXmlRequest(
         EXPORT_URL,
         "format=" +
           format +
@@ -1324,7 +1325,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b, dpi) {
 ExportDialog.saveLocalFile = function (editorUi, data, filename, format) {
   if (data.length < MAX_REQUEST_SIZE) {
     editorUi.hideDialog();
-    var req = new mxXmlRequest(
+    const req = new mxXmlRequest(
       SAVE_URL,
       "xml=" +
         encodeURIComponent(data) +
@@ -1343,43 +1344,43 @@ ExportDialog.saveLocalFile = function (editorUi, data, filename, format) {
 /**
  * Constructs a new metadata dialog.
  */
-var EditDataDialog = function (ui, cell) {
-  var div = document.createElement("div");
-  var graph = ui.editor.graph;
+function EditDataDialog(ui, cell) {
+  const div = document.createElement("div");
+  const graph = ui.editor.graph;
 
-  var value = graph.getModel().getValue(cell);
+  let value = graph.getModel().getValue(cell);
 
   // Converts the value to an XML node
   if (!mxUtils.isNode(value)) {
-    var doc = mxUtils.createXmlDocument();
-    var obj = doc.createElement("object");
+    const doc = mxUtils.createXmlDocument();
+    const obj = doc.createElement("object");
     obj.setAttribute("label", value || "");
     value = obj;
   }
 
   // Creates the dialog contents
-  var form = new mxForm("properties");
+  const form = new mxForm("properties");
   form.table.style.width = "100%";
 
-  var attrs = value.attributes;
-  var names = [];
-  var texts = [];
-  var count = 0;
+  const attrs = value.attributes;
+  const names = [];
+  const texts = [];
+  let count = 0;
 
-  var id =
+  const id =
     EditDataDialog.getDisplayIdForCell != null
       ? EditDataDialog.getDisplayIdForCell(ui, cell)
       : null;
 
-  var addRemoveButton = function (text, name) {
-    var wrapper = document.createElement("div");
+  const addRemoveButton = function (text, name) {
+    const wrapper = document.createElement("div");
     wrapper.style.position = "relative";
     wrapper.style.paddingRight = "20px";
     wrapper.style.boxSizing = "border-box";
     wrapper.style.width = "100%";
 
-    var removeAttr = document.createElement("a");
-    var img = mxUtils.createImage(Dialog.prototype.closeImage);
+    const removeAttr = document.createElement("a");
+    const img = mxUtils.createImage(Dialog.prototype.closeImage);
     img.style.height = "9px";
     img.style.fontSize = "9px";
     img.style.marginBottom = mxClient.IS_IE11 ? "-1px" : "5px";
@@ -1395,11 +1396,11 @@ var EditDataDialog = function (ui, cell) {
     removeAttr.style.cursor = "pointer";
     removeAttr.appendChild(img);
 
-    var removeAttrFn = (function (name) {
+    const removeAttrFn = (function (name) {
       return function () {
-        var count = 0;
+        let count = 0;
 
-        for (var j = 0; j < names.length; j++) {
+        for (let j = 0; j < names.length; j++) {
           if (names[j] == name) {
             texts[j] = null;
             form.table.deleteRow(count + (id != null ? 1 : 0));
@@ -1416,13 +1417,13 @@ var EditDataDialog = function (ui, cell) {
 
     mxEvent.addListener(removeAttr, "click", removeAttrFn);
 
-    var parent = text.parentNode;
+    const parent = text.parentNode;
     wrapper.appendChild(text);
     wrapper.appendChild(removeAttr);
     parent.appendChild(wrapper);
   };
 
-  var addTextArea = function (index, name, value) {
+  const addTextArea = function (index, name, value) {
     names[index] = name;
     texts[index] = form.addTextarea(names[count] + ":", value, 2);
     texts[index].style.width = "100%";
@@ -1434,8 +1435,8 @@ var EditDataDialog = function (ui, cell) {
     addRemoveButton(texts[index], name);
   };
 
-  var temp = [];
-  var isLayer = graph.getModel().getParent(cell) == graph.getModel().getRoot();
+  const temp = [];
+  const isLayer = graph.getModel().getParent(cell) == graph.getModel().getRoot();
 
   for (var i = 0; i < attrs.length; i++) {
     if ((isLayer || attrs[i].nodeName != "label") && attrs[i].nodeName != "placeholders") {
@@ -1455,7 +1456,7 @@ var EditDataDialog = function (ui, cell) {
   });
 
   if (id != null) {
-    var text = document.createElement("div");
+    const text = document.createElement("div");
     text.style.width = "100%";
     text.style.fontSize = "11px";
     text.style.textAlign = "center";
@@ -1469,19 +1470,19 @@ var EditDataDialog = function (ui, cell) {
     count++;
   }
 
-  var top = document.createElement("div");
+  const top = document.createElement("div");
   top.style.cssText =
     "position:absolute;left:30px;right:30px;overflow-y:auto;top:30px;bottom:80px;";
   top.appendChild(form.table);
 
-  var newProp = document.createElement("div");
+  const newProp = document.createElement("div");
   newProp.style.boxSizing = "border-box";
   newProp.style.paddingRight = "160px";
   newProp.style.whiteSpace = "nowrap";
   newProp.style.marginTop = "6px";
   newProp.style.width = "100%";
 
-  var nameInput = document.createElement("input");
+  const nameInput = document.createElement("input");
   nameInput.setAttribute("placeholder", mxResources.get("enterPropertyName"));
   nameInput.setAttribute("type", "text");
   nameInput.setAttribute("size", mxClient.IS_IE || mxClient.IS_IE11 ? "36" : "40");
@@ -1494,18 +1495,18 @@ var EditDataDialog = function (ui, cell) {
   div.appendChild(top);
 
   var addBtn = mxUtils.button(mxResources.get("addProperty"), function () {
-    var name = nameInput.value;
+    const name = nameInput.value;
 
     // Avoid ':' in attribute names which seems to be valid in Chrome
     if (name.length > 0 && name != "label" && name != "placeholders" && name.indexOf(":") < 0) {
       try {
-        var idx = mxUtils.indexOf(names, name);
+        const idx = mxUtils.indexOf(names, name);
 
         if (idx >= 0 && texts[idx] != null) {
           texts[idx].focus();
         } else {
           // Checks if the name is valid
-          var clone = value.cloneNode(false);
+          const clone = value.cloneNode(false);
           clone.setAttribute(name, "");
 
           if (idx >= 0) {
@@ -1514,7 +1515,7 @@ var EditDataDialog = function (ui, cell) {
           }
 
           names.push(name);
-          var text = form.addTextarea(name + ":", "", 2);
+          const text = form.addTextarea(name + ":", "", 2);
           text.style.width = "100%";
           texts.push(text);
           addRemoveButton(text, name);
@@ -1550,21 +1551,21 @@ var EditDataDialog = function (ui, cell) {
   addBtn.className = "geBtn";
   newProp.appendChild(addBtn);
 
-  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     ui.hideDialog.apply(ui, arguments);
   });
 
   cancelBtn.className = "geBtn";
 
-  var applyBtn = mxUtils.button(mxResources.get("apply"), function () {
+  const applyBtn = mxUtils.button(mxResources.get("apply"), function () {
     try {
       ui.hideDialog.apply(ui, arguments);
 
       // Clones and updates the value
       value = value.cloneNode(true);
-      var removeLabel = false;
+      let removeLabel = false;
 
-      for (var i = 0; i < names.length; i++) {
+      for (let i = 0; i < names.length; i++) {
         if (texts[i] == null) {
           value.removeAttribute(names[i]);
         } else {
@@ -1600,14 +1601,14 @@ var EditDataDialog = function (ui, cell) {
   // Catches all changes that don't fire a keyup (such as paste via mouse)
   mxEvent.addListener(nameInput, "change", updateAddBtn);
 
-  var buttons = document.createElement("div");
+  const buttons = document.createElement("div");
   buttons.style.cssText =
     "position:absolute;left:30px;right:30px;text-align:right;bottom:30px;height:40px;";
 
   if (ui.editor.graph.getModel().isVertex(cell) || ui.editor.graph.getModel().isEdge(cell)) {
-    var replace = document.createElement("span");
+    const replace = document.createElement("span");
     replace.style.marginRight = "10px";
-    var input = document.createElement("input");
+    const input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     input.style.marginRight = "6px";
 
@@ -1628,14 +1629,14 @@ var EditDataDialog = function (ui, cell) {
     mxUtils.write(replace, mxResources.get("placeholders"));
 
     if (EditDataDialog.placeholderHelpLink != null) {
-      var link = document.createElement("a");
+      const link = document.createElement("a");
       link.setAttribute("href", EditDataDialog.placeholderHelpLink);
       link.setAttribute("title", mxResources.get("help"));
       link.setAttribute("target", "_blank");
       link.style.marginLeft = "8px";
       link.style.cursor = "help";
 
-      var icon = document.createElement("img");
+      const icon = document.createElement("img");
       mxUtils.setOpacity(icon, 50);
       icon.style.height = "16px";
       icon.style.width = "16px";
@@ -1661,13 +1662,13 @@ var EditDataDialog = function (ui, cell) {
 
   div.appendChild(buttons);
   this.container = div;
-};
+}
 
 /**
  * Optional help link.
  */
 EditDataDialog.getDisplayIdForCell = function (ui, cell) {
-  var id = null;
+  let id = null;
 
   if (ui.editor.graph.getModel().getParent(cell) != null) {
     id = cell.getId();
@@ -1684,11 +1685,11 @@ EditDataDialog.placeholderHelpLink = null;
 /**
  * Constructs a new link dialog.
  */
-var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
-  var div = document.createElement("div");
+const LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
+  const div = document.createElement("div");
   mxUtils.write(div, mxResources.get("editLink") + ":");
 
-  var inner = document.createElement("div");
+  const inner = document.createElement("div");
   inner.className = "geTitle";
   inner.style.backgroundColor = "transparent";
   inner.style.borderColor = "transparent";
@@ -1700,7 +1701,7 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
     inner.style.paddingRight = "20px";
   }
 
-  var linkInput = document.createElement("input");
+  const linkInput = document.createElement("input");
   linkInput.setAttribute("value", initialValue);
   linkInput.setAttribute("placeholder", "http://www.example.com/");
   linkInput.setAttribute("type", "text");
@@ -1711,7 +1712,7 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
   linkInput.style.backgroundPosition = "100% 50%";
   linkInput.style.paddingRight = "14px";
 
-  var cross = document.createElement("div");
+  const cross = document.createElement("div");
   cross.setAttribute("title", mxResources.get("reset"));
   cross.style.position = "relative";
   cross.style.left = "-16px";
@@ -1745,7 +1746,7 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
     }
   };
 
-  var btns = document.createElement("div");
+  const btns = document.createElement("div");
   btns.style.marginTop = "18px";
   btns.style.textAlign = "right";
 
@@ -1756,7 +1757,7 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
     }
   });
 
-  var cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
     editorUi.hideDialog();
   });
   cancelBtn.className = "geBtn";
@@ -1765,7 +1766,7 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
     btns.appendChild(cancelBtn);
   }
 
-  var mainBtn = mxUtils.button(btnLabel, function () {
+  const mainBtn = mxUtils.button(btnLabel, function () {
     editorUi.hideDialog();
     fn(linkInput.value);
   });
@@ -1784,10 +1785,10 @@ var LinkDialog = function (editorUi, initialValue, btnLabel, fn) {
 /**
  *
  */
-var OutlineWindow = function (editorUi, x, y, w, h) {
-  var graph = editorUi.editor.graph;
+function OutlineWindow(editorUi, x, y, w, h) {
+  const graph = editorUi.editor.graph;
 
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.style.position = "absolute";
   div.style.width = "100%";
   div.style.height = "100%";
@@ -1803,8 +1804,9 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
   this.window.setVisible(true);
 
   this.window.setLocation = function (x, y) {
-    var iw = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
-    var ih =
+    const iw =
+      window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+    const ih =
       window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
     x = Math.max(0, Math.min(x, iw - this.table.clientWidth));
@@ -1815,16 +1817,16 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
     }
   };
 
-  var resizeListener = mxUtils.bind(this, function () {
-    var x = this.window.getX();
-    var y = this.window.getY();
+  const resizeListener = mxUtils.bind(this, function () {
+    const x = this.window.getX();
+    const y = this.window.getY();
 
     this.window.setLocation(x, y);
   });
 
   mxEvent.addListener(window, "resize", resizeListener);
 
-  var outline = editorUi.createOutline(this.window);
+  const outline = editorUi.createOutline(this.window);
 
   this.destroy = function () {
     mxEvent.removeListener(window, "resize", resizeListener);
@@ -1872,9 +1874,9 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
     })
   );
 
-  var outlineCreateGraph = outline.createGraph;
+  const outlineCreateGraph = outline.createGraph;
   outline.createGraph = function (container) {
-    var g = outlineCreateGraph.apply(this, arguments);
+    const g = outlineCreateGraph.apply(this, arguments);
     g.gridEnabled = false;
     g.pageScale = graph.pageScale;
     g.pageFormat = graph.pageFormat;
@@ -1884,7 +1886,7 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
         : graph.background;
     g.pageVisible = graph.pageVisible;
 
-    var current = mxUtils.getCurrentStyle(graph.container);
+    const current = mxUtils.getCurrentStyle(graph.container);
     div.style.backgroundColor = current.backgroundColor;
 
     return g;
@@ -1899,7 +1901,7 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
         ? graph.defaultPageBackgroundColor
         : graph.background;
 
-    var current = mxUtils.getCurrentStyle(graph.container);
+    const current = mxUtils.getCurrentStyle(graph.container);
     div.style.backgroundColor = current.backgroundColor;
 
     if (
@@ -1924,12 +1926,12 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
   });
 
   if (outline.outline.dialect == mxConstants.DIALECT_SVG) {
-    var zoomInAction = editorUi.actions.get("zoomIn");
-    var zoomOutAction = editorUi.actions.get("zoomOut");
+    const zoomInAction = editorUi.actions.get("zoomIn");
+    const zoomOutAction = editorUi.actions.get("zoomOut");
 
     mxEvent.addMouseWheelListener(function (evt, up) {
-      var outlineWheel = false;
-      var source = mxEvent.getSource(evt);
+      let outlineWheel = false;
+      let source = mxEvent.getSource(evt);
 
       while (source != null) {
         if (source == outline.outline.view.canvas.ownerSVGElement) {
@@ -1949,15 +1951,15 @@ var OutlineWindow = function (editorUi, x, y, w, h) {
       }
     });
   }
-};
+}
 
 /**
  *
  */
-var LayersWindow = function (editorUi, x, y, w, h) {
-  var graph = editorUi.editor.graph;
+function LayersWindow(editorUi, x, y, w, h) {
+  const graph = editorUi.editor.graph;
 
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.style.userSelect = "none";
   div.style.background = Dialog.backdropColor == "white" ? "whiteSmoke" : Dialog.backdropColor;
   div.style.border = "1px solid whiteSmoke";
@@ -1965,9 +1967,9 @@ var LayersWindow = function (editorUi, x, y, w, h) {
   div.style.marginBottom = "10px";
   div.style.overflow = "auto";
 
-  var tbarHeight = !EditorUi.compactUi ? "30px" : "26px";
+  const tbarHeight = !EditorUi.compactUi ? "30px" : "26px";
 
-  var listDiv = document.createElement("div");
+  const listDiv = document.createElement("div");
   listDiv.style.backgroundColor =
     Dialog.backdropColor == "white" ? "#dcdcdc" : Dialog.backdropColor;
   listDiv.style.position = "absolute";
@@ -1978,8 +1980,8 @@ var LayersWindow = function (editorUi, x, y, w, h) {
   listDiv.style.bottom = parseInt(tbarHeight) + 7 + "px";
   div.appendChild(listDiv);
 
-  var dragSource = null;
-  var dropIndex = null;
+  let dragSource = null;
+  let dropIndex = null;
 
   mxEvent.addListener(div, "dragover", function (evt) {
     evt.dataTransfer.dropEffect = "move";
@@ -1994,9 +1996,9 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     evt.preventDefault();
   });
 
-  var layerCount = null;
-  var selectionLayer = null;
-  var ldiv = document.createElement("div");
+  let layerCount = null;
+  let selectionLayer = null;
+  const ldiv = document.createElement("div");
 
   ldiv.className = "geToolbarContainer";
   ldiv.style.position = "absolute";
@@ -2018,14 +2020,14 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     ldiv.style.filter = "none";
   }
 
-  var link = document.createElement("a");
+  const link = document.createElement("a");
   link.className = "geButton";
 
   if (mxClient.IS_QUIRKS) {
     link.style.filter = "none";
   }
 
-  var removeLink = link.cloneNode();
+  const removeLink = link.cloneNode();
   removeLink.innerHTML =
     '<div class="geSprite geSprite-delete" style="display:inline-block;"></div>';
 
@@ -2033,7 +2035,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     if (graph.isEnabled()) {
       graph.model.beginUpdate();
       try {
-        var index = graph.model.root.getIndex(selectionLayer);
+        const index = graph.model.root.getIndex(selectionLayer);
         graph.removeCells([selectionLayer], false);
 
         // Creates default layer if no layer exists
@@ -2059,7 +2061,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
   ldiv.appendChild(removeLink);
 
-  var insertLink = link.cloneNode();
+  const insertLink = link.cloneNode();
   insertLink.setAttribute("title", mxUtils.trim(mxResources.get("moveSelectionTo", [""])));
   insertLink.innerHTML =
     '<div class="geSprite geSprite-insert" style="display:inline-block;"></div>';
@@ -2068,11 +2070,11 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     if (graph.isEnabled() && !graph.isSelectionEmpty()) {
       editorUi.editor.graph.popupMenuHandler.hideMenu();
 
-      var menu = new mxPopupMenu(
+      const menu = new mxPopupMenu(
         mxUtils.bind(this, function (menu, parent) {
-          for (var i = layerCount - 1; i >= 0; i--) {
+          for (let i = layerCount - 1; i >= 0; i--) {
             mxUtils.bind(this, function (child) {
-              var item = menu.addItem(
+              const item = menu.addItem(
                 graph.convertValueToString(child) || mxResources.get("background"),
                 null,
                 mxUtils.bind(this, function () {
@@ -2102,7 +2104,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
         menu.destroy();
       });
 
-      var offset = mxUtils.getOffset(insertLink);
+      const offset = mxUtils.getOffset(insertLink);
       menu.popup(offset.x, offset.y + insertLink.offsetHeight, null, evt);
 
       // Allows hiding by clicking on document
@@ -2112,7 +2114,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
   ldiv.appendChild(insertLink);
 
-  var dataLink = link.cloneNode();
+  const dataLink = link.cloneNode();
   dataLink.innerHTML = '<div class="geSprite geSprite-dots" style="display:inline-block;"></div>';
   dataLink.setAttribute("title", mxResources.get("rename"));
 
@@ -2132,8 +2134,8 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
   function renameLayer(layer) {
     if (graph.isEnabled() && layer != null) {
-      var label = graph.convertValueToString(layer);
-      var dlg = new FilenameDialog(
+      const label = graph.convertValueToString(layer);
+      const dlg = new FilenameDialog(
         editorUi,
         label || mxResources.get("background"),
         mxResources.get("rename"),
@@ -2149,13 +2151,13 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     }
   }
 
-  var duplicateLink = link.cloneNode();
+  const duplicateLink = link.cloneNode();
   duplicateLink.innerHTML =
     '<div class="geSprite geSprite-duplicate" style="display:inline-block;"></div>';
 
   mxEvent.addListener(duplicateLink, "click", function (evt) {
     if (graph.isEnabled()) {
-      var newCell = null;
+      let newCell = null;
       graph.model.beginUpdate();
       try {
         newCell = graph.cloneCell(selectionLayer);
@@ -2179,7 +2181,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
   ldiv.appendChild(duplicateLink);
 
-  var addLink = link.cloneNode();
+  const addLink = link.cloneNode();
   addLink.innerHTML = '<div class="geSprite geSprite-plus" style="display:inline-block;"></div>';
   addLink.setAttribute("title", mxResources.get("addLayer"));
 
@@ -2188,7 +2190,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
       graph.model.beginUpdate();
 
       try {
-        var cell = graph.addCell(new mxCell(mxResources.get("untitledLayer")), graph.model.root);
+        const cell = graph.addCell(new mxCell(mxResources.get("untitledLayer")), graph.model.root);
         graph.setDefaultParent(cell);
       } finally {
         graph.model.endUpdate();
@@ -2210,7 +2212,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     listDiv.innerHTML = "";
 
     function addLayer(index, label, child, defaultParent) {
-      var ldiv = document.createElement("div");
+      const ldiv = document.createElement("div");
       ldiv.className = "geToolbarContainer";
 
       ldiv.style.overflow = "hidden";
@@ -2226,7 +2228,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
       ldiv.style.whiteSpace = "nowrap";
       ldiv.setAttribute("title", label);
 
-      var left = document.createElement("div");
+      const left = document.createElement("div");
       left.style.display = "inline-block";
       left.style.width = "100%";
       left.style.textOverflow = "ellipsis";
@@ -2260,14 +2262,14 @@ var LayersWindow = function (editorUi, x, y, w, h) {
         evt.preventDefault();
       });
 
-      var btn = document.createElement("img");
+      const btn = document.createElement("img");
       btn.setAttribute("draggable", "false");
       btn.setAttribute("align", "top");
       btn.setAttribute("border", "0");
       btn.style.padding = "4px";
       btn.setAttribute("title", mxResources.get("lockUnlock"));
 
-      var style = graph.getCurrentCellStyle(child);
+      const style = graph.getCurrentCellStyle(child);
 
       if (mxUtils.getValue(style, "locked", "0") == "1") {
         btn.setAttribute("src", Dialog.prototype.lockedImage);
@@ -2281,7 +2283,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
       mxEvent.addListener(btn, "click", function (evt) {
         if (graph.isEnabled()) {
-          var value = null;
+          let value = null;
 
           graph.getModel().beginUpdate();
           try {
@@ -2301,7 +2303,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
       left.appendChild(btn);
 
-      var inp = document.createElement("input");
+      const inp = document.createElement("input");
       inp.setAttribute("type", "checkbox");
       inp.setAttribute(
         "title",
@@ -2333,7 +2335,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
           mxClient.IS_VML ||
           (mxClient.IS_IE && document.documentMode < 10)
         ) {
-          var right = document.createElement("div");
+          const right = document.createElement("div");
           right.style.display = "block";
           right.style.textAlign = "right";
           right.style.whiteSpace = "nowrap";
@@ -2343,7 +2345,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
 
           // Poor man's change layer order
           if (index > 0) {
-            var img2 = document.createElement("a");
+            const img2 = document.createElement("a");
 
             img2.setAttribute("title", mxResources.get("toBack"));
 
@@ -2367,7 +2369,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
           }
 
           if (index >= 0 && index < layerCount - 1) {
-            var img1 = document.createElement("a");
+            const img1 = document.createElement("a");
 
             img1.setAttribute("title", mxResources.get("toFront"));
 
@@ -2400,7 +2402,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
       }
 
       mxEvent.addListener(ldiv, "dblclick", function (evt) {
-        var nodeName = mxEvent.getSource(evt).nodeName;
+        const nodeName = mxEvent.getSource(evt).nodeName;
 
         if (nodeName != "INPUT" && nodeName != "IMG") {
           renameLayer(child);
@@ -2437,7 +2439,7 @@ var LayersWindow = function (editorUi, x, y, w, h) {
       })(graph.model.getChildAt(graph.model.root, i));
     }
 
-    var label = graph.convertValueToString(selectionLayer) || mxResources.get("background");
+    const label = graph.convertValueToString(selectionLayer) || mxResources.get("background");
     removeLink.setAttribute("title", mxResources.get("removeIt", [label]));
     duplicateLink.setAttribute("title", mxResources.get("duplicateIt", [label]));
     dataLink.setAttribute("title", mxResources.get("editData"));
@@ -2483,8 +2485,9 @@ var LayersWindow = function (editorUi, x, y, w, h) {
   this.refreshLayers = refresh;
 
   this.window.setLocation = function (x, y) {
-    var iw = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
-    var ih =
+    const iw =
+      window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+    const ih =
       window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
     x = Math.max(0, Math.min(x, iw - this.table.clientWidth));
@@ -2495,9 +2498,9 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     }
   };
 
-  var resizeListener = mxUtils.bind(this, function () {
-    var x = this.window.getX();
-    var y = this.window.getY();
+  const resizeListener = mxUtils.bind(this, function () {
+    const x = this.window.getX();
+    const y = this.window.getY();
 
     this.window.setLocation(x, y);
   });
@@ -2508,4 +2511,4 @@ var LayersWindow = function (editorUi, x, y, w, h) {
     mxEvent.removeListener(window, "resize", resizeListener);
     this.window.destroy();
   };
-};
+}
