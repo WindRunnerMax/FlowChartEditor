@@ -38,7 +38,6 @@ export const {
   mxDivResizer,
   mxPopupMenu,
   mxPoint,
-  mxPrintPreview,
   mxGraphView,
   mxMouseEvent,
   mxPolyline,

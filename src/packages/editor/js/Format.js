@@ -10,10 +10,9 @@ import {
   mxClient,
   mxCellRenderer,
 } from "../../core/mxgraph";
-import { Editor, Dialog, FilenameDialog, PageSetupDialog } from "./Editor";
+import { Editor, Dialog, FilenameDialog } from "./Editor";
 import { Menus } from "./Menus";
 import { Graph } from "./Graph";
-import { ChangePageSetup } from "./EditorUi";
 import { arrowSVG } from "../images/base64";
 
 export {
@@ -6831,56 +6830,6 @@ DiagramFormatPanel.prototype.addDocumentProperties = function (div) {
  * Adds the label menu items to the given menu and parent.
  */
 DiagramFormatPanel.prototype.addPaperSize = function (div) {
-  const ui = this.editorUi;
-  const editor = ui.editor;
-  const graph = editor.graph;
-
-  div.appendChild(this.createTitle(mxResources.get("paperSize")));
-
-  const accessor = PageSetupDialog.addPageFormatPanel(
-    div,
-    "formatpanel",
-    graph.pageFormat,
-    function (pageFormat) {
-      if (
-        graph.pageFormat == null ||
-        graph.pageFormat.width != pageFormat.width ||
-        graph.pageFormat.height != pageFormat.height
-      ) {
-        const change = new ChangePageSetup(ui, null, null, pageFormat);
-        change.ignoreColor = true;
-        change.ignoreImage = true;
-
-        graph.model.execute(change);
-      }
-    }
-  );
-
-  this.addKeyHandler(accessor.widthInput, function () {
-    accessor.set(graph.pageFormat);
-  });
-  this.addKeyHandler(accessor.heightInput, function () {
-    accessor.set(graph.pageFormat);
-  });
-
-  const listener = function () {
-    accessor.set(graph.pageFormat);
-  };
-
-  ui.addListener("pageFormatChanged", listener);
-  this.listeners.push({
-    destroy: function () {
-      ui.removeListener(listener);
-    },
-  });
-
-  graph.getModel().addListener(mxEvent.CHANGE, listener);
-  this.listeners.push({
-    destroy: function () {
-      graph.getModel().removeListener(listener);
-    },
-  });
-
   return div;
 };
 

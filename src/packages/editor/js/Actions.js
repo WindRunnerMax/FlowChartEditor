@@ -15,7 +15,7 @@ import {
 } from "../../core/mxgraph";
 
 import { Editor, FilenameDialog } from "./Editor";
-import { TextareaDialog, LayersWindow, OutlineWindow } from "./Dialogs";
+import { LayersWindow, OutlineWindow } from "./Dialogs";
 import { ChangePageSetup } from "./EditorUi";
 
 export { Actions, Action };
@@ -415,36 +415,7 @@ Actions.prototype.init = function () {
     "F2/Enter"
   );
 
-  this.addAction(
-    "editTooltip...",
-    function () {
-      const graph = ui.editor.graph;
-
-      if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-        const cell = graph.getSelectionCell();
-        let tooltip = "";
-
-        if (mxUtils.isNode(cell.value)) {
-          const tmp = cell.value.getAttribute("tooltip");
-
-          if (tmp != null) {
-            tooltip = tmp;
-          }
-        }
-
-        const dlg = new TextareaDialog(ui, mxResources.get("editTooltip") + ":", tooltip, function (
-          newValue
-        ) {
-          graph.setTooltipForCell(cell, newValue);
-        });
-        ui.showDialog(dlg.container, 320, 200, true, true);
-        dlg.init();
-      }
-    },
-    null,
-    null,
-    "Alt+Shift+T"
-  );
+  // - Edit Edit Tooltip Action
 
   // - Insert Image Action
   // - Insert Link Action
@@ -1174,36 +1145,9 @@ Actions.prototype.init = function () {
       )
     );
   });
-  this.addAction(
-    "editStyle...",
-    mxUtils.bind(this, function () {
-      const cells = graph.getSelectionCells();
 
-      if (cells != null && cells.length > 0) {
-        const model = graph.getModel();
+  // - Edit Style Action
 
-        const dlg = new TextareaDialog(
-          this.editorUi,
-          mxResources.get("editStyle") + ":",
-          model.getStyle(cells[0]) || "",
-          function (newValue) {
-            if (newValue != null) {
-              graph.setCellStyle(mxUtils.trim(newValue), cells);
-            }
-          },
-          null,
-          null,
-          400,
-          220
-        );
-        this.editorUi.showDialog(dlg.container, 420, 300, true, true);
-        dlg.init();
-      }
-    }),
-    null,
-    null,
-    Editor.ctrlKey + "+E"
-  );
   this.addAction(
     "setAsDefaultStyle",
     function () {

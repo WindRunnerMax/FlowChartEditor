@@ -2822,7 +2822,6 @@ EditorUi.prototype.updateActionStates = function () {
     "underline",
     "delete",
     "duplicate",
-    "editTooltip",
     "backgroundColor",
     "borderColor",
     "edit",
