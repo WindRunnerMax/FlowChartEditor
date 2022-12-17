@@ -1,7 +1,6 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
-import { IMAGE_PATH } from "../constant";
 import {
   mxConstants,
   mxResources,
@@ -15,6 +14,7 @@ import { Editor, Dialog, FilenameDialog, PageSetupDialog } from "./Editor";
 import { Menus } from "./Menus";
 import { Graph } from "./Graph";
 import { ChangePageSetup } from "./EditorUi";
+import { arrowSVG } from "../images/base64";
 
 export {
   StyleFormatPanel,
@@ -103,13 +103,6 @@ Format.prototype.init = function () {
   graph.getModel().addListener(mxEvent.CHANGE, this.update);
   graph.addListener(
     mxEvent.ROOT,
-    mxUtils.bind(this, function () {
-      this.refresh();
-    })
-  );
-
-  editor.addListener(
-    "autosaveChanged",
     mxUtils.bind(this, function () {
       this.refresh();
     })
@@ -1277,12 +1270,7 @@ BaseFormatPanel.prototype.addArrow = function (elt, height) {
 
   arrow.style.height = height + "px";
   arrow.style.borderLeft = "1px solid #a0a0a0";
-  arrow.innerHTML =
-    '<img border="0" src="' +
-    (mxClient.IS_SVG
-      ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpidHB2ZyAGsACxDRBPIKCuA6TwCBB/h2rABu4A8SYmKCcXiP/iUFgAxL9gCi8A8SwsirZCMQMTkmANEH9E4v+CmsaArvAdyNFI/FlQ92EoBIE+qCRIUz168DBgsU4OqhinQpgHMABAgAEALY4XLIsJ20oAAAAASUVORK5CYII="
-      : IMAGE_PATH + "/dropdown.png") +
-    '" style="margin-bottom:4px;">';
+  arrow.innerHTML = '<img border="0" src="' + arrowSVG + '" style="margin-bottom:4px;">';
   mxUtils.setOpacity(arrow, 70);
 
   const symbol = elt.getElementsByTagName("div")[0];
@@ -6780,97 +6768,54 @@ DiagramFormatPanel.prototype.addGridOption = function (container) {
     },
   });
 
-  if (mxClient.IS_SVG) {
-    input.style.marginTop = "-2px";
-    input.style.right = "84px";
-    stepper.style.marginTop = "-2px";
-    stepper.style.right = "72px";
+  input.style.marginTop = "-2px";
+  input.style.right = "84px";
+  stepper.style.marginTop = "-2px";
+  stepper.style.right = "72px";
 
-    const panel = this.createColorOption(
-      mxResources.get("grid"),
-      function () {
-        const color = graph.view.gridColor;
+  const panel = this.createColorOption(
+    mxResources.get("grid"),
+    function () {
+      const color = graph.view.gridColor;
 
-        return graph.isGridEnabled() ? color : null;
-      },
-      function (color) {
-        const enabled = graph.isGridEnabled();
+      return graph.isGridEnabled() ? color : null;
+    },
+    function (color) {
+      const enabled = graph.isGridEnabled();
 
-        if (color == mxConstants.NONE) {
-          graph.setGridEnabled(false);
-        } else {
-          graph.setGridEnabled(true);
-          ui.setGridColor(color);
-        }
-
-        input.style.display = graph.isGridEnabled() ? "" : "none";
-        stepper.style.display = input.style.display;
-
-        if (enabled != graph.isGridEnabled()) {
-          ui.fireEvent(new mxEventObject("gridEnabledChanged"));
-        }
-      },
-      "#e0e0e0",
-      {
-        install: function (apply) {
-          this.listener = function () {
-            apply(graph.isGridEnabled() ? graph.view.gridColor : null);
-          };
-
-          ui.addListener("gridColorChanged", this.listener);
-          ui.addListener("gridEnabledChanged", this.listener);
-        },
-        destroy: function () {
-          ui.removeListener(this.listener);
-        },
+      if (color == mxConstants.NONE) {
+        graph.setGridEnabled(false);
+      } else {
+        graph.setGridEnabled(true);
+        ui.setGridColor(color);
       }
-    );
 
-    panel.appendChild(input);
-    panel.appendChild(stepper);
-    container.appendChild(panel);
-  } else {
-    input.style.marginTop = "2px";
-    input.style.right = "32px";
-    stepper.style.marginTop = "2px";
-    stepper.style.right = "20px";
+      input.style.display = graph.isGridEnabled() ? "" : "none";
+      stepper.style.display = input.style.display;
 
-    container.appendChild(input);
-    container.appendChild(stepper);
+      if (enabled != graph.isGridEnabled()) {
+        ui.fireEvent(new mxEventObject("gridEnabledChanged"));
+      }
+    },
+    "#e0e0e0",
+    {
+      install: function (apply) {
+        this.listener = function () {
+          apply(graph.isGridEnabled() ? graph.view.gridColor : null);
+        };
 
-    container.appendChild(
-      this.createOption(
-        mxResources.get("grid"),
-        function () {
-          return graph.isGridEnabled();
-        },
-        function (checked) {
-          graph.setGridEnabled(checked);
+        ui.addListener("gridColorChanged", this.listener);
+        ui.addListener("gridEnabledChanged", this.listener);
+      },
+      destroy: function () {
+        ui.removeListener(this.listener);
+      },
+    }
+  );
 
-          if (graph.isGridEnabled()) {
-            graph.view.gridColor = "#e0e0e0";
-          }
-
-          ui.fireEvent(new mxEventObject("gridEnabledChanged"));
-        },
-        {
-          install: function (apply) {
-            this.listener = function () {
-              input.style.display = graph.isGridEnabled() ? "" : "none";
-              stepper.style.display = input.style.display;
-
-              apply(graph.isGridEnabled());
-            };
-
-            ui.addListener("gridEnabledChanged", this.listener);
-          },
-          destroy: function () {
-            ui.removeListener(this.listener);
-          },
-        }
-      )
-    );
-  }
+  panel.appendChild(input);
+  panel.appendChild(stepper);
+  container.appendChild(panel);
 };
 
 /**

@@ -34,10 +34,7 @@ function Menus(editorUi) {
   this.menus = new Object();
   this.init();
 
-  // Pre-fetches checkmark image
-  if (!mxClient.IS_SVG) {
-    new Image().src = this.checkmarkImage;
-  }
+  new Image().src = this.checkmarkImage;
 }
 
 /**

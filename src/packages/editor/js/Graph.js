@@ -1,7 +1,6 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
-import { IMAGE_PATH, urlParams, STYLE_PATH } from "../constant";
 import {
   mxGraph,
   mxCodec,
@@ -58,7 +57,6 @@ import {
   mxImageShape,
   mxStackLayout,
   mxConnector,
-  mxStyleRegistry,
   mxCell,
   mxGeometry,
 } from "../../core/mxgraph";
@@ -68,6 +66,7 @@ import { getStencil } from "../stencils";
 
 import pako from "pako";
 import html_sanitize from "sanitize-html";
+import { gridImage, refreshTarget } from "../images/base64";
 
 export { TableLayout, Graph, HoverIcons };
 
@@ -159,9 +158,7 @@ mxText.prototype.baseSpacingBottom = 1;
 mxGraphModel.prototype.ignoreRelativeEdgeParent = false;
 
 // Defines grid properties
-mxGraphView.prototype.gridImage = mxClient.IS_SVG
-  ? "data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs="
-  : IMAGE_PATH + "/grid.gif";
+mxGraphView.prototype.gridImage = gridImage;
 mxGraphView.prototype.gridSteps = 4;
 mxGraphView.prototype.minGridSize = 4;
 
@@ -1193,18 +1190,12 @@ Graph.touchStyle =
   mxClient.IS_TOUCH ||
   (mxClient.IS_FF && mxClient.IS_WIN) ||
   navigator.maxTouchPoints > 0 ||
-  navigator.msMaxTouchPoints > 0 ||
-  window.urlParams == null ||
-  urlParams["touch"] == "1";
+  navigator.msMaxTouchPoints > 0;
 
 /**
  * Shortcut for capability check.
  */
-Graph.fileSupport =
-  window.File != null &&
-  window.FileReader != null &&
-  window.FileList != null &&
-  (window.urlParams == null || urlParams["filesupport"] != "0");
+Graph.fileSupport = false;
 
 /**
  * Default size for line jumps.
@@ -1430,13 +1421,12 @@ Graph.prototype.maxFitScale = null;
  * Sets the policy for links. Possible values are "self" to replace any framesets,
  * "blank" to load the URL in <linkTarget> and "auto" (default).
  */
-Graph.prototype.linkPolicy =
-  urlParams["target"] == "frame" ? "blank" : urlParams["target"] || "auto";
+Graph.prototype.linkPolicy = "auto";
 
 /**
  * Target for links that open in a new window. Default is _blank.
  */
-Graph.prototype.linkTarget = urlParams["target"] == "frame" ? "_self" : "_blank";
+Graph.prototype.linkTarget = "_blank";
 
 /**
  * Value to the rel attribute of links. Default is 'nofollow noopener noreferrer'.
@@ -1529,10 +1519,9 @@ Graph.prototype.defaultThemes = {};
 /**
  * Base URL for relative links.
  */
-Graph.prototype.baseUrl =
-  urlParams["base"] != null
-    ? decodeURIComponent(urlParams["base"])
-    : (window != window.top ? document.referrer : document.location.toString()).split("#")[0];
+Graph.prototype.baseUrl = (
+  window != window.top ? document.referrer : document.location.toString()
+).split("#")[0];
 
 /**
  * Specifies if the label should be edited after an insert.
@@ -1672,7 +1661,6 @@ Graph.prototype.init = function () {
    */
   Graph.prototype.isFastZoomEnabled = function () {
     return (
-      urlParams["zoom"] != "nocss" &&
       !mxClient.NO_FO &&
       !mxClient.IS_EDGE &&
       !this.useCssTransforms &&
@@ -3463,10 +3451,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
 
       if (tip.length > 0) {
         tip = tip.substring(0, tip.length - 1);
-
-        if (mxClient.IS_SVG) {
-          tip = '<div style="max-width:360px;">' + tip + "</div>";
-        }
+        tip = '<div style="max-width:360px;">' + tip + "</div>";
       }
     }
   }
@@ -3573,83 +3558,67 @@ HoverIcons.prototype.arrowFill = "#29b6f2";
 /**
  * Up arrow.
  */
-HoverIcons.prototype.triangleUp = !mxClient.IS_SVG
-  ? new mxImage(IMAGE_PATH + "/triangle-up.png", 26, 14)
-  : Graph.createSvgImage(
-      18,
-      28,
-      '<path d="m 6 26 L 12 26 L 12 12 L 18 12 L 9 1 L 1 12 L 6 12 z" ' +
-        'stroke="#fff" fill="' +
-        HoverIcons.prototype.arrowFill +
-        '"/>'
-    );
+HoverIcons.prototype.triangleUp = Graph.createSvgImage(
+  18,
+  28,
+  '<path d="m 6 26 L 12 26 L 12 12 L 18 12 L 9 1 L 1 12 L 6 12 z" ' +
+    'stroke="#fff" fill="' +
+    HoverIcons.prototype.arrowFill +
+    '"/>'
+);
 
 /**
  * Right arrow.
  */
-HoverIcons.prototype.triangleRight = !mxClient.IS_SVG
-  ? new mxImage(IMAGE_PATH + "/triangle-right.png", 14, 26)
-  : Graph.createSvgImage(
-      26,
-      18,
-      '<path d="m 1 6 L 14 6 L 14 1 L 26 9 L 14 18 L 14 12 L 1 12 z" ' +
-        'stroke="#fff" fill="' +
-        HoverIcons.prototype.arrowFill +
-        '"/>'
-    );
+HoverIcons.prototype.triangleRight = Graph.createSvgImage(
+  26,
+  18,
+  '<path d="m 1 6 L 14 6 L 14 1 L 26 9 L 14 18 L 14 12 L 1 12 z" ' +
+    'stroke="#fff" fill="' +
+    HoverIcons.prototype.arrowFill +
+    '"/>'
+);
 
 /**
  * Down arrow.
  */
-HoverIcons.prototype.triangleDown = !mxClient.IS_SVG
-  ? new mxImage(IMAGE_PATH + "/triangle-down.png", 26, 14)
-  : Graph.createSvgImage(
-      18,
-      26,
-      '<path d="m 6 1 L 6 14 L 1 14 L 9 26 L 18 14 L 12 14 L 12 1 z" ' +
-        'stroke="#fff" fill="' +
-        HoverIcons.prototype.arrowFill +
-        '"/>'
-    );
+HoverIcons.prototype.triangleDown = Graph.createSvgImage(
+  18,
+  26,
+  '<path d="m 6 1 L 6 14 L 1 14 L 9 26 L 18 14 L 12 14 L 12 1 z" ' +
+    'stroke="#fff" fill="' +
+    HoverIcons.prototype.arrowFill +
+    '"/>'
+);
 
 /**
  * Left arrow.
  */
-HoverIcons.prototype.triangleLeft = !mxClient.IS_SVG
-  ? new mxImage(IMAGE_PATH + "/triangle-left.png", 14, 26)
-  : Graph.createSvgImage(
-      28,
-      18,
-      '<path d="m 1 9 L 12 1 L 12 6 L 26 6 L 26 12 L 12 12 L 12 18 z" ' +
-        'stroke="#fff" fill="' +
-        HoverIcons.prototype.arrowFill +
-        '"/>'
-    );
+HoverIcons.prototype.triangleLeft = Graph.createSvgImage(
+  28,
+  18,
+  '<path d="m 1 9 L 12 1 L 12 6 L 26 6 L 26 12 L 12 12 L 12 18 z" ' +
+    'stroke="#fff" fill="' +
+    HoverIcons.prototype.arrowFill +
+    '"/>'
+);
 
 /**
  * Round target.
  */
-HoverIcons.prototype.roundDrop = !mxClient.IS_SVG
-  ? new mxImage(IMAGE_PATH + "/round-drop.png", 26, 26)
-  : Graph.createSvgImage(
-      26,
-      26,
-      '<circle cx="13" cy="13" r="12" ' +
-        'stroke="#fff" fill="' +
-        HoverIcons.prototype.arrowFill +
-        '"/>'
-    );
+HoverIcons.prototype.roundDrop = Graph.createSvgImage(
+  26,
+  26,
+  '<circle cx="13" cy="13" r="12" ' +
+    'stroke="#fff" fill="' +
+    HoverIcons.prototype.arrowFill +
+    '"/>'
+);
 
 /**
  * Refresh target.
  */
-HoverIcons.prototype.refreshTarget = new mxImage(
-  mxClient.IS_SVG
-    ? "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjM2cHgiIGhlaWdodD0iMzZweCI+PGVsbGlwc2UgZmlsbD0iIzI5YjZmMiIgY3g9IjEyIiBjeT0iMTIiIHJ4PSIxMiIgcnk9IjEyIi8+PHBhdGggdHJhbnNmb3JtPSJzY2FsZSgwLjgpIHRyYW5zbGF0ZSgyLjQsIDIuNCkiIHN0cm9rZT0iI2ZmZiIgZmlsbD0iI2ZmZiIgZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz48cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PC9zdmc+Cg=="
-    : IMAGE_PATH + "/refresh.png",
-  38,
-  38
-);
+HoverIcons.prototype.refreshTarget = new mxImage(refreshTarget, 38, 38);
 
 /**
  * Tolerance for hover icon clicks.
@@ -3819,28 +3788,10 @@ HoverIcons.prototype.isResetEvent = function (evt) {
 HoverIcons.prototype.createArrow = function (img, tooltip) {
   let arrow = null;
 
-  if (mxClient.IS_IE && !mxClient.IS_SVG) {
-    // Workaround for PNG images in IE6
-    if (mxClient.IS_IE6 && document.compatMode != "CSS1Compat") {
-      arrow = document.createElement(mxClient.VML_PREFIX + ":image");
-      arrow.setAttribute("src", img.src);
-      arrow.style.borderStyle = "none";
-    } else {
-      arrow = document.createElement("div");
-      arrow.style.backgroundImage = "url(" + img.src + ")";
-      arrow.style.backgroundPosition = "center";
-      arrow.style.backgroundRepeat = "no-repeat";
-    }
-
-    arrow.style.width = img.width + 4 + "px";
-    arrow.style.height = img.height + 4 + "px";
-    arrow.style.display = mxClient.IS_QUIRKS ? "inline" : "inline-block";
-  } else {
-    arrow = mxUtils.createImage(img.src);
-    arrow.style.width = img.width + "px";
-    arrow.style.height = img.height + "px";
-    arrow.style.padding = this.tolerance + "px";
-  }
+  arrow = mxUtils.createImage(img.src);
+  arrow.style.width = img.width + "px";
+  arrow.style.height = img.height + "px";
+  arrow.style.padding = this.tolerance + "px";
 
   if (tooltip != null) {
     arrow.setAttribute("title", tooltip);
@@ -5779,12 +5730,7 @@ if (typeof mxVertexHandler != "undefined") {
      * Loads the stylesheet for this graph.
      */
     Graph.prototype.loadStylesheet = function () {
-      const node =
-        this.themes != null
-          ? this.themes[this.defaultThemeName]
-          : !mxStyleRegistry.dynamicLoading
-          ? null
-          : mxUtils.load(STYLE_PATH + "/default.xml").getDocumentElement();
+      const node = this.themes != null ? this.themes[this.defaultThemeName] : null;
 
       if (node != null) {
         const dec = new mxCodec(node.ownerDocument);
@@ -6883,7 +6829,7 @@ if (typeof mxVertexHandler != "undefined") {
               (state != null && !this.isCellLocked(state.cell))) &&
             (state != null ||
               (mxClient.IS_VML && src == this.view.getCanvas()) ||
-              (mxClient.IS_SVG && src == this.view.getCanvas().ownerSVGElement))
+              src == this.view.getCanvas().ownerSVGElement)
           ) {
             if (state == null) {
               state = this.view.getState(this.getCellAt(pt.x, pt.y));
@@ -9785,61 +9731,49 @@ if (typeof mxVertexHandler != "undefined") {
      * Defines the handles for the UI. Uses data-URIs to speed-up loading time where supported.
      */
     // TODO: Increase handle padding
-    HoverIcons.prototype.mainHandle = !mxClient.IS_SVG
-      ? new mxImage(IMAGE_PATH + "/handle-main.png", 17, 17)
-      : Graph.createSvgImage(
-          18,
-          18,
-          '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
-            HoverIcons.prototype.arrowFill +
-            '" stroke-width="1"/>'
-        );
-    HoverIcons.prototype.secondaryHandle = !mxClient.IS_SVG
-      ? new mxImage(IMAGE_PATH + "/handle-secondary.png", 17, 17)
-      : Graph.createSvgImage(
-          16,
-          16,
-          '<path d="m 8 3 L 13 8 L 8 13 L 3 8 z" stroke="#fff" fill="#fca000"/>'
-        );
-    HoverIcons.prototype.fixedHandle = !mxClient.IS_SVG
-      ? new mxImage(IMAGE_PATH + "/handle-fixed.png", 17, 17)
-      : Graph.createSvgImage(
-          18,
-          18,
-          '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
-            HoverIcons.prototype.arrowFill +
-            '" stroke-width="1"/><path d="m 7 7 L 11 11 M 7 11 L 11 7" stroke="#fff"/>'
-        );
-    HoverIcons.prototype.terminalHandle = !mxClient.IS_SVG
-      ? new mxImage(IMAGE_PATH + "/handle-terminal.png", 17, 17)
-      : Graph.createSvgImage(
-          18,
-          18,
-          '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
-            HoverIcons.prototype.arrowFill +
-            '" stroke-width="1"/><circle cx="9" cy="9" r="2" stroke="#fff" fill="transparent"/>'
-        );
-    HoverIcons.prototype.rotationHandle = !mxClient.IS_SVG
-      ? new mxImage(IMAGE_PATH + "/handle-rotate.png", 16, 16)
-      : Graph.createSvgImage(
-          16,
-          16,
-          '<path stroke="' +
-            HoverIcons.prototype.arrowFill +
-            '" fill="' +
-            HoverIcons.prototype.arrowFill +
-            '" d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z"/>',
-          24,
-          24
-        );
+    HoverIcons.prototype.mainHandle = Graph.createSvgImage(
+      18,
+      18,
+      '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
+        HoverIcons.prototype.arrowFill +
+        '" stroke-width="1"/>'
+    );
+    HoverIcons.prototype.secondaryHandle = Graph.createSvgImage(
+      16,
+      16,
+      '<path d="m 8 3 L 13 8 L 8 13 L 3 8 z" stroke="#fff" fill="#fca000"/>'
+    );
+    HoverIcons.prototype.fixedHandle = Graph.createSvgImage(
+      18,
+      18,
+      '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
+        HoverIcons.prototype.arrowFill +
+        '" stroke-width="1"/><path d="m 7 7 L 11 11 M 7 11 L 11 7" stroke="#fff"/>'
+    );
+    HoverIcons.prototype.terminalHandle = Graph.createSvgImage(
+      18,
+      18,
+      '<circle cx="9" cy="9" r="5" stroke="#fff" fill="' +
+        HoverIcons.prototype.arrowFill +
+        '" stroke-width="1"/><circle cx="9" cy="9" r="2" stroke="#fff" fill="transparent"/>'
+    );
+    HoverIcons.prototype.rotationHandle = Graph.createSvgImage(
+      16,
+      16,
+      '<path stroke="' +
+        HoverIcons.prototype.arrowFill +
+        '" fill="' +
+        HoverIcons.prototype.arrowFill +
+        '" d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z"/>',
+      24,
+      24
+    );
 
-    if (mxClient.IS_SVG) {
-      mxConstraintHandler.prototype.pointImage = Graph.createSvgImage(
-        5,
-        5,
-        '<path d="m 0 0 L 5 5 M 0 5 L 5 0" stroke="' + HoverIcons.prototype.arrowFill + '"/>'
-      );
-    }
+    mxConstraintHandler.prototype.pointImage = Graph.createSvgImage(
+      5,
+      5,
+      '<path d="m 0 0 L 5 5 M 0 5 L 5 0" stroke="' + HoverIcons.prototype.arrowFill + '"/>'
+    );
 
     mxVertexHandler.TABLE_HANDLE_COLOR = "#fca000";
     mxVertexHandler.prototype.handleImage = HoverIcons.prototype.mainHandle;
@@ -9858,20 +9792,18 @@ if (typeof mxVertexHandler != "undefined") {
     Sidebar.prototype.roundDrop = HoverIcons.prototype.roundDrop;
 
     // Pre-fetches images (only needed for non data-uris)
-    if (!mxClient.IS_SVG) {
-      new Image().src = HoverIcons.prototype.mainHandle.src;
-      new Image().src = HoverIcons.prototype.fixedHandle.src;
-      new Image().src = HoverIcons.prototype.terminalHandle.src;
-      new Image().src = HoverIcons.prototype.secondaryHandle.src;
-      new Image().src = HoverIcons.prototype.rotationHandle.src;
+    new Image().src = HoverIcons.prototype.mainHandle.src;
+    new Image().src = HoverIcons.prototype.fixedHandle.src;
+    new Image().src = HoverIcons.prototype.terminalHandle.src;
+    new Image().src = HoverIcons.prototype.secondaryHandle.src;
+    new Image().src = HoverIcons.prototype.rotationHandle.src;
 
-      new Image().src = HoverIcons.prototype.triangleUp.src;
-      new Image().src = HoverIcons.prototype.triangleRight.src;
-      new Image().src = HoverIcons.prototype.triangleDown.src;
-      new Image().src = HoverIcons.prototype.triangleLeft.src;
-      new Image().src = HoverIcons.prototype.refreshTarget.src;
-      new Image().src = HoverIcons.prototype.roundDrop.src;
-    }
+    new Image().src = HoverIcons.prototype.triangleUp.src;
+    new Image().src = HoverIcons.prototype.triangleRight.src;
+    new Image().src = HoverIcons.prototype.triangleDown.src;
+    new Image().src = HoverIcons.prototype.triangleLeft.src;
+    new Image().src = HoverIcons.prototype.refreshTarget.src;
+    new Image().src = HoverIcons.prototype.roundDrop.src;
 
     // Adds rotation handle and live preview
     mxVertexHandler.prototype.rotationEnabled = true;

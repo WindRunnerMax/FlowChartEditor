@@ -14,17 +14,8 @@ import {
   mxEventSource,
 } from "../../core/mxgraph";
 
-import { RESOURCES_PATH } from "../constant";
-import { OpenFile, Editor, PageSetupDialog, PrintDialog, FilenameDialog } from "./Editor";
-import {
-  ExportDialog,
-  EditDiagramDialog,
-  TextareaDialog,
-  LayersWindow,
-  OutlineWindow,
-  OpenDialog,
-  AboutDialog,
-} from "./Dialogs";
+import { Editor, FilenameDialog } from "./Editor";
+import { TextareaDialog, LayersWindow, OutlineWindow } from "./Dialogs";
 import { ChangePageSetup } from "./EditorUi";
 
 export { Actions, Action };
@@ -52,84 +43,7 @@ Actions.prototype.init = function () {
     return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
   };
 
-  // File actions
-  this.addAction("new...", function () {
-    graph.openLink(ui.getUrl());
-  });
-  this.addAction("open...", function () {
-    window.openNew = true;
-    window.openKey = "open";
-
-    ui.openFile();
-  });
-  this.addAction("import...", function () {
-    window.openNew = false;
-    window.openKey = "import";
-
-    // Closes dialog after open
-    window.openFile = new OpenFile(
-      mxUtils.bind(this, function () {
-        ui.hideDialog();
-      })
-    );
-
-    window.openFile.setConsumer(
-      mxUtils.bind(this, function (xml) {
-        try {
-          const doc = mxUtils.parseXml(xml);
-          editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
-        } catch (e) {
-          mxUtils.alert(mxResources.get("invalidOrMissingFile") + ": " + e.message);
-        }
-      })
-    );
-
-    // Removes openFile if dialog is closed
-    ui.showDialog(new OpenDialog(this).container, 320, 220, true, true, function () {
-      window.openFile = null;
-    });
-  }).isEnabled = isGraphEnabled;
-  this.addAction(
-    "save",
-    function () {
-      ui.saveFile(false);
-    },
-    null,
-    null,
-    Editor.ctrlKey + "+S"
-  ).isEnabled = isGraphEnabled;
-  this.addAction(
-    "saveAs...",
-    function () {
-      ui.saveFile(true);
-    },
-    null,
-    null,
-    Editor.ctrlKey + "+Shift+S"
-  ).isEnabled = isGraphEnabled;
-  this.addAction("export...", function () {
-    ui.showDialog(new ExportDialog(ui).container, 300, 296, true, true);
-  });
-  this.addAction("editDiagram...", function () {
-    const dlg = new EditDiagramDialog(ui);
-    ui.showDialog(dlg.container, 620, 420, true, false);
-    dlg.init();
-  });
-  this.addAction("pageSetup...", function () {
-    ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true);
-  }).isEnabled = isGraphEnabled;
-  this.addAction(
-    "print...",
-    function () {
-      ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true);
-    },
-    null,
-    "sprite-print",
-    Editor.ctrlKey + "+P"
-  );
-  this.addAction("preview", function () {
-    mxUtils.show(graph, null, 10, 10);
-  });
+  // - File actions
 
   // Edit actions
   this.addAction(
@@ -978,41 +892,10 @@ Actions.prototype.init = function () {
     return graph.connectionHandler.isCreateTarget();
   });
   action.isEnabled = isGraphEnabled;
-  action = this.addAction("autosave", function () {
-    ui.editor.setAutosave(!ui.editor.autosave);
-  });
-  action.setToggleAction(true);
-  action.setSelectedCallback(function () {
-    return ui.editor.autosave;
-  });
-  action.isEnabled = isGraphEnabled;
-  action.visible = false;
 
-  // Help actions
-  this.addAction("help", function () {
-    let ext = "";
-
-    if (mxResources.isLanguageSupported(mxClient.language)) {
-      ext = "_" + mxClient.language;
-    }
-
-    graph.openLink(RESOURCES_PATH + "/help" + ext + ".html");
-  });
-
-  let showingAbout = false;
-
-  this.put(
-    "about",
-    new Action(mxResources.get("about") + " Graph Editor...", function () {
-      if (!showingAbout) {
-        ui.showDialog(new AboutDialog(ui).container, 320, 280, true, true, function () {
-          showingAbout = false;
-        });
-
-        showingAbout = true;
-      }
-    })
-  );
+  // - AutoSave Action
+  // - Help Action
+  // - About Action
 
   // Font style actions
   const toggleFontStyle = mxUtils.bind(this, function (key, style, fn, shortcut) {

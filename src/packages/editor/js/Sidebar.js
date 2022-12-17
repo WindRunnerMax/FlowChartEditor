@@ -1,7 +1,6 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
-import { STENCIL_PATH, IMAGE_PATH, urlParams } from "../constant";
 import {
   mxConstants,
   mxResources,
@@ -25,6 +24,7 @@ import { Graph, HoverIcons } from "./Graph";
 import { Editor, Dialog } from "./Editor";
 import { getStencil } from "../stencils";
 import Gear_128x128 from "../stencils/clipart/Gear_128x128";
+import { collapsedImage, expandedImage, searchImage } from "../images/base64";
 
 export { Sidebar };
 
@@ -119,8 +119,6 @@ function Sidebar(editorUi, container) {
  * Adds all palettes to the sidebar.
  */
 Sidebar.prototype.init = function () {
-  const dir = STENCIL_PATH;
-
   this.addSearchPalette(true);
   this.addGeneralPalette(true);
   this.addStencilPalette(
@@ -137,7 +135,7 @@ Sidebar.prototype.init = function () {
   );
   this.addMiscPalette(false);
   this.addAdvancedPalette(false);
-  this.addBasicPalette(dir);
+  this.addBasicPalette("");
   this.addStencilPalette(
     "arrows",
     mxResources.get("arrows"),
@@ -145,12 +143,12 @@ Sidebar.prototype.init = function () {
     ";whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2"
   );
   this.addUmlPalette(false);
-  this.addBpmnPalette(dir, false);
+  this.addBpmnPalette("", false);
 
   this.addImagePalette(
     "clipart",
     mxResources.get("clipart"),
-    dir + "/clipart/",
+    "",
     "_128x128.png",
     [
       "Earth_globe",
@@ -200,21 +198,17 @@ Sidebar.prototype.init = function () {
 /**
  * Sets the default font size.
  */
-Sidebar.prototype.collapsedImage =
-  "data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozNUQyRTJFNjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozNUQyRTJFNzZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MEUxNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MEUyNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhSMj6lrwAjcC1GyahV+dcZJgeIIFgA7";
+Sidebar.prototype.collapsedImage = collapsedImage;
 
 /**
  * Sets the default font size.
  */
-Sidebar.prototype.expandedImage =
-  "data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxREY3NzBERjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxREY3NzBFMDZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MERENkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MERFNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhGMj6nL3QAjVHIu6azbvPtWAAA7";
+Sidebar.prototype.expandedImage = expandedImage;
 
 /**
  *
  */
-Sidebar.prototype.searchImage = !mxClient.IS_SVG
-  ? IMAGE_PATH + "/search.png"
-  : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAEaSURBVHjabNGxS5VxFIfxz71XaWuQUJCG/gCHhgTD9VpEETg4aMOlQRp0EoezObgcd220KQiXmpretTAHQRBdojlQEJyukPdt+b1ywfvAGc7wnHP4nlZd1yKijQW8xzNc4Su+ZOYfQ3T6/f4YNvEJYzjELXp4VVXVz263+7cR2niBxAFeZ2YPi3iHR/gYERPDwhpOsd6sz8x/mfkNG3iOlWFhFj8y89J9KvzGXER0GuEaD42mgwHqUtoljbcRsTBCeINpfM/MgZLKPpaxFxGbOCqDXmILN7hoJrTKH+axhxmcYRxP0MIDnOBDZv5q1XUNIuJxifJp+UNV7t7BFM6xeic0RMQ4Bpl5W/ol7GISx/eEUUTECrbx+f8A8xhiZht9zsgAAAAASUVORK5CYII=";
+Sidebar.prototype.searchImage = searchImage;
 
 /**
  *
@@ -279,14 +273,12 @@ Sidebar.prototype.thumbBorder = 2;
 /*
  * Experimental smaller sidebar entries
  */
-if (urlParams["sidebar-entries"] != "large") {
-  Sidebar.prototype.thumbPadding = document.documentMode >= 5 ? 0 : 1;
-  Sidebar.prototype.thumbBorder = 1;
-  Sidebar.prototype.thumbWidth = 32;
-  Sidebar.prototype.thumbHeight = 30;
-  Sidebar.prototype.minThumbStrokeWidth = 1.3;
-  Sidebar.prototype.thumbAntiAlias = true;
-}
+Sidebar.prototype.thumbPadding = document.documentMode >= 5 ? 0 : 1;
+Sidebar.prototype.thumbBorder = 1;
+Sidebar.prototype.thumbWidth = 32;
+Sidebar.prototype.thumbHeight = 30;
+Sidebar.prototype.minThumbStrokeWidth = 1.3;
+Sidebar.prototype.thumbAntiAlias = true;
 
 /**
  * Specifies the size of the sidebar titles.
@@ -369,10 +361,6 @@ Sidebar.prototype.showTooltip = function (elt, cells, w, h, title, showLabel) {
           this.graph2.setTooltips(false);
           this.graph2.setConnectable(false);
           this.graph2.setEnabled(false);
-
-          if (!mxClient.IS_SVG) {
-            this.graph2.view.canvas.style.position = "relative";
-          }
         }
 
         this.graph2.model.clear();
@@ -431,12 +419,7 @@ Sidebar.prototype.showTooltip = function (elt, cells, w, h, title, showLabel) {
           const ddy = this.tooltipTitle.offsetHeight + 10;
           height += ddy;
 
-          if (mxClient.IS_SVG) {
-            this.tooltipTitle.style.marginTop = 2 - ddy + "px";
-          } else {
-            height -= 6;
-            this.tooltipTitle.style.top = height - ddy + "px";
-          }
+          this.tooltipTitle.style.marginTop = 2 - ddy + "px";
         } else if (this.tooltipTitle != null && this.tooltipTitle.parentNode != null) {
           this.tooltipTitle.style.display = "none";
         }
@@ -474,15 +457,10 @@ Sidebar.prototype.showTooltip = function (elt, cells, w, h, title, showLabel) {
             )
           ) + off.y;
 
-        if (mxClient.IS_SVG) {
-          if (x0 != 0 || y0 != 0) {
-            this.graph2.view.canvas.setAttribute("transform", "translate(" + x0 + "," + y0 + ")");
-          } else {
-            this.graph2.view.canvas.removeAttribute("transform");
-          }
+        if (x0 != 0 || y0 != 0) {
+          this.graph2.view.canvas.setAttribute("transform", "translate(" + x0 + "," + y0 + ")");
         } else {
-          this.graph2.view.drawPane.style.left = x0 + "px";
-          this.graph2.view.drawPane.style.top = y0 + "px";
+          this.graph2.view.canvas.removeAttribute("transform");
         }
 
         // Workaround for ignored position CSS style in IE9
@@ -4400,27 +4378,9 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
   function createArrow(img, tooltip) {
     let arrow = null;
 
-    if (mxClient.IS_IE && !mxClient.IS_SVG) {
-      // Workaround for PNG images in IE6
-      if (mxClient.IS_IE6 && document.compatMode != "CSS1Compat") {
-        arrow = document.createElement(mxClient.VML_PREFIX + ":image");
-        arrow.setAttribute("src", img.src);
-        arrow.style.borderStyle = "none";
-      } else {
-        arrow = document.createElement("div");
-        arrow.style.backgroundImage = "url(" + img.src + ")";
-        arrow.style.backgroundPosition = "center";
-        arrow.style.backgroundRepeat = "no-repeat";
-      }
-
-      arrow.style.width = img.width + 4 + "px";
-      arrow.style.height = img.height + 4 + "px";
-      arrow.style.display = mxClient.IS_QUIRKS ? "inline" : "inline-block";
-    } else {
-      arrow = mxUtils.createImage(img.src);
-      arrow.style.width = img.width + "px";
-      arrow.style.height = img.height + "px";
-    }
+    arrow = mxUtils.createImage(img.src);
+    arrow.style.width = img.width + "px";
+    arrow.style.height = img.height + "px";
 
     if (tooltip != null) {
       arrow.setAttribute("title", tooltip);
@@ -4471,9 +4431,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
     const elt = dsCreatePreviewElement.apply(this, arguments);
 
     // Pass-through events required to tooltip on replace shape
-    if (mxClient.IS_SVG) {
-      elt.style.pointerEvents = "none";
-    }
+    elt.style.pointerEvents = "none";
 
     this.previewElementWidth = elt.style.width;
     this.previewElementHeight = elt.style.height;

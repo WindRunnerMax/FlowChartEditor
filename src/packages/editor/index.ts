@@ -1,5 +1,5 @@
 import "./js/Shapes";
-import { mxWindow } from "../core/mxgraph";
+import { mxWindow, mxClient } from "../core/mxgraph";
 import close from "./images/close.gif";
 import normalize from "./images/normalize.gif";
 import maximize from "./images/maximize.gif";
@@ -13,17 +13,7 @@ mxWindow.prototype.minimizeImage = minimize;
 mxWindow.prototype.resizeImage = resize;
 
 export { Actions, Action } from "./js/Actions";
-export {
-  ExportDialog,
-  TextareaDialog,
-  OpenDialog,
-  ColorDialog,
-  AboutDialog,
-  OutlineWindow,
-  EditDataDialog,
-  EditDiagramDialog,
-  LayersWindow,
-} from "./js/Dialogs";
+export { TextareaDialog, ColorDialog, OutlineWindow, LayersWindow } from "./js/Dialogs";
 
 export {
   FilenameDialog,
