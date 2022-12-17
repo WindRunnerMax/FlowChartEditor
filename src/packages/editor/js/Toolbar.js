@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import { IMAGE_PATH } from "../constant";
 import {
@@ -843,24 +843,6 @@ Toolbar.prototype.createTextToolbar = function () {
       const row = graph.getParentByName(elt, "TR", graph.cellEditor.text2);
 
       if (row == null) {
-        function createTable(rows, cols) {
-          const html = ["<table>"];
-
-          for (let i = 0; i < rows; i++) {
-            html.push("<tr>");
-
-            for (let j = 0; j < cols; j++) {
-              html.push("<td><br></td>");
-            }
-
-            html.push("</tr>");
-          }
-
-          html.push("</table>");
-
-          return html.join("");
-        }
-
         this.editorUi.menus.addInsertTableItem(menu);
       } else {
         const table = graph.getParentByName(row, "TABLE", graph.cellEditor.text2);
@@ -1311,7 +1293,7 @@ Toolbar.prototype.createButton = function (classname) {
 /**
  * Creates and returns a new button.
  */
-Toolbar.prototype.createLabel = function (label, tooltip) {
+Toolbar.prototype.createLabel = function (label) {
   const elt = document.createElement("a");
   elt.className = "geLabel";
   mxUtils.write(elt, label);

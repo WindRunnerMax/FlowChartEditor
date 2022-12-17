@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import { IMAGE_PATH, urlParams, STYLE_PATH } from "../constant";
 import {
@@ -62,7 +62,7 @@ import {
   mxCell,
   mxGeometry,
 } from "../../core/mxgraph";
-import { Editor, Dialog } from "./Editor";
+import { Editor } from "./Editor";
 import { Sidebar } from "./Sidebar";
 import { getStencil } from "../stencils";
 
@@ -184,7 +184,7 @@ mxGraphView.prototype.setUnit = function (unit) {
 mxSvgCanvas2D.prototype.foAltText = "[Not supported by viewer]";
 
 // Hook for custom constraints
-mxShape.prototype.getConstraints = function (style, w, h) {
+mxShape.prototype.getConstraints = function () {
   return null;
 };
 
@@ -393,10 +393,8 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
       })
     );
 
-    const mouseDown = null;
-
     this.addMouseListener({
-      mouseDown: function (sender, me) {},
+      mouseDown: function () {},
       mouseMove: mxUtils.bind(this, function (sender, me) {
         // Checks if any other handler is active
         const handlerMap = this.selectionCellsHandler.handlers.map;
@@ -679,7 +677,7 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
           }
         }
       }),
-      mouseUp: mxUtils.bind(this, function (sender, me) {
+      mouseUp: mxUtils.bind(this, function () {
         start.state = null;
         start.event = null;
         start.point = null;
@@ -724,7 +722,7 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
     this.connectionHandler.insertBeforeSource = true;
 
     // Disables built-in connection starts
-    this.connectionHandler.isValidSource = function (cell, me) {
+    this.connectionHandler.isValidSource = function () {
       return false;
     };
 
@@ -786,12 +784,12 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
     mxDragSource.prototype.dragElementZIndex = mxPopupMenu.prototype.zIndex;
 
     // Overrides color for virtual guides for page centers
-    mxGuide.prototype.getGuideColor = function (state, horizontal) {
+    mxGuide.prototype.getGuideColor = function (state) {
       return state.cell == null ? "#ffa500" /* orange */ : mxConstants.GUIDE_COLOR;
     };
 
     // Changes color of move preview for black backgrounds
-    this.graphHandler.createPreviewShape = function (bounds) {
+    this.graphHandler.createPreviewShape = function () {
       this.previewColor =
         this.graph.background == "#000000" ? "#ffffff" : mxGraphHandler.prototype.previewColor;
 
@@ -804,7 +802,7 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
     // LATER: Handle recursive parts
     const graphHandlerGetCells = this.graphHandler.getCells;
 
-    this.graphHandler.getCells = function (initialCell) {
+    this.graphHandler.getCells = function () {
       const cells = graphHandlerGetCells.apply(this, arguments);
       const lookup = new mxDictionary();
       const newCells = [];
@@ -828,7 +826,8 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
     // Handles parts of cells for drag and drop
     const graphHandlerStart = this.graphHandler.start;
 
-    this.graphHandler.start = function (cell, x, y, cells) {
+    this.graphHandler.start = function (cell) {
+      // eslint-disable-next-line no-unused-vars
       cell = this.graph.getCompositeParent(cell);
 
       graphHandlerStart.apply(this, arguments);
@@ -836,6 +835,7 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
 
     // Handles parts of cells when cloning the source for new connections
     this.connectionHandler.createTargetVertex = function (evt, source) {
+      // eslint-disable-next-line no-unused-vars
       source = this.graph.getCompositeParent(source);
 
       return mxConnectionHandler.prototype.createTargetVertex.apply(this, arguments);
@@ -969,7 +969,6 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
     };
 
     // Redirects cursor for locked cells
-    const getCursorForMouseEvent = this.getCursorForMouseEvent;
     this.getCursorForMouseEvent = function (me) {
       const locked =
         me.state == null && me.sourceState != null && this.isCellLocked(me.sourceState.cell);
@@ -1059,7 +1058,7 @@ function Graph(container, model, renderHint, stylesheet, themes, standalone) {
 
     // Never removes cells from parents that are being moved
     const graphHandlerShouldRemoveCellsFromParent = this.graphHandler.shouldRemoveCellsFromParent;
-    this.graphHandler.shouldRemoveCellsFromParent = function (parent, cells, evt) {
+    this.graphHandler.shouldRemoveCellsFromParent = function (parent) {
       if (this.graph.isCellSelected(parent)) {
         return false;
       }
@@ -1371,7 +1370,7 @@ Graph.removePasteFormatting = function (elt) {
 /**
  * Sanitizes the given HTML markup.
  */
-Graph.sanitizeHtml = function (value, editing) {
+Graph.sanitizeHtml = function (value) {
   // Uses https://code.google.com/p/google-caja/wiki/JsHtmlSanitizer
   // NOTE: Original minimized sanitizer was modified to support
   // data URIs for images, mailto and special data:-links.
@@ -1555,7 +1554,7 @@ Graph.prototype.standalone = false;
 /**
  * Installs child layout styles.
  */
-Graph.prototype.init = function (container) {
+Graph.prototype.init = function () {
   mxGraph.prototype.init.apply(this, arguments);
 
   // Intercepts links with no target attribute and opens in new window
@@ -1631,7 +1630,7 @@ Graph.prototype.init = function (container) {
   /**
    * Returns the cell for editing the given cell.
    */
-  Graph.prototype.getStartEditingCell = function (cell, trigger) {
+  Graph.prototype.getStartEditingCell = function (cell) {
     // Redirect editing for tables
     let style = this.getCellStyle(cell);
     let size = parseInt(mxUtils.getValue(style, mxConstants.STYLE_STARTSIZE, 0));
@@ -1698,9 +1697,10 @@ Graph.prototype.init = function (container) {
    *
    * Needs to modify original method for recursive call.
    */
-  Graph.prototype.getCellAt = function (x, y, parent, vertices, edges, ignoreFn) {
+  Graph.prototype.getCellAt = function (x, y) {
     if (this.useCssTransforms) {
       x = x / this.currentScale - this.currentTranslate.x;
+      // eslint-disable-next-line no-unused-vars
       y = y / this.currentScale - this.currentTranslate.y;
     }
 
@@ -1799,7 +1799,7 @@ Graph.prototype.init = function (container) {
    *
    * Updates the highlight after a change of the model or view.
    */
-  mxCellHighlight.prototype.getStrokeWidth = function (state) {
+  mxCellHighlight.prototype.getStrokeWidth = function () {
     let s = this.strokeWidth;
 
     if (this.graph.useCssTransforms) {
@@ -1851,7 +1851,7 @@ Graph.prototype.init = function (container) {
    */
   const graphViewValidate = mxGraphView.prototype.validate;
 
-  mxGraphView.prototype.validate = function (cell) {
+  mxGraphView.prototype.validate = function () {
     if (this.graph.useCssTransforms) {
       this.graph.currentScale = this.scale;
       this.graph.currentTranslate.x = this.translate.x;
@@ -1961,7 +1961,7 @@ Graph.prototype.init = function (container) {
 
   const graphUpdatePageBreaks = mxGraph.prototype.updatePageBreaks;
 
-  mxGraph.prototype.updatePageBreaks = function (visible, width, height) {
+  mxGraph.prototype.updatePageBreaks = function () {
     const useCssTranforms = this.useCssTransforms,
       scale = this.view.scale,
       translate = this.view.translate;
@@ -2074,7 +2074,7 @@ Graph.prototype.isCustomLink = function (href) {
 /**
  * Adds support for page links.
  */
-Graph.prototype.customLinkClicked = function (link) {
+Graph.prototype.customLinkClicked = function () {
   return false;
 };
 
@@ -2135,7 +2135,7 @@ Graph.prototype.getAbsoluteUrl = function (url) {
 Graph.prototype.initLayoutManager = function () {
   this.layoutManager = new mxLayoutManager(this);
 
-  this.layoutManager.hasLayout = function (cell, eventName) {
+  this.layoutManager.hasLayout = function (cell) {
     return this.graph.getCellStyle(cell)["childLayout"] != null;
   };
 
@@ -2278,7 +2278,6 @@ Graph.prototype.sanitizeHtml = function (value, editing) {
  * Revalidates all cells with placeholders in the current graph model.
  */
 Graph.prototype.updatePlaceholders = function () {
-  const model = this.model;
   let validate = false;
 
   for (const key in this.model.cells) {
@@ -3084,7 +3083,7 @@ Graph.prototype.getCellStyle = function (cell) {
 /**
  * Disables alternate width persistence for stack layout parents
  */
-Graph.prototype.updateAlternateBounds = function (cell, geo, willCollapse) {
+Graph.prototype.updateAlternateBounds = function (cell, geo) {
   if (cell != null && geo != null && this.layoutManager != null && geo.alternateBounds != null) {
     const layout = this.layoutManager.getLayout(this.model.getParent(cell));
 
@@ -3329,7 +3328,7 @@ Graph.prototype.selectCells = function (vertices, edges, parent) {
  * parent - <mxCell> that should be used as the root of the recursion.
  * Default is <defaultParent>.
  */
-Graph.prototype.getSwimlaneAt = function (x, y, parent) {
+Graph.prototype.getSwimlaneAt = function () {
   let result = mxGraph.prototype.getSwimlaneAt.apply(this, arguments);
 
   if (this.isCellLocked(result)) {
@@ -3372,7 +3371,8 @@ Graph.prototype.reset = function () {
 /**
  * Overridden to limit zoom to 1% - 16.000%.
  */
-Graph.prototype.zoom = function (factor, center) {
+Graph.prototype.zoom = function (factor) {
+  // eslint-disable-next-line no-unused-vars
   factor = Math.max(0.01, Math.min(this.view.scale * factor, 160)) / this.view.scale;
 
   mxGraph.prototype.zoom.apply(this, arguments);
@@ -3709,7 +3709,7 @@ HoverIcons.prototype.init = function () {
   // Resets current state when in-place editor starts
   this.graph.addListener(
     mxEvent.START_EDITING,
-    mxUtils.bind(this, function (evt) {
+    mxUtils.bind(this, function () {
       this.reset();
     })
   );
@@ -3766,12 +3766,6 @@ HoverIcons.prototype.init = function () {
     }),
     mouseUp: mxUtils.bind(this, function (sender, me) {
       const evt = me.getEvent();
-      const pt = mxUtils.convertPoint(
-        this.graph.container,
-        mxEvent.getClientX(evt),
-        mxEvent.getClientY(evt)
-      );
-
       if (this.isResetEvent(evt)) {
         this.reset();
       } else if (this.isActive() && !connectionHandlerActive && this.mouseDownPoint != null) {
@@ -3810,7 +3804,7 @@ HoverIcons.prototype.init = function () {
 /**
  *
  */
-HoverIcons.prototype.isResetEvent = function (evt, allowShift) {
+HoverIcons.prototype.isResetEvent = function (evt) {
   return (
     mxEvent.isAltDown(evt) ||
     (this.activeArrow == null && mxEvent.isShiftDown(evt)) ||
@@ -3895,7 +3889,7 @@ HoverIcons.prototype.createArrow = function (img, tooltip) {
   mxEvent.addListener(
     arrow,
     "mouseleave",
-    mxUtils.bind(this, function (evt) {
+    mxUtils.bind(this, function () {
       // Workaround for IE11 firing this event on touch
       if (!this.graph.isMouseDown) {
         this.resetActiveArrow();
@@ -5497,7 +5491,7 @@ mxStencilRegistry.getBasenameForStencil = function (name) {
 };
 
 // Loads the given stencil set
-mxStencilRegistry.loadStencilSet = function (stencilFile, postStencilLoad, force, async) {
+mxStencilRegistry.loadStencilSet = function (stencilFile, postStencilLoad, force) {
   force = force != null ? force : false;
   const stencilXML = mxUtils.parseXml(stencilFile);
   const stencilXMLNode = stencilXML && stencilXML.documentElement;
@@ -5525,7 +5519,7 @@ mxStencilRegistry.loadStencilSet = function (stencilFile, postStencilLoad, force
 // Loads the given stencil XML file.
 mxStencilRegistry.loadStencil = function (filename, fn) {
   if (fn != null) {
-    const req = mxUtils.get(
+    mxUtils.get(
       filename,
       mxUtils.bind(this, function (req) {
         fn(req.getStatus() >= 200 && req.getStatus() <= 299 ? req.getXml() : null);
@@ -5654,7 +5648,7 @@ if (typeof mxVertexHandler != "undefined") {
     mxConnectionHandler.prototype.cursor = "crosshair";
 
     // Uses current edge style for connect preview
-    mxConnectionHandler.prototype.createEdgeState = function (me) {
+    mxConnectionHandler.prototype.createEdgeState = function () {
       const style = this.graph.createCurrentEdgeStyle();
       const edge = this.graph.createEdge(null, null, null, null, null, style);
       const state = new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
@@ -5677,7 +5671,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     // Overrides live preview to keep current style
-    mxConnectionHandler.prototype.updatePreview = function (valid) {
+    mxConnectionHandler.prototype.updatePreview = function () {
       // do not change color of preview
     };
 
@@ -5687,7 +5681,7 @@ if (typeof mxVertexHandler != "undefined") {
       const marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 
       const markerGetCell = marker.getCell;
-      marker.getCell = mxUtils.bind(this, function (me) {
+      marker.getCell = mxUtils.bind(this, function () {
         const result = markerGetCell.apply(this, arguments);
 
         this.error = null;
@@ -6218,14 +6212,14 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Updates cell IDs in custom links on the given cell and its label.
      */
-    Graph.prototype.updateCustomLinksForCell = function (mapping, cell) {
+    Graph.prototype.updateCustomLinksForCell = function () {
       // Hook for subclassers
     };
 
     /**
      * Overrides method to provide connection constraints for shapes.
      */
-    Graph.prototype.getAllConnectionConstraints = function (terminal, source) {
+    Graph.prototype.getAllConnectionConstraints = function (terminal) {
       if (terminal != null) {
         let constraints = mxUtils.getValue(terminal.style, "points", null);
 
@@ -6327,7 +6321,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Disables drill-down for non-swimlanes.
      */
-    Graph.prototype.isValidDropTarget = function (cell, cells, evt) {
+    Graph.prototype.isValidDropTarget = function (cell, cells) {
       const style = this.getCurrentCellStyle(cell);
       let rows = true;
 
@@ -6378,7 +6372,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Overrides autosize to add a border.
      */
-    Graph.prototype.getPreferredSizeForCell = function (cell) {
+    Graph.prototype.getPreferredSizeForCell = function () {
       const result = mxGraph.prototype.getPreferredSizeForCell.apply(this, arguments);
 
       // Adds buffer
@@ -6646,7 +6640,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Handles label changes for XML user objects.
      */
-    Graph.prototype.cellLabelChanged = function (cell, value, autoSize) {
+    Graph.prototype.cellLabelChanged = function (cell, value) {
       // Removes all illegal control characters in user input
       value = Graph.zapGremlins(value);
 
@@ -6810,9 +6804,7 @@ if (typeof mxVertexHandler != "undefined") {
      * Overridden to stop moving edge labels between cells.
      */
     const graphGetDropTarget = Graph.prototype.getDropTarget;
-    Graph.prototype.getDropTarget = function (cells, evt, cell, clone) {
-      const model = this.getModel();
-
+    Graph.prototype.getDropTarget = function (cells, evt) {
       // Disables drop into group if alt is pressed
       if (mxEvent.isAltDown(evt)) {
         return null;
@@ -7111,7 +7103,7 @@ if (typeof mxVertexHandler != "undefined") {
               null,
               null,
               null,
-              function (state, x, y) {
+              function (state) {
                 return graph.getLinkForCell(state.cell) == null;
               }
             );
@@ -7265,10 +7257,10 @@ if (typeof mxVertexHandler != "undefined") {
       };
 
       // Ignores built-in click handling
-      graph.click = function (me) {};
+      graph.click = function () {};
       graph.addMouseListener(mouseListener);
 
-      mxEvent.addListener(document, "mouseleave", function (evt) {
+      mxEvent.addListener(document, "mouseleave", function () {
         mouseListener.clear();
       });
     };
@@ -7531,7 +7523,7 @@ if (typeof mxVertexHandler != "undefined") {
       const exp = new mxImageExport();
 
       // Adds hyperlinks (experimental)
-      exp.getLinkForCellState = mxUtils.bind(this, function (state, canvas) {
+      exp.getLinkForCellState = mxUtils.bind(this, function (state) {
         return this.getLinkForCell(state.cell);
       });
 
@@ -7638,21 +7630,7 @@ if (typeof mxVertexHandler != "undefined") {
 
         // Adds simple text fallback for viewers with no support for foreignObjects
         const getAlternateText = svgCanvas.getAlternateText;
-        svgCanvas.getAlternateText = function (
-          fo,
-          x,
-          y,
-          w,
-          h,
-          str,
-          align,
-          valign,
-          wrap,
-          format,
-          overflow,
-          clip,
-          rotation
-        ) {
+        svgCanvas.getAlternateText = function (fo, x, y, w, h, str) {
           // Assumes a max character width of 0.5em
           if (str != null && this.state.fontSize > 0) {
             try {
@@ -7724,14 +7702,14 @@ if (typeof mxVertexHandler != "undefined") {
         // Ignores custom links
         const imgExportGetLinkForCellState = imgExport.getLinkForCellState;
 
-        imgExport.getLinkForCellState = function (state, canvas) {
+        imgExport.getLinkForCellState = function (state) {
           const result = imgExportGetLinkForCellState.apply(this, arguments);
 
           return result != null && !state.view.graph.isCustomLink(result) ? result : null;
         };
 
         // Implements ignoreSelection flag
-        imgExport.drawCellState = function (state, canvas) {
+        imgExport.drawCellState = function (state) {
           const graph = state.view.graph;
           let selected = graph.isCellSelected(state.cell);
           let parent = graph.model.getParent(state.cell);
@@ -8375,7 +8353,7 @@ if (typeof mxVertexHandler != "undefined") {
       };
 
       // Hides menu when editing starts
-      this.addListener(mxEvent.START_EDITING, function (sender, evt) {
+      this.addListener(mxEvent.START_EDITING, function () {
         this.popupMenuHandler.hideMenu();
       });
 
@@ -8417,7 +8395,7 @@ if (typeof mxVertexHandler != "undefined") {
 
       const oldFireMouseEvent = this.fireMouseEvent;
 
-      this.fireMouseEvent = function (evtName, me, sender) {
+      this.fireMouseEvent = function (evtName, me) {
         if (evtName == mxEvent.MOUSE_DOWN) {
           // For hit detection on edges
           me = this.updateMouseEvent(me);
@@ -8559,7 +8537,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     const mxConstraintHandlerUpdate = mxConstraintHandler.prototype.update;
-    mxConstraintHandler.prototype.update = function (me, source) {
+    mxConstraintHandler.prototype.update = function (me) {
       if (this.isKeepFocusEvent(me) || !mxEvent.isAltDown(me.getEvent())) {
         mxConstraintHandlerUpdate.apply(this, arguments);
       } else {
@@ -8570,7 +8548,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * No dashed shapes.
      */
-    mxGuide.prototype.createGuideShape = function (horizontal) {
+    mxGuide.prototype.createGuideShape = function () {
       const guide = new mxPolyline([], mxConstants.GUIDE_COLOR, mxConstants.GUIDE_STROKEWIDTH);
 
       return guide;
@@ -8637,7 +8615,7 @@ if (typeof mxVertexHandler != "undefined") {
      * HTML in-place editor
      */
     const cellEditorInstallListeners = mxCellEditor.prototype.installListeners;
-    mxCellEditor.prototype.installListeners = function (elt) {
+    mxCellEditor.prototype.installListeners = function () {
       cellEditorInstallListeners.apply(this, arguments);
 
       // Adds a reference from the clone to the original node, recursively
@@ -8720,7 +8698,7 @@ if (typeof mxVertexHandler != "undefined") {
         mxEvent.addListener(
           this.textarea,
           "paste",
-          mxUtils.bind(this, function (evt) {
+          mxUtils.bind(this, function () {
             const clone = reference(this.textarea, this.textarea.cloneNode(true));
 
             window.setTimeout(
@@ -8883,7 +8861,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     const mxCellEditorResize = mxCellEditor.prototype.resize;
-    mxCellEditor.prototype.resize = function (state, trigger) {
+    mxCellEditor.prototype.resize = function (state) {
       if (this.textarea != null) {
         var state = this.graph.getView().getState(this.editingCell);
 
@@ -8990,7 +8968,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     const mxCellEditorStopEditing = mxCellEditor.prototype.stopEditing;
-    mxCellEditor.prototype.stopEditing = function (cancel) {
+    mxCellEditor.prototype.stopEditing = function () {
       // Restores default view mode before applying value
       if (this.codeViewMode) {
         this.toggleViewMode();
@@ -9104,7 +9082,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Updates the hint for the current operation.
      */
-    mxGraphHandler.prototype.updateHint = function (me) {
+    mxGraphHandler.prototype.updateHint = function () {
       if (this.pBounds != null && (this.shape != null || this.livePreviewActive)) {
         if (this.hint == null) {
           this.hint = createHint();
@@ -9208,7 +9186,7 @@ if (typeof mxVertexHandler != "undefined") {
      */
     const vertexHandlerCreateParentHighlightShape =
       mxVertexHandler.prototype.createParentHighlightShape;
-    mxVertexHandler.prototype.createParentHighlightShape = function (bounds) {
+    mxVertexHandler.prototype.createParentHighlightShape = function () {
       const shape = vertexHandlerCreateParentHighlightShape.apply(this, arguments);
 
       shape.stroke = "#C0C0C0";
@@ -9222,7 +9200,7 @@ if (typeof mxVertexHandler != "undefined") {
      */
     const edgeHandlerCreateParentHighlightShape =
       mxEdgeHandler.prototype.createParentHighlightShape;
-    mxEdgeHandler.prototype.createParentHighlightShape = function (bounds) {
+    mxEdgeHandler.prototype.createParentHighlightShape = function () {
       const shape = edgeHandlerCreateParentHighlightShape.apply(this, arguments);
 
       shape.stroke = "#C0C0C0";
@@ -9471,7 +9449,7 @@ if (typeof mxVertexHandler != "undefined") {
                 }
               };
 
-              handle.setPosition = function (bounds, pt, me) {
+              handle.setPosition = function (bounds, pt) {
                 dy = Math.max(
                   Graph.minTableRowHeight - bounds.height,
                   pt.y - bounds.y - bounds.height
@@ -9680,7 +9658,7 @@ if (typeof mxVertexHandler != "undefined") {
     /**
      * Updates the hint for the current operation.
      */
-    mxVertexHandler.prototype.updateHint = function (me) {
+    mxVertexHandler.prototype.updateHint = function () {
       if (this.index != mxEvent.LABEL_HANDLE) {
         if (this.hint == null) {
           this.hint = createHint();
@@ -9733,7 +9711,7 @@ if (typeof mxVertexHandler != "undefined") {
      */
     const edgeHandlerMouseMove = mxEdgeHandler.prototype.mouseMove;
 
-    mxEdgeHandler.prototype.mouseMove = function (sender, me) {
+    mxEdgeHandler.prototype.mouseMove = function () {
       edgeHandlerMouseMove.apply(this, arguments);
 
       if (
@@ -9751,7 +9729,7 @@ if (typeof mxVertexHandler != "undefined") {
      */
     const edgeHandlerMouseUp = mxEdgeHandler.prototype.mouseUp;
 
-    mxEdgeHandler.prototype.mouseUp = function (sender, me) {
+    mxEdgeHandler.prototype.mouseUp = function () {
       edgeHandlerMouseUp.apply(this, arguments);
 
       if (this.linkHint != null && this.linkHint.style.display == "none") {
@@ -10189,7 +10167,7 @@ if (typeof mxVertexHandler != "undefined") {
 
     const mxEdgeHandlerUpdatePreviewState = mxEdgeHandler.prototype.updatePreviewState;
 
-    mxEdgeHandler.prototype.updatePreviewState = function (edge, point, terminalState, me) {
+    mxEdgeHandler.prototype.updatePreviewState = function (edge, point, terminalState) {
       mxEdgeHandlerUpdatePreviewState.apply(this, arguments);
 
       if (terminalState != this.currentTerminalState) {
@@ -10217,7 +10195,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     // Shows secondary handle for fixed connection points
-    mxEdgeHandler.prototype.createHandleShape = function (index, virtual) {
+    mxEdgeHandler.prototype.createHandleShape = function (index) {
       const source = index != null && index == 0;
       const terminalState = this.state.getVisibleTerminalState(source);
       const c =
@@ -10261,7 +10239,7 @@ if (typeof mxVertexHandler != "undefined") {
     };
 
     const vertexHandlerCreateSizerShape = mxVertexHandler.prototype.createSizerShape;
-    mxVertexHandler.prototype.createSizerShape = function (bounds, index, fillColor) {
+    mxVertexHandler.prototype.createSizerShape = function (bounds, index) {
       this.handleImage =
         index == mxEvent.ROTATION_HANDLE
           ? HoverIcons.prototype.rotationHandle
@@ -10399,7 +10377,7 @@ if (typeof mxVertexHandler != "undefined") {
     const vertexHandlerMouseMove = mxVertexHandler.prototype.mouseMove;
 
     // Workaround for "isConsumed not defined" in MS Edge is to use arguments
-    mxVertexHandler.prototype.mouseMove = function (sender, me) {
+    mxVertexHandler.prototype.mouseMove = function () {
       vertexHandlerMouseMove.apply(this, arguments);
 
       if (this.graph.graphHandler.first != null) {
@@ -10415,7 +10393,7 @@ if (typeof mxVertexHandler != "undefined") {
 
     const vertexHandlerMouseUp = mxVertexHandler.prototype.mouseUp;
 
-    mxVertexHandler.prototype.mouseUp = function (sender, me) {
+    mxVertexHandler.prototype.mouseUp = function () {
       vertexHandlerMouseUp.apply(this, arguments);
 
       // Shows rotation handle only if one vertex is selected
@@ -10477,7 +10455,7 @@ if (typeof mxVertexHandler != "undefined") {
         this.redrawHandles();
       });
 
-      this.changeHandler = mxUtils.bind(this, function (sender, evt) {
+      this.changeHandler = mxUtils.bind(this, function () {
         this.updateLinkHint(
           this.graph.getLinkForCell(this.state.cell),
           this.graph.getLinksForState(this.state)
@@ -10489,7 +10467,7 @@ if (typeof mxVertexHandler != "undefined") {
       this.graph.getModel().addListener(mxEvent.CHANGE, this.changeHandler);
 
       // Repaint needed when editing stops and no change event is fired
-      this.editingHandler = mxUtils.bind(this, function (sender, evt) {
+      this.editingHandler = mxUtils.bind(this, function () {
         this.redrawHandles();
       });
 
@@ -10580,7 +10558,7 @@ if (typeof mxVertexHandler != "undefined") {
         }
       });
 
-      this.changeHandler = mxUtils.bind(this, function (sender, evt) {
+      this.changeHandler = mxUtils.bind(this, function () {
         this.updateLinkHint(
           this.graph.getLinkForCell(this.state.cell),
           this.graph.getLinksForState(this.state)

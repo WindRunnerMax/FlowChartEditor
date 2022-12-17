@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 import { mxClient } from "../../core/mxgraph";
 import arrow from "./arrow.gif";
 import cross from "./cross.gif";
@@ -350,55 +350,6 @@ export function mxColor(target, prop) {
 
   obj.showPicker = function () {
     if (!isPickerOwner()) {
-      const tp = mxJSColor.getElementPos(target); // target pos
-      const ts = mxJSColor.getElementSize(target); // target size
-      const vp = mxJSColor.getViewPos(); // view pos
-      const vs = mxJSColor.getViewSize(); // view size
-      const ps = getPickerDims(obj); // picker size
-      let a, b, c;
-      switch (obj.pickerPosition.toLowerCase()) {
-        case "left":
-          a = 1;
-          b = 0;
-          c = -1;
-          break;
-        case "right":
-          a = 1;
-          b = 0;
-          c = 1;
-          break;
-        case "top":
-          a = 0;
-          b = 1;
-          c = -1;
-          break;
-        default:
-          a = 0;
-          b = 1;
-          c = 1;
-          break;
-      }
-      const l = (ts[b] + ps[b]) / 2;
-
-      // picker pos
-      if (!obj.pickerSmartPosition) {
-        var pp = [tp[a], tp[b] + ts[b] - l + l * c];
-      } else {
-        var pp = [
-          -vp[a] + tp[a] + ps[a] > vs[a]
-            ? -vp[a] + tp[a] + ts[a] / 2 > vs[a] / 2 && tp[a] + ts[a] - ps[a] >= 0
-              ? tp[a] + ts[a] - ps[a]
-              : tp[a]
-            : tp[a],
-          -vp[b] + tp[b] + ts[b] + ps[b] - l + l * c > vs[b]
-            ? -vp[b] + tp[b] + ts[b] / 2 > vs[b] / 2 && tp[b] + ts[b] - l - l * c >= 0
-              ? tp[b] + ts[b] - l - l * c
-              : tp[b] + ts[b] - l + l * c
-            : tp[b] + ts[b] - l + l * c >= 0
-            ? tp[b] + ts[b] - l + l * c
-            : tp[b] + ts[b] - l - l * c,
-        ];
-      }
       drawPicker(0, 0);
     }
   };

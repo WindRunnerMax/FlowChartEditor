@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import {
   mxConstants,
@@ -718,7 +718,7 @@ Menus.prototype.init = function () {
   this.put(
     "edit",
     new Menu(
-      mxUtils.bind(this, function (menu, parent) {
+      mxUtils.bind(this, function (menu) {
         this.addMenuItems(menu, [
           "undo",
           "redo",
@@ -743,7 +743,7 @@ Menus.prototype.init = function () {
   this.put(
     "extras",
     new Menu(
-      mxUtils.bind(this, function (menu, parent) {
+      mxUtils.bind(this, function (menu) {
         this.addMenuItems(menu, ["copyConnect", "collapseExpand"]);
       })
     )
@@ -840,8 +840,6 @@ Menus.prototype.addInsertTableItem = function (menu, insertFn, parent) {
           const td = graph.getParentByName(mxEvent.getSource(evt), "TD");
 
           if (td != null && graph.cellEditor.textarea != null) {
-            const row2 = graph.getParentByName(td, "TR");
-
             // To find the new link, we create a list of all existing links first
             // LATER: Refactor for reuse with code for finding inserted image below
             const tmp = graph.cellEditor.textarea.getElementsByTagName("table");

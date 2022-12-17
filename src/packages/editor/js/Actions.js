@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import {
   mxConstants,
@@ -10,8 +10,6 @@ import {
   mxClient,
   mxRectangle,
   mxEdgeHandler,
-  mxCell,
-  mxGeometry,
   mxClipboard,
   mxEventSource,
 } from "../../core/mxgraph";
@@ -76,7 +74,7 @@ Actions.prototype.init = function () {
     );
 
     window.openFile.setConsumer(
-      mxUtils.bind(this, function (xml, filename) {
+      mxUtils.bind(this, function (xml) {
         try {
           const doc = mxUtils.parseXml(xml);
           editor.graph.setSelectionCells(editor.graph.importGraphModel(doc.documentElement));
@@ -185,7 +183,7 @@ Actions.prototype.init = function () {
     "sprite-paste",
     Editor.ctrlKey + "+V"
   );
-  this.addAction("pasteHere", function (evt) {
+  this.addAction("pasteHere", function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
       graph.getModel().beginUpdate();
       try {
@@ -229,7 +227,7 @@ Actions.prototype.init = function () {
 
   this.addAction(
     "copySize",
-    function (evt) {
+    function () {
       const cell = graph.getSelectionCell();
 
       if (graph.isEnabled() && cell != null && graph.getModel().isVertex(cell)) {
@@ -247,7 +245,7 @@ Actions.prototype.init = function () {
 
   this.addAction(
     "pasteSize",
-    function (evt) {
+    function () {
       if (graph.isEnabled() && !graph.isSelectionEmpty() && ui.copiedSize != null) {
         graph.getModel().beginUpdate();
 
@@ -691,7 +689,7 @@ Actions.prototype.init = function () {
   );
   this.addAction(
     "zoomIn",
-    function (evt) {
+    function () {
       if (graph.isFastZoomEnabled()) {
         graph.lazyZoom(true, true, ui.buttonZoomDelay);
       } else {
@@ -704,7 +702,7 @@ Actions.prototype.init = function () {
   );
   this.addAction(
     "zoomOut",
-    function (evt) {
+    function () {
       if (graph.isFastZoomEnabled()) {
         graph.lazyZoom(false, true, ui.buttonZoomDelay);
       } else {

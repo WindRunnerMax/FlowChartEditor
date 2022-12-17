@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 import { urlParams, MAX_REQUEST_SIZE, SAVE_URL } from "../constant";
 import {
   mxConstants,
@@ -209,7 +209,7 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
     // Overrides hovericons to disable while space key is pressed
     const hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
 
-    this.hoverIcons.isResetEvent = function (evt, allowShift) {
+    this.hoverIcons.isResetEvent = function () {
       return spaceKeyPressed || hoverIconsIsResetEvent.apply(this, arguments);
     };
 
@@ -230,7 +230,7 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
 
     mxEvent.addListener(document, "keydown", this.keydownHandler);
 
-    this.keyupHandler = mxUtils.bind(this, function (evt) {
+    this.keyupHandler = mxUtils.bind(this, function () {
       graph.container.style.cursor = "";
       spaceKeyPressed = false;
     });
@@ -374,7 +374,7 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
 
     // Updates toolbar and handles possible errors
     const cellEditorStopEditing = graph.cellEditor.stopEditing;
-    graph.cellEditor.stopEditing = function (cell, trigger) {
+    graph.cellEditor.stopEditing = function () {
       try {
         cellEditorStopEditing.apply(this, arguments);
         updateToolbar();
@@ -398,7 +398,7 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
 
     // Keeps graph container focused on mouse down
     const graphFireMouseEvent = graph.fireMouseEvent;
-    graph.fireMouseEvent = function (evtName, me, sender) {
+    graph.fireMouseEvent = function (evtName) {
       if (evtName == mxEvent.MOUSE_DOWN) {
         this.container.focus();
       }
@@ -419,7 +419,7 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
     // Hides context menu
     mxEvent.addGestureListeners(
       document,
-      mxUtils.bind(this, function (evt) {
+      mxUtils.bind(this, function () {
         graph.popupMenuHandler.hideMenu();
       })
     );
@@ -1158,7 +1158,7 @@ EditorUi.prototype.onKeyPress = function (evt) {
 /**
  * Returns true if the given event should start editing. This implementation returns true.
  */
-EditorUi.prototype.isImmediateEditingEvent = function (evt) {
+EditorUi.prototype.isImmediateEditingEvent = function () {
   return true;
 };
 
@@ -1291,7 +1291,6 @@ EditorUi.prototype.initClipboard = function () {
     ui.updatePasteActionStates();
   };
 
-  const mxClipboardCopy = mxClipboard.copy;
   mxClipboard.copy = function (graph) {
     let result = null;
 
@@ -1370,7 +1369,7 @@ EditorUi.prototype.initClipboard = function () {
 
   const cellEditorStopEditing = this.editor.graph.cellEditor.stopEditing;
 
-  this.editor.graph.cellEditor.stopEditing = function (cell, trigger) {
+  this.editor.graph.cellEditor.stopEditing = function () {
     cellEditorStopEditing.apply(this, arguments);
     ui.updatePasteActionStates();
   };
@@ -1424,7 +1423,7 @@ EditorUi.prototype.initCanvas = function () {
     );
   };
 
-  graph.getPreferredPageSize = function (bounds, width, height) {
+  graph.getPreferredPageSize = function () {
     const pages = this.getPageLayout();
     const size = this.getPageSize();
 
@@ -1515,11 +1514,11 @@ EditorUi.prototype.initCanvas = function () {
       })
     );
 
-    this.actions.get("zoomIn").funct = mxUtils.bind(this, function (evt) {
+    this.actions.get("zoomIn").funct = mxUtils.bind(this, function () {
       graph.zoomIn();
       this.chromelessResize(false);
     });
-    this.actions.get("zoomOut").funct = mxUtils.bind(this, function (evt) {
+    this.actions.get("zoomOut").funct = mxUtils.bind(this, function () {
       graph.zoomOut();
       this.chromelessResize(false);
     });
@@ -1563,11 +1562,7 @@ EditorUi.prototype.initCanvas = function () {
       this.editor.addListener("resetGraphView", updateChromelessToolbarPosition);
       updateChromelessToolbarPosition();
 
-      let btnCount = 0;
-
       const addButton = mxUtils.bind(this, function (fn, imgSrc, tip) {
-        btnCount++;
-
         const a = document.createElement("span");
         a.style.paddingLeft = "8px";
         a.style.paddingRight = "8px";
@@ -1959,7 +1954,7 @@ EditorUi.prototype.initCanvas = function () {
           this.scrollLeft = graph.container.scrollLeft;
           this.scrollTop = graph.container.scrollTop;
         },
-        mouseMove: function (sender, me) {},
+        mouseMove: function () {},
         mouseUp: function (sender, me) {
           if (mxEvent.isTouchEvent(me.getEvent())) {
             if (
@@ -1997,8 +1992,6 @@ EditorUi.prototype.initCanvas = function () {
 
         // Updating scrollbars here causes flickering in quirks and is not needed
         // if zoom method is always used to set the current scale on the graph.
-        const tx = this.translate.x;
-        const ty = this.translate.y;
         this.translate.x = pad.x - (this.x0 || 0) * size.width;
         this.translate.y = pad.y - (this.y0 || 0) * size.height;
       }
@@ -2271,13 +2264,13 @@ EditorUi.prototype.initCanvas = function () {
   // Holds back repaint until after mouse gestures
   mxEvent.addGestureListeners(
     graph.container,
-    function (evt) {
+    function () {
       if (updateZoomTimeout != null) {
         window.clearTimeout(updateZoomTimeout);
       }
     },
     null,
-    function (evt) {
+    function () {
       if (graph.cumulativeZoomFactor != 1) {
         scheduleZoom(0);
       }
@@ -2956,7 +2949,7 @@ EditorUi.prototype.addUndoListener = function () {
 
   const cellEditorStopEditing = this.editor.graph.cellEditor.stopEditing;
 
-  this.editor.graph.cellEditor.stopEditing = function (cell, trigger) {
+  this.editor.graph.cellEditor.stopEditing = function () {
     cellEditorStopEditing.apply(this, arguments);
     undoListener();
   };
@@ -3059,7 +3052,6 @@ EditorUi.prototype.updateActionStates = function () {
     );
 
   // Updates menu states
-  const state = graph.view.getState(graph.getSelectionCell());
   this.menus.get("navigation").setEnabled(selected || graph.view.currentRoot != null);
   this.actions
     .get("collapsible")
@@ -3513,7 +3505,7 @@ EditorUi.prototype.addSplitHandler = function (elt, horizontal, dx, onChange) {
  * @param {number} dx X-coordinate of the translation.
  * @param {number} dy Y-coordinate of the translation.
  */
-EditorUi.prototype.handleError = function (resp, title, fn, invokeFnOnClose, notFoundMessage) {
+EditorUi.prototype.handleError = function (resp, title, fn, invokeFnOnClose) {
   const e = resp != null && resp.error != null ? resp.error : resp;
 
   if (e != null || title != null) {
@@ -3807,7 +3799,7 @@ EditorUi.prototype.extractGraphModelFromEvent = function (evt) {
  * Hook for subclassers to return true if event data is a supported format.
  * This implementation always returns false.
  */
-EditorUi.prototype.isCompatibleString = function (data) {
+EditorUi.prototype.isCompatibleString = function () {
   return false;
 };
 
@@ -3934,7 +3926,7 @@ EditorUi.prototype.executeLayout = function (exec, animate, post) {
 /**
  * Hides the current menu.
  */
-EditorUi.prototype.showImageDialog = function (title, value, fn, ignoreExisting) {
+EditorUi.prototype.showImageDialog = function (title, value, fn) {
   const cellEditor = this.editor.graph.cellEditor;
   const selState = cellEditor.saveSelection();
   const newValue = mxUtils.prompt(title, value);
@@ -3960,7 +3952,7 @@ EditorUi.prototype.showImageDialog = function (title, value, fn, ignoreExisting)
 /**
  * Hides the current menu.
  */
-EditorUi.prototype.showLinkDialog = function (value, btnLabel, fn) {
+EditorUi.prototype.showLinkDialog = function () {
   // var dlg = new LinkDialog(this, value, btnLabel, fn);
   // this.showDialog(dlg.container, 420, 90, true, true);
   // dlg.init();
@@ -4036,7 +4028,7 @@ EditorUi.prototype.confirm = function (msg, okFn, cancelFn) {
 /**
  * Creates the keyboard event handler for the current graph and history.
  */
-EditorUi.prototype.createOutline = function (wnd) {
+EditorUi.prototype.createOutline = function () {
   const outline = new mxOutline(this.editor.graph);
   outline.border = 20;
 
@@ -4064,7 +4056,7 @@ EditorUi.prototype.altShiftActions = {
 /**
  * Creates the keyboard event handler for the current graph and history.
  */
-EditorUi.prototype.createKeyHandler = function (editor) {
+EditorUi.prototype.createKeyHandler = function () {
   const editorUi = this;
   const graph = this.editor.graph;
   const keyHandler = new mxKeyHandler(graph);
@@ -4342,7 +4334,7 @@ EditorUi.prototype.createKeyHandler = function (editor) {
 
   const ui = this;
   const keyHandlerEscape = keyHandler.escape;
-  keyHandler.escape = function (evt) {
+  keyHandler.escape = function () {
     keyHandlerEscape.apply(this, arguments);
   };
 

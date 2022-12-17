@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import {
   IMAGE_PATH,
@@ -1775,7 +1775,7 @@ function OutlineWindow(editorUi, x, y, w, h) {
   );
 
   const outlineCreateGraph = outline.createGraph;
-  outline.createGraph = function (container) {
+  outline.createGraph = function () {
     const g = outlineCreateGraph.apply(this, arguments);
     g.gridEnabled = false;
     g.pageScale = graph.pageScale;
@@ -2055,7 +2055,7 @@ function LayersWindow(editorUi, x, y, w, h) {
   duplicateLink.innerHTML =
     '<div class="geSprite geSprite-duplicate" style="display:inline-block;"></div>';
 
-  mxEvent.addListener(duplicateLink, "click", function (evt) {
+  mxEvent.addListener(duplicateLink, "click", function () {
     if (graph.isEnabled()) {
       let newCell = null;
       graph.model.beginUpdate();
@@ -2315,7 +2315,7 @@ function LayersWindow(editorUi, x, y, w, h) {
         ldiv.style.fontWeight = graph.isEnabled() ? "bold" : "";
         selectionLayer = child;
       } else {
-        mxEvent.addListener(ldiv, "click", function (evt) {
+        mxEvent.addListener(ldiv, "click", function () {
           if (graph.isEnabled()) {
             graph.setDefaultParent(defaultParent);
             graph.view.setCurrentRoot(null);

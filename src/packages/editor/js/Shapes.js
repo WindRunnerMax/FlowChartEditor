@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import {
   mxConstants,
@@ -48,87 +48,6 @@ import { Graph } from "./Graph";
  * Registers shapes.
  */
 (function () {
-  // LATER: Use this to implement striping
-  function paintTableBackground(state, c, x, y, w, h, r) {
-    if (state != null) {
-      const graph = state.view.graph;
-      const start = graph.getActualStartSize(state.cell);
-      const rows = graph.model.getChildCells(state.cell, true);
-
-      if (rows.length > 0) {
-        let events = false;
-
-        if (this.style != null) {
-          events = mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, "1") == "1";
-        }
-
-        if (!events) {
-          c.pointerEvents = false;
-        }
-
-        const evenRowColor = mxUtils.getValue(state.style, "evenRowColor", mxConstants.NONE);
-        const oddRowColor = mxUtils.getValue(state.style, "oddRowColor", mxConstants.NONE);
-        const evenColColor = mxUtils.getValue(state.style, "evenColumnColor", mxConstants.NONE);
-        const oddColColor = mxUtils.getValue(state.style, "oddColumnColor", mxConstants.NONE);
-        const cols = graph.model.getChildCells(rows[0], true);
-
-        // Paints column backgrounds
-        for (var i = 0; i < cols.length; i++) {
-          var clr = mxUtils.mod(i, 2) == 1 ? evenColColor : oddColColor;
-          var geo = graph.getCellGeometry(cols[i]);
-
-          if (geo != null && clr != mxConstants.NONE) {
-            c.setFillColor(clr);
-            c.begin();
-            c.moveTo(x + geo.x, y + start.y);
-
-            if (r > 0 && i == cols.length - 1) {
-              c.lineTo(x + geo.x + geo.width - r, y);
-              c.quadTo(x + geo.x + geo.width, y, x + geo.x + geo.width, y + r);
-              c.lineTo(x + geo.x + geo.width, y + h - r);
-              c.quadTo(x + geo.x + geo.width, y + h, x + geo.x + geo.width - r, y + h);
-            } else {
-              c.lineTo(x + geo.x + geo.width, y + start.y);
-              c.lineTo(x + geo.x + geo.width, y + h - start.height);
-            }
-
-            c.lineTo(x + geo.x, y + h);
-            c.close();
-            c.fill();
-          }
-        }
-
-        // Paints row backgrounds
-        for (var i = 0; i < rows.length; i++) {
-          var clr = mxUtils.mod(i, 2) == 1 ? evenRowColor : oddRowColor;
-          var geo = graph.getCellGeometry(rows[i]);
-
-          if (geo != null && clr != mxConstants.NONE) {
-            const b = i == rows.length - 1 ? y + h : y + geo.y + geo.height;
-            c.setFillColor(clr);
-
-            c.begin();
-            c.moveTo(x + start.x, y + geo.y);
-            c.lineTo(x + w - start.width, y + geo.y);
-
-            if (r > 0 && i == rows.length - 1) {
-              c.lineTo(x + w, b - r);
-              c.quadTo(x + w, b, x + w - r, b);
-              c.lineTo(x + r, b);
-              c.quadTo(x, b, x, b - r);
-            } else {
-              c.lineTo(x + w - start.width, b);
-              c.lineTo(x + start.x, b);
-            }
-
-            c.close();
-            c.fill();
-          }
-        }
-      }
-    }
-  }
-
   // Table Shape
   function TableShape() {
     mxSwimlane.call(this);
@@ -136,7 +55,7 @@ import { Graph } from "./Graph";
 
   mxUtils.extend(TableShape, mxSwimlane);
 
-  TableShape.prototype.getLabelBounds = function (rect) {
+  TableShape.prototype.getLabelBounds = function () {
     const start = this.getTitleSize();
 
     if (start == 0) {
@@ -306,7 +225,7 @@ import { Graph } from "./Graph";
       c.stroke();
     }
   };
-  CubeShape.prototype.getLabelMargins = function (rect) {
+  CubeShape.prototype.getLabelMargins = function () {
     if (mxUtils.getValue(this.style, "boundedLbl", false)) {
       const s = parseFloat(mxUtils.getValue(this.style, "size", this.size)) * this.scale;
 
@@ -1038,7 +957,7 @@ import { Graph } from "./Graph";
    * Disables glass effect with hand jiggle.
    */
   const mxRectangleShapePaintForeground0 = mxRectangleShape.prototype.paintForeground;
-  mxRectangleShape.prototype.paintForeground = function (c, x, y, w, h) {
+  mxRectangleShape.prototype.paintForeground = function (c) {
     if (c.handJiggle == null) {
       mxRectangleShapePaintForeground0.apply(this, arguments);
     }
@@ -1126,7 +1045,7 @@ import { Graph } from "./Graph";
     c.rect(x, y, w, h);
     c.fill();
   };
-  TransparentShape.prototype.paintForeground = function (c, x, y, w, h) {};
+  TransparentShape.prototype.paintForeground = function () {};
 
   mxCellRenderer.registerShape("transparent", TransparentShape);
 
@@ -1687,7 +1606,6 @@ import { Graph } from "./Graph";
       this.gradient &&
       this.gradient != mxConstants.NONE
     ) {
-      const b = this.getGradientBounds(c, x, y, w, h);
       c.setGradient(this.fill, this.gradient, x, y, w, h, this.gradientDirection);
     } else {
       c.setFillColor(this.fill);
@@ -1713,7 +1631,7 @@ import { Graph } from "./Graph";
 
   mxCellRenderer.registerShape("umlFrame", UmlFrame);
 
-  mxPerimeter.LifelinePerimeter = function (bounds, vertex, next, orthogonal) {
+  mxPerimeter.LifelinePerimeter = function (bounds, vertex, next) {
     let size = UmlLifeline.prototype.size;
 
     if (vertex != null) {
@@ -1736,15 +1654,13 @@ import { Graph } from "./Graph";
 
   mxStyleRegistry.putValue("lifelinePerimeter", mxPerimeter.LifelinePerimeter);
 
-  mxPerimeter.OrthogonalPerimeter = function (bounds, vertex, next, orthogonal) {
-    orthogonal = true;
-
+  mxPerimeter.OrthogonalPerimeter = function () {
     return mxPerimeter.RectanglePerimeter.apply(this, arguments);
   };
 
   mxStyleRegistry.putValue("orthogonalPerimeter", mxPerimeter.OrthogonalPerimeter);
 
-  mxPerimeter.BackbonePerimeter = function (bounds, vertex, next, orthogonal) {
+  mxPerimeter.BackbonePerimeter = function (bounds, vertex, next) {
     let sw =
       (parseFloat(vertex.style[mxConstants.STYLE_STROKEWIDTH] || 1) * vertex.view.scale) / 2 - 1;
 
@@ -2473,10 +2389,6 @@ import { Graph } from "./Graph";
     const dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, "dx", this.dx))));
     const dy = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, "dy", this.dy))));
 
-    const s = Math.min(
-      w / 2,
-      Math.min(h, parseFloat(mxUtils.getValue(this.style, "size", this.size)))
-    );
     const arcSize =
       mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
     this.addPoints(
@@ -2532,12 +2444,7 @@ import { Graph } from "./Graph";
   TeeShape.prototype.redrawPath = function (c, x, y, w, h) {
     const dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, "dx", this.dx))));
     const dy = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, "dy", this.dy))));
-    const w2 = Math.abs(w - dx) / 2;
 
-    const s = Math.min(
-      w / 2,
-      Math.min(h, parseFloat(mxUtils.getValue(this.style, "size", this.size)))
-    );
     const arcSize =
       mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
     this.addPoints(
@@ -3132,7 +3039,7 @@ import { Graph } from "./Graph";
   }
 
   // Registers and defines the custom marker
-  mxMarker.addMarker("dash", function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
+  mxMarker.addMarker("dash", function (c, shape, type, pe, unitX, unitY, size, source, sw) {
     const nx = unitX * (size + sw + 1);
     const ny = unitY * (size + sw + 1);
 
@@ -3171,25 +3078,21 @@ import { Graph } from "./Graph";
   });
 
   // Registers and defines the custom marker
-  mxMarker.addMarker(
-    "cross",
-    function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-      const nx = unitX * (size + sw + 1);
-      const ny = unitY * (size + sw + 1);
+  mxMarker.addMarker("cross", function (c, shape, type, pe, unitX, unitY, size, source, sw) {
+    const nx = unitX * (size + sw + 1);
+    const ny = unitY * (size + sw + 1);
 
-      return function () {
-        c.begin();
-        c.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
-        c.lineTo(pe.x + ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 - nx / 2);
-        c.moveTo(pe.x - nx / 2 + ny / 2, pe.y - ny / 2 - nx / 2);
-        c.lineTo(pe.x - ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 + nx / 2);
-        c.stroke();
-      };
-    }
-  );
+    return function () {
+      c.begin();
+      c.moveTo(pe.x - nx / 2 - ny / 2, pe.y - ny / 2 + nx / 2);
+      c.lineTo(pe.x + ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 - nx / 2);
+      c.moveTo(pe.x - nx / 2 + ny / 2, pe.y - ny / 2 - nx / 2);
+      c.lineTo(pe.x - ny / 2 - (3 * nx) / 2, pe.y - (3 * ny) / 2 + nx / 2);
+      c.stroke();
+    };
+  });
 
   function circleMarker(c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-    const a = size / 2;
     var size = size + sw;
 
     const pt = pe.clone();
@@ -3212,47 +3115,41 @@ import { Graph } from "./Graph";
   }
 
   mxMarker.addMarker("circle", circleMarker);
-  mxMarker.addMarker(
-    "circlePlus",
-    function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-      const pt = pe.clone();
-      const fn = circleMarker.apply(this, arguments);
-      const nx = unitX * (size + 2 * sw); // (size + sw + 1);
-      const ny = unitY * (size + 2 * sw); //(size + sw + 1);
+  mxMarker.addMarker("circlePlus", function (c, shape, type, pe, unitX, unitY, size, source, sw) {
+    const pt = pe.clone();
+    const fn = circleMarker.apply(this, arguments);
+    const nx = unitX * (size + 2 * sw); // (size + sw + 1);
+    const ny = unitY * (size + 2 * sw); //(size + sw + 1);
 
-      return function () {
-        fn.apply(this, arguments);
+    return function () {
+      fn.apply(this, arguments);
 
-        c.begin();
-        c.moveTo(pt.x - unitX * sw, pt.y - unitY * sw);
-        c.lineTo(pt.x - 2 * nx + unitX * sw, pt.y - 2 * ny + unitY * sw);
-        c.moveTo(pt.x - nx - ny + unitY * sw, pt.y - ny + nx - unitX * sw);
-        c.lineTo(pt.x + ny - nx - unitY * sw, pt.y - ny - nx + unitX * sw);
-        c.stroke();
-      };
-    }
-  );
+      c.begin();
+      c.moveTo(pt.x - unitX * sw, pt.y - unitY * sw);
+      c.lineTo(pt.x - 2 * nx + unitX * sw, pt.y - 2 * ny + unitY * sw);
+      c.moveTo(pt.x - nx - ny + unitY * sw, pt.y - ny + nx - unitX * sw);
+      c.lineTo(pt.x + ny - nx - unitY * sw, pt.y - ny - nx + unitX * sw);
+      c.stroke();
+    };
+  });
 
   // Registers and defines the custom marker
-  mxMarker.addMarker(
-    "halfCircle",
-    function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-      const nx = unitX * (size + sw + 1);
-      const ny = unitY * (size + sw + 1);
-      const pt = pe.clone();
+  mxMarker.addMarker("halfCircle", function (c, shape, type, pe, unitX, unitY, size, source, sw) {
+    const nx = unitX * (size + sw + 1);
+    const ny = unitY * (size + sw + 1);
+    const pt = pe.clone();
 
-      pe.x -= nx;
-      pe.y -= ny;
+    pe.x -= nx;
+    pe.y -= ny;
 
-      return function () {
-        c.begin();
-        c.moveTo(pt.x - ny, pt.y + nx);
-        c.quadTo(pe.x - ny, pe.y + nx, pe.x, pe.y);
-        c.quadTo(pe.x + ny, pe.y - nx, pt.x + ny, pt.y - nx);
-        c.stroke();
-      };
-    }
-  );
+    return function () {
+      c.begin();
+      c.moveTo(pt.x - ny, pt.y + nx);
+      c.quadTo(pe.x - ny, pe.y + nx, pe.x, pe.y);
+      c.quadTo(pe.x + ny, pe.y - nx, pt.x + ny, pt.y - nx);
+      c.stroke();
+    };
+  });
 
   mxMarker.addMarker(
     "async",
@@ -3299,7 +3196,7 @@ import { Graph } from "./Graph";
   function createOpenAsyncArrow(widthFactor) {
     widthFactor = widthFactor != null ? widthFactor : 2;
 
-    return function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
+    return function (c, shape, type, pe, unitX, unitY, size, source, sw) {
       unitX = unitX * (size + sw);
       unitY = unitY * (size + sw);
 
@@ -3405,7 +3302,7 @@ import { Graph } from "./Graph";
             );
           }
         },
-        function (bounds, pt, me) {
+        function (bounds, pt) {
           if (mxUtils.getValue(state.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == "1") {
             this.state.style[mxConstants.STYLE_ARCSIZE] = Math.round(
               Math.max(0, Math.min(bounds.width, (bounds.x + bounds.width - pt.x) * 2))
@@ -3505,7 +3402,7 @@ import { Graph } from "./Graph";
                 bounds.getCenterY()
               );
             },
-            function (bounds, pt, me) {
+            function (bounds, pt) {
               const fixed =
                 fixedDefaultValue != null
                   ? mxUtils.getValue(this.state.style, "fixedSize", "0") != "0"
@@ -3627,7 +3524,7 @@ import { Graph } from "./Graph";
       return createHandle(
         state,
         keys,
-        function (bounds) {
+        function () {
           const pts = state.absolutePoints;
           const n = pts.length - 1;
 
@@ -3671,7 +3568,7 @@ import { Graph } from "./Graph";
         state,
         ["width"],
         start,
-        function (dist, nx, ny, p0, p1) {
+        function (dist, nx, ny, p0) {
           const w = state.shape.getEdgeWidth() * state.view.scale + spacing;
 
           return new mxPoint(
@@ -3683,13 +3580,6 @@ import { Graph } from "./Graph";
           const w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
           state.style["width"] = Math.round(w * 2) / state.view.scale - spacing;
         }
-      );
-    }
-
-    function ptLineDistance(x1, y1, x2, y2, x0, y0) {
-      return (
-        Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) /
-        Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
       );
     }
 
@@ -3716,7 +3606,7 @@ import { Graph } from "./Graph";
               state,
               ["width", mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE],
               true,
-              function (dist, nx, ny, p0, p1) {
+              function (dist, nx, ny, p0) {
                 const w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
                 const l =
                   mxUtils.getNumber(
@@ -3767,7 +3657,7 @@ import { Graph } from "./Graph";
               state,
               ["startWidth", "endWidth", mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE],
               true,
-              function (dist, nx, ny, p0, p1) {
+              function (dist, nx, ny, p0) {
                 const w =
                   (state.shape.getStartArrowWidth() - state.shape.strokewidth) * state.view.scale;
                 const l =
@@ -3834,7 +3724,7 @@ import { Graph } from "./Graph";
               state,
               ["width", mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE],
               false,
-              function (dist, nx, ny, p0, p1) {
+              function (dist, nx, ny, p0) {
                 const w = (state.shape.getEdgeWidth() - state.shape.strokewidth) * state.view.scale;
                 const l =
                   mxUtils.getNumber(
@@ -3885,7 +3775,7 @@ import { Graph } from "./Graph";
               state,
               ["startWidth", "endWidth", mxConstants.STYLE_STARTSIZE, mxConstants.STYLE_ENDSIZE],
               false,
-              function (dist, nx, ny, p0, p1) {
+              function (dist, nx, ny, p0) {
                 const w =
                   (state.shape.getEndArrowWidth() - state.shape.strokewidth) * state.view.scale;
                 const l =
@@ -4273,13 +4163,6 @@ import { Graph } from "./Graph";
                   mxUtils.getValue(this.state.style, "position", CalloutShape.prototype.position)
                 )
               );
-              const base = Math.max(
-                0,
-                Math.min(
-                  bounds.width,
-                  mxUtils.getValue(this.state.style, "base", CalloutShape.prototype.base)
-                )
-              );
 
               return new mxPoint(
                 bounds.x + position * bounds.width,
@@ -4287,13 +4170,6 @@ import { Graph } from "./Graph";
               );
             },
             function (bounds, pt) {
-              const base = Math.max(
-                0,
-                Math.min(
-                  bounds.width,
-                  mxUtils.getValue(this.state.style, "base", CalloutShape.prototype.base)
-                )
-              );
               this.state.style["size"] = Math.round(
                 Math.max(0, Math.min(bounds.height, bounds.y + bounds.height - pt.y))
               );
@@ -4889,22 +4765,13 @@ import { Graph } from "./Graph";
 
   CalloutShape.prototype.getConstraints = function (style, w, h) {
     const constr = [];
-    const arcSize =
-      mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
     const s = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, "size", this.size))));
-    const dx =
-      w *
-      Math.max(0, Math.min(1, parseFloat(mxUtils.getValue(this.style, "position", this.position))));
     const dx2 =
       w *
       Math.max(
         0,
         Math.min(1, parseFloat(mxUtils.getValue(this.style, "position2", this.position2)))
       );
-    const base = Math.max(
-      0,
-      Math.min(w, parseFloat(mxUtils.getValue(this.style, "base", this.base)))
-    );
 
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0), false));
     constr.push(new mxConnectionConstraint(new mxPoint(0.25, 0), false));
@@ -5313,7 +5180,6 @@ import { Graph } from "./Graph";
     const constr = [];
     const dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, "dx", this.dx))));
     const dy = Math.max(0, Math.min(h, parseFloat(mxUtils.getValue(this.style, "dy", this.dy))));
-    const w2 = Math.abs(w - dx) / 2;
 
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0), false));
     constr.push(new mxConnectionConstraint(new mxPoint(0.5, 0), false));
@@ -5391,7 +5257,6 @@ import { Graph } from "./Graph";
         Math.min(1, parseFloat(mxUtils.getValue(this.style, "arrowSize", this.arrowSize)))
       );
     const at = (h - aw) / 2;
-    const ab = at + aw;
 
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0.5), false));
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0), false, null, 0, at));
@@ -5430,7 +5295,6 @@ import { Graph } from "./Graph";
         )
       );
     const at = (h - aw) / 2;
-    const ab = at + aw;
 
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0.5), false));
     constr.push(new mxConnectionConstraint(new mxPoint(0, 0), false, null, as, 0));

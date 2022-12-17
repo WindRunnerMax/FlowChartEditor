@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import { IMAGE_PATH, urlParams } from "../constant";
 
@@ -653,7 +653,7 @@ Editor.prototype.createUndoManager = function () {
   };
 
   // Installs the command history
-  const listener = mxUtils.bind(this, function (sender, evt) {
+  const listener = mxUtils.bind(this, function () {
     this.undoListener.apply(this, arguments);
   });
 
@@ -671,7 +671,6 @@ Editor.prototype.createUndoManager = function () {
     );
 
     if (cand.length > 0) {
-      const model = graph.getModel();
       const cells = [];
 
       for (let i = 0; i < cand.length; i++) {
@@ -883,11 +882,11 @@ function Dialog(
 
       mxEvent.addGestureListeners(
         this.bg,
-        mxUtils.bind(this, function (evt) {
+        mxUtils.bind(this, function () {
           mouseDownSeen = true;
         }),
         null,
-        mxUtils.bind(this, function (evt) {
+        mxUtils.bind(this, function () {
           if (mouseDownSeen) {
             editorUi.hideDialog(true);
             mouseDownSeen = false;
@@ -1270,7 +1269,6 @@ PrintDialog.prototype.create = function (editorUi) {
     }
 
     // Negative coordinates are cropped or shifted if page visible
-    const gb = graph.getGraphBounds();
     const border = 0;
     let x0 = 0;
     let y0 = 0;
@@ -1949,7 +1947,6 @@ function FilenameDialog(
       const dlg = table.parentNode;
 
       if (dlg != null) {
-        const graph = editorUi.editor.graph;
         let dropElt = null;
 
         mxEvent.addListener(dlg, "dragleave", function (evt) {
@@ -2162,7 +2159,7 @@ FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
     typeSelect.appendChild(typeOption);
   }
 
-  mxEvent.addListener(typeSelect, "change", function (evt) {
+  mxEvent.addListener(typeSelect, "change", function () {
     var ext = types[typeSelect.value].extension;
     const idx = nameInput.value.lastIndexOf(".");
 
@@ -2182,7 +2179,7 @@ FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
     }
   });
 
-  const nameInputChanged = function (evt) {
+  const nameInputChanged = function () {
     const idx = nameInput.value.lastIndexOf(".");
     let active = 0;
 
@@ -2511,7 +2508,7 @@ FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
   // Disables removing relative children from parents
   const mxGraphHandlerShouldRemoveCellsFromParent =
     mxGraphHandler.prototype.shouldRemoveCellsFromParent;
-  mxGraphHandler.prototype.shouldRemoveCellsFromParent = function (parent, cells, evt) {
+  mxGraphHandler.prototype.shouldRemoveCellsFromParent = function (parent, cells) {
     for (let i = 0; i < cells.length; i++) {
       if (this.graph.getModel().isVertex(cells[i])) {
         const geo = this.graph.getCellGeometry(cells[i]);
@@ -2530,7 +2527,7 @@ FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
   mxConnectionHandler.prototype.createMarker = function () {
     const marker = mxConnectionHandlerCreateMarker.apply(this, arguments);
 
-    marker.intersects = mxUtils.bind(this, function (state, evt) {
+    marker.intersects = mxUtils.bind(this, function () {
       if (this.isConnecting()) {
         return true;
       }

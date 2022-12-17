@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import { IMAGE_PATH } from "../constant";
 import {
@@ -92,7 +92,7 @@ Format.prototype.init = function () {
   const editor = ui.editor;
   const graph = editor.graph;
 
-  this.update = mxUtils.bind(this, function (sender, evt) {
+  this.update = mxUtils.bind(this, function () {
     this.clearSelectionState();
     this.refresh();
   });
@@ -184,7 +184,7 @@ Format.prototype.initSelectionState = function () {
 /**
  * Returns information about the current selection.
  */
-Format.prototype.updateSelectionStateForCell = function (result, cell, cells) {
+Format.prototype.updateSelectionStateForCell = function (result, cell) {
   const graph = this.editorUi.editor.graph;
 
   if (graph.getModel().isVertex(cell)) {
@@ -501,7 +501,7 @@ Format.prototype.refresh = function () {
     let currentPanel = null;
 
     const addClickHandler = mxUtils.bind(this, function (elt, panel, index) {
-      const clickHandler = mxUtils.bind(this, function (evt) {
+      const clickHandler = mxUtils.bind(this, function () {
         if (currentLabel != elt) {
           if (containsLabel) {
             this.labelIndex = index;
@@ -1673,7 +1673,7 @@ ArrangePanel.prototype.addTable = function (div) {
 ArrangePanel.prototype.addLayerOps = function (div) {
   const ui = this.editorUi;
 
-  var btn = mxUtils.button(mxResources.get("toFront"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("toFront"), function () {
     ui.actions.get("toFront").funct();
   });
 
@@ -1685,7 +1685,7 @@ ArrangePanel.prototype.addLayerOps = function (div) {
   btn.style.marginRight = "2px";
   div.appendChild(btn);
 
-  var btn = mxUtils.button(mxResources.get("toBack"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("toBack"), function () {
     ui.actions.get("toBack").funct();
   });
 
@@ -1714,7 +1714,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
   div.style.paddingBottom = "6px";
 
   if (graph.getSelectionCount() > 1) {
-    btn = mxUtils.button(mxResources.get("group"), function (evt) {
+    btn = mxUtils.button(mxResources.get("group"), function () {
       ui.actions.get("group").funct();
     });
 
@@ -1735,7 +1735,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
     !ss.cell &&
     graph.getModel().getChildCount(cell) > 0
   ) {
-    btn = mxUtils.button(mxResources.get("ungroup"), function (evt) {
+    btn = mxUtils.button(mxResources.get("ungroup"), function () {
       ui.actions.get("ungroup").funct();
     });
 
@@ -1755,7 +1755,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
       count = 0;
     }
 
-    var btn = mxUtils.button(mxResources.get("copySize"), function (evt) {
+    var btn = mxUtils.button(mxResources.get("copySize"), function () {
       ui.actions.get("copySize").funct();
     });
 
@@ -1770,7 +1770,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
     count++;
 
     if (ui.copiedSize != null) {
-      const btn2 = mxUtils.button(mxResources.get("pasteSize"), function (evt) {
+      const btn2 = mxUtils.button(mxResources.get("pasteSize"), function () {
         ui.actions.get("pasteSize").funct();
       });
 
@@ -1800,7 +1800,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
       mxUtils.br(div);
     }
 
-    btn = mxUtils.button(mxResources.get("removeFromGroup"), function (evt) {
+    btn = mxUtils.button(mxResources.get("removeFromGroup"), function () {
       ui.actions.get("removeFromGroup").funct();
     });
 
@@ -1816,7 +1816,7 @@ ArrangePanel.prototype.addGroupOps = function (div) {
 
     btn = mxUtils.button(
       mxResources.get("clearWaypoints"),
-      mxUtils.bind(this, function (evt) {
+      mxUtils.bind(this, function () {
         this.editorUi.actions.get("clearWaypoints").funct();
       })
     );
@@ -1944,7 +1944,7 @@ ArrangePanel.prototype.addFlip = function (div) {
   mxUtils.write(span, mxResources.get("flip"));
   div.appendChild(span);
 
-  var btn = mxUtils.button(mxResources.get("horizontal"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("horizontal"), function () {
     graph.toggleCellStyles(mxConstants.STYLE_FLIPH, false);
   });
 
@@ -1953,7 +1953,7 @@ ArrangePanel.prototype.addFlip = function (div) {
   btn.style.marginRight = "2px";
   div.appendChild(btn);
 
-  var btn = mxUtils.button(mxResources.get("vertical"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("vertical"), function () {
     graph.toggleCellStyles(mxConstants.STYLE_FLIPV, false);
   });
 
@@ -1976,7 +1976,7 @@ ArrangePanel.prototype.addDistribute = function (div) {
 
   div.appendChild(this.createTitle(mxResources.get("distribute")));
 
-  var btn = mxUtils.button(mxResources.get("horizontal"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("horizontal"), function () {
     graph.distributeCells(true);
   });
 
@@ -1985,7 +1985,7 @@ ArrangePanel.prototype.addDistribute = function (div) {
   btn.style.marginRight = "2px";
   div.appendChild(btn);
 
-  var btn = mxUtils.button(mxResources.get("vertical"), function (evt) {
+  var btn = mxUtils.button(mxResources.get("vertical"), function () {
     graph.distributeCells(false);
   });
 
@@ -3407,7 +3407,7 @@ TextFormatPanel.prototype.addFont = function (container) {
         mxConstants.STYLE_LABEL_BACKGROUNDCOLOR,
         "#ffffff",
         null,
-        function (color) {
+        function () {
           graph.updateLabelElements(graph.getSelectionCells(), function (elt) {
             elt.style.backgroundColor = null;
           });
@@ -4461,9 +4461,6 @@ StyleFormatPanel.prototype.defaultStrokeColor = "black";
  * Adds the label menu items to the given menu and parent.
  */
 StyleFormatPanel.prototype.init = function () {
-  const ui = this.editorUi;
-  const editor = ui.editor;
-  const graph = editor.graph;
   const ss = this.format.getSelectionState();
 
   if (!ss.containsLabel) {
@@ -4520,8 +4517,6 @@ StyleFormatPanel.prototype.getCssRules = function (css) {
  * Adds the label menu items to the given menu and parent.
  */
 StyleFormatPanel.prototype.addSvgStyles = function (container) {
-  const ui = this.editorUi;
-  const graph = ui.editor.graph;
   const ss = this.format.getSelectionState();
   container.style.paddingTop = "6px";
   container.style.paddingBottom = "6px";
@@ -4610,7 +4605,7 @@ StyleFormatPanel.prototype.addSvgRule = function (
           },
           "#ffffff",
           {
-            install: function (apply) {
+            install: function () {
               // ignore
             },
             destroy: function () {
@@ -6095,7 +6090,6 @@ StyleFormatPanel.prototype.addStroke = function (container) {
 
   const listener = mxUtils.bind(this, function (sender, evt, force) {
     ss = this.format.getSelectionState();
-    const color = mxUtils.getValue(ss.style, strokeKey, null);
 
     if (force || document.activeElement != input) {
       var tmp = parseInt(mxUtils.getValue(ss.style, mxConstants.STYLE_STROKEWIDTH, 1));
@@ -6480,7 +6474,7 @@ StyleFormatPanel.prototype.addEffects = function (div) {
     count++;
   });
 
-  const listener = mxUtils.bind(this, function (sender, evt, force) {
+  const listener = mxUtils.bind(this, function () {
     ss = this.format.getSelectionState();
 
     left.innerHTML = "";
@@ -6532,7 +6526,7 @@ StyleFormatPanel.prototype.addStyleOps = function (div) {
 
   const btn = mxUtils.button(
     mxResources.get("setAsDefaultStyle"),
-    mxUtils.bind(this, function (evt) {
+    mxUtils.bind(this, function () {
       this.editorUi.actions.get("setAsDefaultStyle").funct();
     })
   );
@@ -6608,7 +6602,7 @@ DiagramFormatPanel.prototype.addView = function (div) {
         function () {
           return graph.pageVisible;
         },
-        function (checked) {
+        function () {
           ui.actions.get("pageView").funct();
         },
         {
@@ -6650,7 +6644,7 @@ DiagramFormatPanel.prototype.addOptions = function (div) {
         function () {
           return graph.connectionArrowsEnabled;
         },
-        function (checked) {
+        function () {
           ui.actions.get("connectionArrows").funct();
         },
         {
@@ -6675,7 +6669,7 @@ DiagramFormatPanel.prototype.addOptions = function (div) {
         function () {
           return graph.connectionHandler.isEnabled();
         },
-        function (checked) {
+        function () {
           ui.actions.get("connectionPoints").funct();
         },
         {
@@ -6700,7 +6694,7 @@ DiagramFormatPanel.prototype.addOptions = function (div) {
         function () {
           return graph.graphHandler.guidesEnabled;
         },
-        function (checked) {
+        function () {
           ui.actions.get("guides").funct();
         },
         {
@@ -6774,7 +6768,7 @@ DiagramFormatPanel.prototype.addGridOption = function (container) {
   mxEvent.addListener(input, "blur", update);
   mxEvent.addListener(input, "change", update);
 
-  const unitChangeListener = function (sender, evt) {
+  const unitChangeListener = function () {
     input.value = fPanel.inUnit(graph.getGridSize()) + " " + fPanel.getUnit();
     fPanel.format.refresh();
   };
@@ -6884,12 +6878,7 @@ DiagramFormatPanel.prototype.addGridOption = function (container) {
  */
 DiagramFormatPanel.prototype.addDocumentProperties = function (div) {
   // Hook for subclassers
-  const ui = this.editorUi;
-  const editor = ui.editor;
-  const graph = editor.graph;
-
   div.appendChild(this.createTitle(mxResources.get("options")));
-
   return div;
 };
 
@@ -6958,7 +6947,7 @@ DiagramFormatPanel.prototype.addStyleOps = function (div) {
 
   const btn = mxUtils.button(
     mxResources.get("clearDefaultStyle"),
-    mxUtils.bind(this, function (evt) {
+    mxUtils.bind(this, function () {
       this.editorUi.actions.get("clearDefaultStyle").funct();
     })
   );

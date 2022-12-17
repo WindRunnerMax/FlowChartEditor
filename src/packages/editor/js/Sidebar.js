@@ -1,5 +1,5 @@
 /* eslint-disable */
-/* eslint-enable no-undef, prettier/prettier */
+/* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 
 import { STENCIL_PATH, IMAGE_PATH, urlParams } from "../constant";
 import {
@@ -48,7 +48,7 @@ function Sidebar(editorUi, container) {
 
   document.body.appendChild(this.graph.container);
 
-  this.pointerUpHandler = mxUtils.bind(this, function () {
+  this.pointerUpHandler = mxUtils.bind(this, () => {
     this.showTooltips = true;
   });
 
@@ -58,7 +58,7 @@ function Sidebar(editorUi, container) {
     this.pointerUpHandler
   );
 
-  this.pointerDownHandler = mxUtils.bind(this, function () {
+  this.pointerDownHandler = mxUtils.bind(this, () => {
     this.showTooltips = false;
     this.hideTooltip();
   });
@@ -634,7 +634,7 @@ Sidebar.prototype.addEntry = function (tags, fn) {
 /**
  * Adds shape search UI.
  */
-Sidebar.prototype.searchEntries = function (searchTerms, count, page, success, error) {
+Sidebar.prototype.searchEntries = function (searchTerms, count, page, success) {
   if (this.taglist != null && searchTerms != null) {
     var tmp = searchTerms.toLowerCase().split(" ");
     let dict = new mxDictionary();
@@ -940,7 +940,7 @@ Sidebar.prototype.addSearchPalette = function (expand) {
   mxEvent.addListener(
     input,
     "keyup",
-    mxUtils.bind(this, function (evt) {
+    mxUtils.bind(this, function () {
       if (input.value == "") {
         cross.setAttribute("src", Sidebar.prototype.searchImage);
         cross.setAttribute("title", mxResources.get("search"));
@@ -994,16 +994,7 @@ Sidebar.prototype.addSearchPalette = function (expand) {
 /**
  * Adds the general palette to the sidebar.
  */
-Sidebar.prototype.insertSearchHint = function (
-  div,
-  searchTerm,
-  count,
-  page,
-  results,
-  len,
-  more,
-  terms
-) {
+Sidebar.prototype.insertSearchHint = function (div, searchTerm, count, page, results) {
   if (results.length == 0 && page == 1) {
     const err = document.createElement("div");
     err.className = "geTitle";
@@ -1343,7 +1334,7 @@ Sidebar.prototype.addGeneralPalette = function (expand) {
 /**
  * Adds the general palette to the sidebar.
  */
-Sidebar.prototype.addBasicPalette = function (dir) {
+Sidebar.prototype.addBasicPalette = function () {
   this.addStencilPalette(
     "basic",
     mxResources.get("basic"),
@@ -3044,7 +3035,7 @@ Sidebar.prototype.addUmlPalette = function (expand) {
 /**
  * Adds the BPMN library to the sidebar.
  */
-Sidebar.prototype.addBpmnPalette = function (dir, expand) {
+Sidebar.prototype.addBpmnPalette = function () {
   // Avoids having to bind all functions to "this"
   const sb = this;
 
@@ -3649,9 +3640,7 @@ Sidebar.prototype.createThumb = function (
   parent,
   title,
   showLabel,
-  showTitle,
-  realWidth,
-  realHeight
+  showTitle
 ) {
   this.graph.labelsVisible = showLabel == null || showLabel;
   const fo = mxClient.NO_FO;
@@ -4347,7 +4336,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
   const dragSource = mxUtils.makeDraggable(
     elt,
     this.editorUi.editor.graph,
-    mxUtils.bind(this, function (graph, evt, target, x, y) {
+    mxUtils.bind(this, function (graph, evt) {
       if (this.updateThread != null) {
         window.clearTimeout(this.updateThread);
       }
@@ -4391,7 +4380,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
   );
 
   // Stops dragging if cancel is pressed
-  graph.addListener(mxEvent.ESCAPE, function (sender, evt) {
+  graph.addListener(mxEvent.ESCAPE, function () {
     if (dragSource.isActive()) {
       dragSource.reset();
     }
@@ -4478,7 +4467,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
   const dsCreatePreviewElement = dragSource.createPreviewElement;
 
   // Stores initial size of preview element
-  dragSource.createPreviewElement = function (graph) {
+  dragSource.createPreviewElement = function () {
     const elt = dsCreatePreviewElement.apply(this, arguments);
 
     // Pass-through events required to tooltip on replace shape
@@ -4494,7 +4483,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
 
   // Shows/hides hover icons
   const dragEnter = dragSource.dragEnter;
-  dragSource.dragEnter = function (graph, evt) {
+  dragSource.dragEnter = function () {
     if (ui.hoverIcons != null) {
       ui.hoverIcons.setDisplay("none");
     }
@@ -4503,7 +4492,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
   };
 
   const dragExit = dragSource.dragExit;
-  dragSource.dragExit = function (graph, evt) {
+  dragSource.dragExit = function () {
     if (ui.hoverIcons != null) {
       ui.hoverIcons.setDisplay("");
     }
@@ -4511,7 +4500,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
     dragExit.apply(this, arguments);
   };
 
-  dragSource.dragOver = function (graph, evt) {
+  dragSource.dragOver = function (graph) {
     mxDragSource.prototype.dragOver.apply(this, arguments);
 
     if (this.currentGuide != null && activeArrow != null) {
@@ -4907,8 +4896,6 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
           if (pts != null) {
             var p0 = pts[0];
             var pe = pts[pts.length - 1];
-            const tol = graph.tolerance;
-            const box = new mxRectangle(x - tol, y - tol, 2 * tol, 2 * tol);
 
             roundSource.style.left = Math.floor(p0.x - this.roundDrop.width / 2) + "px";
             roundSource.style.top = Math.floor(p0.y - this.roundDrop.height / 2) + "px";
@@ -5065,7 +5052,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
 /**
  * Adds a handler for inserting the cell with a single click.
  */
-Sidebar.prototype.itemClicked = function (cells, ds, evt, elt) {
+Sidebar.prototype.itemClicked = function (cells, ds, evt) {
   const graph = this.editorUi.editor.graph;
   graph.container.focus();
 
@@ -5496,7 +5483,6 @@ Sidebar.prototype.removePalette = function (id) {
  * Adds the given image palette.
  */
 Sidebar.prototype.addImagePalette = function (id, title, prefix, postfix, items, titles, tags) {
-  const showTitles = titles != null;
   const fns = [];
 
   for (let i = 0; i < items.length; i++) {
