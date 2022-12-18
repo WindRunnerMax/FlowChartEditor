@@ -70,67 +70,6 @@ import { gridImage, refreshTarget } from "../images/base64";
 
 export { TableLayout, Graph, HoverIcons };
 
-// Workaround for handling named HTML entities in mxUtils.parseXml
-// LATER: How to configure DOMParser to just ignore all entities?
-(function () {
-  const entities = [
-    ["nbsp", "160"],
-    ["shy", "173"],
-  ];
-
-  const parseXml = mxUtils.parseXml;
-
-  mxUtils.parseXml = function (text) {
-    for (let i = 0; i < entities.length; i++) {
-      text = text.replace(new RegExp("&" + entities[i][0] + ";", "g"), "&#" + entities[i][1] + ";");
-    }
-
-    return parseXml(text);
-  };
-})();
-
-// Shim for missing toISOString in older versions of IE
-// See https://stackoverflow.com/questions/12907862
-if (!Date.prototype.toISOString) {
-  (function () {
-    function pad(number) {
-      let r = String(number);
-
-      if (r.length === 1) {
-        r = "0" + r;
-      }
-
-      return r;
-    }
-
-    Date.prototype.toISOString = function () {
-      return (
-        this.getUTCFullYear() +
-        "-" +
-        pad(this.getUTCMonth() + 1) +
-        "-" +
-        pad(this.getUTCDate()) +
-        "T" +
-        pad(this.getUTCHours()) +
-        ":" +
-        pad(this.getUTCMinutes()) +
-        ":" +
-        pad(this.getUTCSeconds()) +
-        "." +
-        String((this.getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5) +
-        "Z"
-      );
-    };
-  })();
-}
-
-// Shim for Date.now()
-if (!Date.now) {
-  Date.now = function () {
-    return new Date().getTime();
-  };
-}
-
 // Changes default colors
 /**
  * Measurements Units

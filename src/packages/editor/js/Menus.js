@@ -33,8 +33,6 @@ function Menus(editorUi) {
   this.editorUi = editorUi;
   this.menus = new Object();
   this.init();
-
-  new Image().src = this.checkmarkImage;
 }
 
 /**
@@ -1558,7 +1556,6 @@ Menubar.prototype.addMenuHandler = function (elt, funct) {
           this.editorUi.resetCurrentMenu();
           menu.destroy();
         });
-
         const offset = mxUtils.getOffset(elt);
         menu.popup(offset.x, offset.y + elt.offsetHeight, null, evt);
         this.editorUi.setCurrentMenu(menu, elt);

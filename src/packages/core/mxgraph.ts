@@ -135,3 +135,34 @@ mxCodec.prototype.decode = function (node, into) {
   }
   return obj;
 };
+
+mxUtils.getScrollOrigin = function (node, includeAncestors, includeDocument) {
+  includeAncestors = includeAncestors != null ? includeAncestors : false;
+  includeDocument = includeDocument != null ? includeDocument : false;
+  const doc = node != null ? node.ownerDocument : document;
+  const b = doc.body;
+  const d = doc.documentElement;
+  const result = new mxPoint();
+  let fixed = false;
+  while (node != null && node != b && node != d) {
+    if (!isNaN(node.scrollLeft) && !isNaN(node.scrollTop)) {
+      result.x += node.scrollLeft;
+      result.y += node.scrollTop;
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const style = mxUtils.getCurrentStyle(node);
+    if (style != null) {
+      fixed = fixed || style.position == "fixed";
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    node = includeAncestors ? node.parentNode : null;
+  }
+  if (!fixed && includeDocument) {
+    const origin = mxUtils.getDocumentScrollOrigin(doc);
+    result.x += origin.x;
+    result.y += origin.y;
+  }
+  return result;
+};

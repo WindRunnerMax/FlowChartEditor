@@ -59,6 +59,31 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
   // Pre-fetches submenu image or replaces with embedded image if supported
   mxPopupMenu.prototype.submenuImage = submenuImage;
 
+  // 处理菜单的挂载容器
+  mxPopupMenu.prototype.showMenu = function () {
+    container.appendChild(this.div);
+    mxUtils.fit(this.div);
+  };
+  // 处理菜单的挂载子容器
+  mxPopupMenu.prototype.showSubmenu = function (parent, row) {
+    if (row.div != null) {
+      row.div.style.left = parent.div.offsetLeft + row.offsetLeft + row.offsetWidth - 1 + "px";
+      row.div.style.top = parent.div.offsetTop + row.offsetTop + "px";
+      container.appendChild(row.div);
+      const left = parseInt(row.div.offsetLeft);
+      const width = parseInt(row.div.offsetWidth);
+      const offset = mxUtils.getDocumentScrollOrigin(document);
+      const b = document.body;
+      const d = document.documentElement;
+      const right = offset.x + (b.clientWidth || d.clientWidth);
+      if (left + width > right) {
+        row.div.style.left =
+          Math.max(0, parent.div.offsetLeft - width + (mxClient.IS_IE ? 6 : -6)) + "px";
+      }
+      mxUtils.fit(row.div);
+    }
+  };
+
   // Disables graph and forced panning in chromeless mode
   if (this.editor.chromeless && !this.editor.editable) {
     this.footerHeight = 0;
@@ -2243,7 +2268,7 @@ EditorUi.prototype.lightboxFit = function (maxHeight) {
   if (this.isDiagramEmpty()) {
     this.editor.graph.view.setScale(1);
   } else {
-    let border = 60;
+    const border = 60;
 
     // LATER: Use initial graph bounds to avoid rounding errors
     this.editor.graph.maxFitScale = this.lightboxMaxFitScale;
@@ -2455,7 +2480,7 @@ EditorUi.prototype.getEditBlankXml = function () {
  * Returns the URL for a copy of this editor with no state.
  */
 EditorUi.prototype.getUrl = function (pathname) {
-  let href = pathname != null ? pathname : window.location.pathname;
+  const href = pathname != null ? pathname : window.location.pathname;
   return href;
 };
 
