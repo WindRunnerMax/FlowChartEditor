@@ -1,5 +1,4 @@
 /* stylelint-disable */
-
 .geEditor {
   border: none;
   font-size: 14px;
@@ -21,7 +20,7 @@
   border-width: 1px;
 }
 
-.geEditor input[name="format-formatpanel"]{
+.geEditor input[name='format-formatpanel'] {
   margin-top: 1px;
 }
 
@@ -329,7 +328,6 @@
 .geToolbarContainer .geButton:hover {
   background: #eee;
   border-radius: 2px;
-  _filter: none !important;
   opacity: 1;
 }
 
@@ -402,7 +400,6 @@
 .geToolbarContainer .geButton {
   border: 1px solid transparent;
   cursor: pointer;
-  _filter: alpha(opacity=60);
   float: left;
   height: 20px;
   margin: 2px;
@@ -450,10 +447,8 @@ div.mxWindow .geButton {
   border-bottom: 1px solid #e5e5e5;
   overflow: hidden;
   padding: 6px;
-  _padding: 2px;
   padding-bottom: 6px;
   padding-left: 10px;
-  _padding-left: 6px;
 }
 
 .geSidebarContainer .geTitle {
@@ -483,19 +478,16 @@ div.mxWindow .geButton {
   border: 2px dotted #b0b0b0;
   border-radius: 10px;
   color: #a0a0a0;
-  fontsize: 13px;
   margin: 6px;
   padding: 6px;
   text-align: center;
 }
 
 .geTitle img {
-  _filter: alpha(opacity=50);
   opacity: 0.5;
 }
 
 .geTitle img:hover {
-  _filter: alpha(opacity=100);
   opacity: 1;
 }
 
@@ -529,7 +521,6 @@ div.mxWindow .geButton {
   background: #fbfbfb;
   border-radius: 6px;
   box-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
-  _filter: progid:dximagetransform.microsoft.dropshadow(OffX=2, OffY=2, Color='#d5d5d5', Positive='true');
   overflow: hidden;
   position: absolute;
 }
@@ -600,7 +591,6 @@ div.mxWindow .geButton {
   box-shadow: 0 0 2px 2px #d5d5d5;
   box-shadow: 0 0 2px 2px #d5d5d5;
   box-shadow: 0 0 2px 2px #d5d5d5;
-  _filter: progid:dximagetransform.microsoft.dropshadow(OffX=2, OffY=2, Color='#d5d5d5', Positive='true');
   line-height: 1em;
   overflow: hidden;
   padding: 30px;
@@ -617,7 +607,6 @@ div.mxWindow .geButton {
 
 .geDialogClose {
   cursor: pointer;
-  _filter: alpha(opacity=50);
   height: 9px;
   opacity: 0.5;
   position: absolute;
@@ -672,7 +661,6 @@ div.mxWindow .geButton {
   border: none;
   border-radius: 3px;
   color: #fff;
-  currsor: pointer;
   font-size: 14px;
   overflow: hidden;
   padding: 4px 10px;
@@ -889,12 +877,10 @@ html td.mxPopupMenuIcon {
 
 td.mxPopupMenuIcon .geIcon {
   border: 1px solid transparent;
-  _height: 26px;
   margin: 2px;
   opacity: 0.5;
   padding: 2px;
   padding-bottom: 4px;
-  _width: 26px;
 }
 
 td.mxPopupMenuIcon .geIcon:hover {
@@ -1048,7 +1034,6 @@ html td.mxWindowTitle {
   border: 1px solid #ccc;
   box-sizing: border-box;
   display: inline-block;
-  float: left;
   height: calc(100% - 118px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -1060,7 +1045,6 @@ html td.mxWindowTitle {
   border: 1px solid #ccc;
   box-sizing: border-box;
   display: inline-block;
-  float: right;
   height: calc(100% - 118px);
   overflow-x: hidden;
   overflow-y: auto;
