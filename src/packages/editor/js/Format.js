@@ -15,6 +15,7 @@ import { Menus } from "./Menus";
 import { Graph } from "./Graph";
 import { arrowSVG } from "../images/base64";
 import { ChangePageSetup } from "./EditorUi";
+import { background } from "../images/base64";
 
 export {
   StyleFormatPanel,
@@ -1460,6 +1461,7 @@ BaseFormatPanel.prototype.addKeyHandler = function (input, listener) {
  */
 BaseFormatPanel.prototype.styleButtons = function (elts) {
   for (let i = 0; i < elts.length; i++) {
+    if (!elts[i]) continue;
     mxUtils.setPrefixedStyle(elts[i].style, "borderRadius", "3px");
     mxUtils.setOpacity(elts[i], 100);
     elts[i].style.border = "1px solid #a0a0a0";
@@ -2874,8 +2876,7 @@ TextFormatPanel.prototype.addFont = function (container) {
     );
     this.styleButtons([strike]);
 
-    strike.firstChild.style.background =
-      "url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PHBhdGggaWQ9ImEiIGQ9Ik0wIDBoMjR2MjRIMFYweiIvPjwvZGVmcz48Y2xpcFBhdGggaWQ9ImIiPjx1c2UgeGxpbms6aHJlZj0iI2EiIG92ZXJmbG93PSJ2aXNpYmxlIi8+PC9jbGlwUGF0aD48cGF0aCBjbGlwLXBhdGg9InVybCgjYikiIGZpbGw9IiMwMTAxMDEiIGQ9Ik03LjI0IDguNzVjLS4yNi0uNDgtLjM5LTEuMDMtLjM5LTEuNjcgMC0uNjEuMTMtMS4xNi40LTEuNjcuMjYtLjUuNjMtLjkzIDEuMTEtMS4yOS40OC0uMzUgMS4wNS0uNjMgMS43LS44My42Ni0uMTkgMS4zOS0uMjkgMi4xOC0uMjkuODEgMCAxLjU0LjExIDIuMjEuMzQuNjYuMjIgMS4yMy41NCAxLjY5Ljk0LjQ3LjQuODMuODggMS4wOCAxLjQzLjI1LjU1LjM4IDEuMTUuMzggMS44MWgtMy4wMWMwLS4zMS0uMDUtLjU5LS4xNS0uODUtLjA5LS4yNy0uMjQtLjQ5LS40NC0uNjgtLjItLjE5LS40NS0uMzMtLjc1LS40NC0uMy0uMS0uNjYtLjE2LTEuMDYtLjE2LS4zOSAwLS43NC4wNC0xLjAzLjEzLS4yOS4wOS0uNTMuMjEtLjcyLjM2LS4xOS4xNi0uMzQuMzQtLjQ0LjU1LS4xLjIxLS4xNS40My0uMTUuNjYgMCAuNDguMjUuODguNzQgMS4yMS4zOC4yNS43Ny40OCAxLjQxLjdINy4zOWMtLjA1LS4wOC0uMTEtLjE3LS4xNS0uMjV6TTIxIDEydi0ySDN2Mmg5LjYyYy4xOC4wNy40LjE0LjU1LjIuMzcuMTcuNjYuMzQuODcuNTEuMjEuMTcuMzUuMzYuNDMuNTcuMDcuMi4xMS40My4xMS42OSAwIC4yMy0uMDUuNDUtLjE0LjY2LS4wOS4yLS4yMy4zOC0uNDIuNTMtLjE5LjE1LS40Mi4yNi0uNzEuMzUtLjI5LjA4LS42My4xMy0xLjAxLjEzLS40MyAwLS44My0uMDQtMS4xOC0uMTNzLS42Ni0uMjMtLjkxLS40MmMtLjI1LS4xOS0uNDUtLjQ0LS41OS0uNzUtLjE0LS4zMS0uMjUtLjc2LS4yNS0xLjIxSDYuNGMwIC41NS4wOCAxLjEzLjI0IDEuNTguMTYuNDUuMzcuODUuNjUgMS4yMS4yOC4zNS42LjY2Ljk4LjkyLjM3LjI2Ljc4LjQ4IDEuMjIuNjUuNDQuMTcuOS4zIDEuMzguMzkuNDguMDguOTYuMTMgMS40NC4xMy44IDAgMS41My0uMDkgMi4xOC0uMjhzMS4yMS0uNDUgMS42Ny0uNzljLjQ2LS4zNC44Mi0uNzcgMS4wNy0xLjI3cy4zOC0xLjA3LjM4LTEuNzFjMC0uNi0uMS0xLjE0LS4zMS0xLjYxLS4wNS0uMTEtLjExLS4yMy0uMTctLjMzSDIxeiIvPjwvc3ZnPg==)";
+    strike.firstChild.style.background = "url(" + background + ")";
     strike.firstChild.style.backgroundPosition = "2px 2px";
     strike.firstChild.style.backgroundSize = "18px 18px";
 
@@ -3686,7 +3687,6 @@ TextFormatPanel.prototype.addFont = function (container) {
 
     const insertPanel = stylePanel.cloneNode(false);
     insertPanel.style.paddingLeft = "0px";
-    const insertBtns = this.editorUi.toolbar.addItems(["link", "image"], insertPanel, true);
 
     var btns = [
       this.editorUi.toolbar.addButton(
@@ -3707,7 +3707,6 @@ TextFormatPanel.prototype.addFont = function (container) {
         })
       ),
     ];
-    this.styleButtons(insertBtns);
     this.styleButtons(btns);
 
     const wrapper2 = this.createPanel();
