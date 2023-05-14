@@ -25,6 +25,11 @@ const configWebpackPlugins = () => config => {
 };
 
 module.exports = {
+  paths: function (paths) {
+    paths.appIndexJs = path.resolve(__dirname, "src/example");
+    paths.appSrc = path.resolve(__dirname, "src");
+    return paths;
+  },
   webpack: override(
     babelInclude([path.resolve("src"), /@maxgraph\/core/]),
     disableEsLint(),
