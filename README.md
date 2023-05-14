@@ -1,6 +1,6 @@
 # FlowChartEditor
 
- [Github](https://github.com/WindrunnerMax/FlowChartEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/FlowChartEditor/) ｜ [TODO](./TODO.MD)
+ [Github](https://github.com/WindrunnerMax/FlowChartEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/FlowChartEditor/) ｜ [TODO](./TODO.md)
 
 流程图编辑器，支持独立的流程图编辑器包以及`DrawIO`嵌入通信方案。
 
