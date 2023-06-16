@@ -16,10 +16,8 @@ window.mxForceIncludes = false;
 window.mxLoadStylesheets = false;
 window.mxResourceExtension = ".txt";
 
-const mx = factory({
-  // https://github.com/jgraph/mxgraph/issues/479
-  mxBasePath: "static",
-});
+// https://github.com/jgraph/mxgraph/issues/479
+const mx = factory();
 
 // 需要用到的再引用 实际上还是把所有的包都打进来了
 export const {
