@@ -12,6 +12,8 @@ export default async () => {
 
   const entries = {
     "packages/index": "src/packages/index.ts",
+    "packages/events/bus": "src/packages/events/bus.ts",
+    "packages/events/event": "src/packages/events/event.ts",
     "packages/core/diagram-editor": "src/packages/core/diagram-editor.ts",
     "packages/core/diagram-viewer": "src/packages/core/diagram-viewer.ts",
   };
