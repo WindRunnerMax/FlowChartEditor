@@ -134,6 +134,7 @@ mxCodec.prototype.decode = function (node, into) {
   return obj;
 };
 
+// https://github.com/jgraph/mxgraph/issues/58
 mxUtils.getScrollOrigin = function (node, includeAncestors, includeDocument) {
   includeAncestors = includeAncestors != null ? includeAncestors : false;
   includeDocument = includeDocument != null ? includeDocument : false;
@@ -163,4 +164,53 @@ mxUtils.getScrollOrigin = function (node, includeAncestors, includeDocument) {
     result.y += origin.y;
   }
   return result;
+};
+
+// https://github.com/WindrunnerMax/FlowChartEditor/issues/4
+mxSvgCanvas2D.prototype.createClip = function (x2, y2, w3, h3) {
+  x2 = Math.round(x2);
+  y2 = Math.round(y2);
+  w3 = Math.round(w3);
+  h3 = Math.round(h3);
+  const id = "mx-clip-" + x2 + "-" + y2 + "-" + w3 + "-" + h3;
+  let counter = 0;
+  let tmp = id + "-" + counter;
+  while (document.getElementById(tmp) != null) {
+    tmp = id + "-" + ++counter;
+  }
+  const clip = this.createElement("clipPath");
+  clip.setAttribute("id", tmp);
+  const rect = this.createElement("rect");
+  rect.setAttribute("x", x2.toString());
+  rect.setAttribute("y", y2.toString());
+  rect.setAttribute("width", w3.toString());
+  rect.setAttribute("height", h3.toString());
+  clip.appendChild(rect);
+  return clip;
+};
+
+// https://github.com/WindrunnerMax/FlowChartEditor/issues/4
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+mxPopupMenu.prototype.createSubmenu = function (parent: {
+  table: HTMLTableElement;
+  tbody: HTMLTableSectionElement;
+  div: HTMLDivElement;
+}) {
+  parent.table = document.createElement("table");
+  parent.table.className = "mxPopupMenu";
+  parent.tbody = document.createElement("tbody");
+  parent.table.appendChild(parent.tbody);
+  parent.div = document.createElement("div");
+  parent.div.className = "mxPopupMenu";
+  parent.div.style.position = "absolute";
+  parent.div.style.display = "inline";
+  parent.div.style.zIndex = this.zIndex.toString();
+  parent.div.appendChild(parent.table);
+  const img = document.createElement("img");
+  img.setAttribute("src", this.submenuImage);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const td = parent.firstChild.nextSibling.nextSibling;
+  td.appendChild(img);
 };
