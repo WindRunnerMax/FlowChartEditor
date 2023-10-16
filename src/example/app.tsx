@@ -25,6 +25,7 @@ export const DiagramExample: FC = () => {
       diagramLoader().then(diagram => {
         const diagramViewer = new diagram.DiagramViewer(stringToXml(xml));
         const svg = diagramViewer.renderSVG(null, 1, 1);
+        diagramViewer.destroy();
         clearElement(div);
         svg && div.appendChild(svg);
       });

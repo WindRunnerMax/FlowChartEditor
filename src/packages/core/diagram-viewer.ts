@@ -1,8 +1,10 @@
 import { stringToXml, xmlToString } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Graph } from "../editor";
-import { mxCodec } from "./mxgraph";
+import { mxCodec, mxEvent } from "./mxgraph";
 import { stringToSvg, svgToString } from "../utils/svg";
+
+export { stringToXml, svgToString, xmlToString, stringToSvg };
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -10,13 +12,18 @@ themes[Graph.prototype.defaultThemeName] = (
 ).documentElement;
 
 export class DiagramViewer {
-  private graph: Graph;
+  private graph: Graph | null;
+  private container: HTMLDivElement | null;
+
   constructor(private xml: XMLDocument | null) {
     const container = document.createElement("div");
-    this.graph = new Graph(container, null, null, null, themes);
+    const graph = new Graph(container, null, null, null, themes, true);
+    this.container = container;
+    this.graph = graph;
   }
 
-  public renderSVG = (background: string | null, scale = 1, border = 1): SVGElement => {
+  public renderSVG = (background: string | null, scale = 1, border = 1): SVGElement | null => {
+    if (!this.graph) return null;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const model = this.graph.getModel();
@@ -25,6 +32,15 @@ export class DiagramViewer {
     // @ts-ignore
     const svg = this.graph.getSvg(background, scale, border);
     return svg;
+  };
+
+  public destroy = (): void => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.graph && this.graph.destroy();
+    this.container && mxEvent.removeAllListeners(this.container);
+    this.graph = null;
+    this.container = null;
   };
 }
 
@@ -72,5 +88,3 @@ export const downloadSVG = (
     }
   });
 };
-
-export { stringToXml, svgToString, xmlToString, stringToSvg };
