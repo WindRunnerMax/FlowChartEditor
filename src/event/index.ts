@@ -1,7 +1,8 @@
-import { EditorEvents } from "./event";
-import { Config, DEFAULT_URL, ExportMsg, MESSAGE_EVENT, SaveMsg } from "./interface";
+import { EditorEvent } from "./basic";
+import type { Config, ExportMsg, SaveMsg } from "./interface";
+import { DEFAULT_URL, MESSAGE_EVENT } from "./interface";
 
-export class EditorBus extends EditorEvents {
+export class EditorBus extends EditorEvent {
   private lock: boolean;
   protected url: string;
   private config: Config;

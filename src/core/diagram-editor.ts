@@ -5,7 +5,8 @@ import { stringToXml, xmlToString } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";
 import { mxEvent, mxResources } from "./mxgraph";
-import { getLanguage, Language } from "../editor/i18n";
+import type { Language } from "../editor/i18n";
+import { getLanguage } from "../editor/i18n";
 
 export { stringToXml, getLanguage, xmlToString };
 

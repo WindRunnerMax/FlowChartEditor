@@ -1,5 +1,6 @@
 import styles from "./index.module.scss";
-import { FC, useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
 import { base64ToSvgString, stringToSvg, stringToXml, xmlToString } from "./utils";
 import { clearElement } from "./utils";

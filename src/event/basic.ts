@@ -1,6 +1,6 @@
-import { EditorMsg, ExportMsg, InitMsg, SaveMsg } from "./interface";
+import type { EditorMsg, ExportMsg, InitMsg, SaveMsg } from "./interface";
 
-export abstract class EditorEvents {
+export abstract class EditorEvent {
   protected abstract url: string;
   protected abstract iframe: HTMLIFrameElement | null;
 

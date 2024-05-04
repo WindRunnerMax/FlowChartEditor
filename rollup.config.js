@@ -11,11 +11,11 @@ export default async () => {
   const external = Object.keys(require("./package.json").dependencies || {});
 
   const entries = {
-    "packages/index": "src/packages/index.ts",
-    "packages/events/bus": "src/packages/events/bus.ts",
-    "packages/events/event": "src/packages/events/event.ts",
-    "packages/core/diagram-editor": "src/packages/core/diagram-editor.ts",
-    "packages/core/diagram-viewer": "src/packages/core/diagram-viewer.ts",
+    "index": "src/index.ts",
+    "event/index": "src/event/index.ts",
+    "event/basic": "src/event/basic.ts",
+    "core/diagram-editor": "src/core/diagram-editor.ts",
+    "core/diagram-viewer": "src/core/diagram-viewer.ts",
   };
 
   return {

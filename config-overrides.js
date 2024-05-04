@@ -14,6 +14,9 @@ const configWebpackPlugins = () => config => {
       plugin.constructor.name !== "CaseSensitivePathsPlugin" &&
       plugin.constructor.name !== "IgnorePlugin"
   );
+  config.resolve.plugins = config.resolve.plugins.filter(
+    plugin => plugin.constructor.name !== "ModuleScopePlugin"
+  );
   // 添加插件
   process.env.NODE_ENV === "production" &&
     config.plugins.push(
@@ -24,14 +27,17 @@ const configWebpackPlugins = () => config => {
   return config;
 };
 
+const examplePath = path.resolve(__dirname, "example");
+const srcPath = path.resolve(__dirname, "src");
+
 module.exports = {
   paths: function (paths) {
-    paths.appIndexJs = path.resolve(__dirname, "src/example");
-    paths.appSrc = path.resolve(__dirname, "src");
+    paths.appIndexJs = examplePath;
+    paths.appSrc = examplePath;
     return paths;
   },
   webpack: override(
-    babelInclude([path.resolve("src"), /@maxgraph\/core/]),
+    babelInclude([srcPath, examplePath, /@maxgraph\/core/]),
     disableEsLint(),
     configWebpackPlugins()
   ),
