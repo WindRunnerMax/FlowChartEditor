@@ -1,10 +1,10 @@
-import ts from "rollup-plugin-typescript2";
-import babel from "rollup-plugin-babel";
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
 import path from "path";
-import postcss from "rollup-plugin-postcss";
+import babel from "@rollup/plugin-babel";
 import image from "@rollup/plugin-image";
+import ts from "rollup-plugin-typescript2";
+import postcss from "rollup-plugin-postcss";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
 
 export default async () => {
   const external = Object.keys(require("./package.json").dependencies || {});
@@ -31,6 +31,7 @@ export default async () => {
       babel({
         exclude: "node_modules/**",
         presets: [["@babel/preset-env", { modules: false, targets: { chrome: "70" } }]],
+        babelHelpers: "bundled",
       }),
       image(),
       postcss({
