@@ -20,6 +20,9 @@ dependencies:
   sanitizer:
     specifier: 0.1.3
     version: 0.1.3
+  tslib:
+    specifier: 2.4.0
+    version: 2.4.0
 
 devDependencies:
   '@babel/core':
@@ -121,9 +124,6 @@ devDependencies:
   stylelint-config-standard:
     specifier: 25.0.0
     version: 25.0.0(stylelint@14.8.5)
-  tslib:
-    specifier: 2.4.0
-    version: 2.4.0
   typescript:
     specifier: 4.1.2
     version: 4.1.2
@@ -13856,7 +13856,6 @@ packages:
 
   /tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-    dev: true
 
   /tsutils@3.21.0(typescript@4.1.2):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
