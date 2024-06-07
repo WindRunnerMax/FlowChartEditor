@@ -1,6 +1,5 @@
 const path = require("path");
 const { override, disableEsLint, babelInclude } = require("customize-cra");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // https://github.com/arackaf/customize-cra
 
 const configWebpackPlugins = () => config => {
@@ -17,28 +16,17 @@ const configWebpackPlugins = () => config => {
   config.resolve.plugins = config.resolve.plugins.filter(
     plugin => plugin.constructor.name !== "ModuleScopePlugin"
   );
-  // 添加插件
-  process.env.NODE_ENV === "production" &&
-    config.plugins.push(
-      new UglifyJsPlugin({
-        uglifyOptions: { compress: { drop_debugger: true, drop_console: true } },
-      })
-    );
   return config;
 };
 
-const examplePath = path.resolve(__dirname, "example");
-const srcPath = path.resolve(__dirname, "src");
+const example = path.resolve(__dirname, "example");
+const src = path.resolve(__dirname, "src");
 
 module.exports = {
   paths: function (paths) {
-    paths.appIndexJs = examplePath;
-    paths.appSrc = examplePath;
+    paths.appIndexJs = example;
+    paths.appSrc = example;
     return paths;
   },
-  webpack: override(
-    babelInclude([srcPath, examplePath, /@maxgraph\/core/]),
-    disableEsLint(),
-    configWebpackPlugins()
-  ),
+  webpack: override(babelInclude([src, example]), disableEsLint(), configWebpackPlugins()),
 };

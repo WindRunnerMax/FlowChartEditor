@@ -1,6 +1,6 @@
 import { mxGraph, mxCodec, mxSvgCanvas2D, mxImageExport } from "../core/mxgraph";
 import { DEFAULT_STYLE_XML } from "../styles/default";
-import { isString } from "./is";
+import { isString } from "laser-utils/dist/es/is";
 import { stringToXml } from "./xml";
 
 const XMLNS = "http://www.w3.org/2000/svg";

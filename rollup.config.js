@@ -3,7 +3,6 @@ import babel from "rollup-plugin-babel";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import path from "path";
-import { terser } from "rollup-plugin-terser";
 import postcss from "rollup-plugin-postcss";
 import image from "@rollup/plugin-image";
 
@@ -11,18 +10,20 @@ export default async () => {
   const external = Object.keys(require("./package.json").dependencies || {});
 
   const entries = {
-    "index": "src/index.ts",
-    "event/index": "src/event/index.ts",
-    "event/basic": "src/event/basic.ts",
-    "core/diagram-editor": "src/core/diagram-editor.ts",
-    "core/diagram-viewer": "src/core/diagram-viewer.ts",
+    index: "src/index.ts",
   };
 
-  return {
+  /**
+   * @typedef { import("rollup").RollupOptions } RollupConfig
+   * @type { RollupConfig }
+   * */
+  const config = {
     input: entries,
     output: {
       dir: "./dist",
       format: "es",
+      preserveModules: true,
+      preserveModulesRoot: "src",
     },
     plugins: [
       resolve(),
@@ -41,8 +42,9 @@ export default async () => {
         tsconfig: path.resolve(__dirname, "./tsconfig.dist.json"),
         extensions: [".ts", ".tsx"],
       }),
-      terser(),
     ],
     external: external,
   };
+
+  return config;
 };

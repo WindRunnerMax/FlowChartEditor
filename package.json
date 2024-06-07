@@ -1,6 +1,6 @@
 {
   "name": "embed-drawio",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "files": [
     "dist",
     "pnpm-lock.yaml"
@@ -20,10 +20,10 @@
     "lint": "npm run lint-es && npm run lint-style"
   },
   "dependencies": {
-    "@maxgraph/core": "0.1.0",
     "laser-utils": "0.0.2-alpha.13",
     "mxgraph": "4.2.2",
     "pako": "1.0.6",
+    "tslib": "2.4.0",
     "sanitize-html": "2.7.3",
     "sanitizer": "0.1.3"
   },
@@ -47,28 +47,21 @@
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-react": "7.27.0",
     "eslint-plugin-react-hooks": "4.3.0",
-    "husky": "7.0.4",
     "less": "3.0.0",
     "less-loader": "5.0.0",
-    "lint-staged": "12.0.2",
     "postcss": "8.3.3",
     "prettier": "2.4.1",
     "react": "17.0.2",
     "react-app-rewired": "2.1.8",
     "react-dom": "17.0.2",
-    "react-scripts": "4.0.3",
     "rollup": "2.75.7",
     "rollup-plugin-postcss": "4.0.2",
-    "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-typescript2": "0.32.1",
     "sass": "1.52.3",
     "stylelint": "14.8.5",
     "stylelint-config-sass-guidelines": "9.0.1",
     "stylelint-config-standard": "25.0.0",
-    "tslib": "2.4.0",
-    "typescript": "4.1.2",
-    "uglifyjs-webpack-plugin": "2.2.0",
-    "webpack": "4.44.2"
+    "typescript": "4.1.2"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
