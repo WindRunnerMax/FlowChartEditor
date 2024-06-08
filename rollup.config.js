@@ -10,7 +10,14 @@ export default async () => {
   const external = Object.keys(require("./package.json").dependencies || {});
 
   const entries = {
-    index: "src/index.ts",
+    "index": "src/index.ts",
+    "utils/svg": "src/utils/svg.ts",
+    "utils/xml": "src/utils/xml.ts",
+    "event/index": "src/event/index.ts",
+    "event/basic": "src/event/basic.ts",
+    "utils/convert": "src/utils/convert.ts",
+    "core/diagram-editor": "src/core/diagram-editor.ts",
+    "core/diagram-viewer": "src/core/diagram-viewer.ts",
   };
 
   /**
@@ -22,8 +29,6 @@ export default async () => {
     output: {
       dir: "./dist",
       format: "es",
-      preserveModules: true,
-      preserveModulesRoot: "src",
     },
     plugins: [
       resolve(),

@@ -8,8 +8,6 @@ import { mxEvent, mxResources } from "./mxgraph";
 import type { Language } from "../editor/i18n";
 import { getLanguage } from "../editor/i18n";
 
-export { stringToXml, getLanguage, xmlToString };
-
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
   stringToXml(DEFAULT_STYLE_XML) as XMLDocument
@@ -57,3 +55,5 @@ export class DiagramEditor {
     this.container.removeChild(this.diagramContainer);
   };
 }
+
+export { stringToXml, getLanguage, xmlToString };

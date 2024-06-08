@@ -4,8 +4,6 @@ import { Graph } from "../editor";
 import { mxCodec, mxEvent } from "./mxgraph";
 import { stringToSvg, svgToString } from "../utils/svg";
 
-export { stringToXml, svgToString, xmlToString, stringToSvg };
-
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
   stringToXml(DEFAULT_STYLE_XML) as XMLDocument
@@ -88,3 +86,5 @@ export const downloadSVG = (
     }
   });
 };
+
+export { stringToXml, svgToString, xmlToString, stringToSvg };
