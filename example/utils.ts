@@ -1,4 +1,4 @@
-import { xmlToString } from "../src/utils/xml";
+import { xmlToString } from "../dist/es/utils/xml";
 
 export const clearElement = (element: HTMLElement | null): void => {
   element && element.childNodes.forEach(node => element.removeChild(node));

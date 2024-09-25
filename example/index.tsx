@@ -1,14 +1,15 @@
 import "./index.css";
+import "../dist/es/index.css";
 import ReactDOM from "react-dom";
 import type { FC } from "react";
 import { useEffect, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
 import { clearElement } from "./utils";
 import { loadEditor, loadViewer } from "./loader";
-import { stringToXml, xmlToString } from "../src/utils/xml";
-import { base64ToSvgString, stringToSvg } from "../src/utils/svg";
-import { getLanguage } from "../src/editor/i18n";
-import { EditorBus } from "../src/event";
+import { stringToXml, xmlToString } from "../dist/es/utils/xml";
+import { base64ToSvgString, stringToSvg } from "../dist/es/utils/svg";
+import { getLanguage } from "../dist/es/editor/i18n";
+import { EditorBus } from "../dist/es/event";
 
 const DiagramExample: FC = () => {
   const [loading, setLoading] = useState(true);

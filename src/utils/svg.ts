@@ -1,4 +1,5 @@
 import { isString } from "laser-utils/dist/es/is";
+import type { Func } from "laser-utils/dist/es/types";
 
 export const svgToString = (svg: Node | null): string | null => {
   if (!svg) return null;
@@ -31,7 +32,7 @@ export const base64ToSvgString = (base64: string): string | null => {
   }
 };
 
-export const convertSVGToBase64 = (svg: string | SVGElement): string | null => {
+export const svgToBase64 = (svg: string | SVGElement): string | null => {
   const svgString = isString(svg) ? svg : svgToString(svg);
   if (svgString) {
     return "data:image/svg+xml;base64," + btoa(svgString);
@@ -39,12 +40,9 @@ export const convertSVGToBase64 = (svg: string | SVGElement): string | null => {
   return null;
 };
 
-export const downloadSVG = (
-  svg: string | SVGElement,
-  name = "image.jpg"
-): Promise<(() => void) | null> => {
-  return new Promise(r => {
-    const svgBase64 = convertSVGToBase64(svg);
+export const makeSVGDownloader = (svg: string | SVGElement, name = "image.jpg") => {
+  return new Promise<Func.Plain | null>(r => {
+    const svgBase64 = svgToBase64(svg);
     if (!svgBase64) {
       r(null);
       return void 0;

@@ -1,11 +1,10 @@
-import "../editor/styles/common.css";
-import "../editor/styles/grapheditor.css";
-import "../styles/diagram.css";
 import { stringToXml } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";
 import { mxEvent, mxResources } from "./mxgraph";
 import type { Language } from "../editor/i18n";
+import { getLanguage } from "../editor/i18n";
+import type { Func } from "laser-utils";
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -42,6 +41,10 @@ export class DiagramEditor {
     });
   };
 
+  public getXML = (): Element | null => {
+    return this.editorUi && this.editorUi.editor.getGraphXml();
+  };
+
   public exit = (): void => {
     this.container.style.overflow = "";
     mxEvent.removeAllListeners(window);
@@ -49,5 +52,9 @@ export class DiagramEditor {
     this.editor && this.editor.destroy();
     this.editorUi && this.editorUi.destroy();
     this.container.removeChild(this.diagramContainer);
+  };
+
+  public static getLang = (lang: Func.Args<typeof getLanguage>["0"]) => {
+    return getLanguage(lang);
   };
 }

@@ -14,45 +14,49 @@
 流程图编辑器，支持独立的流程图编辑器包以及`DrawIO`嵌入通信方案。  
 
 ```bash
+# Install
 $ npm i embed-drawio
+
+# Development
+$ npm run build:dist
+$ npm run dev
 ```
 ## 独立编辑器
-支持独立的流程图编辑器编辑与展示功能。
+支持独立的流程图编辑器编辑与渲染。
 
-使用方法可参考`example/app.tsx`，由于包体积原因，强烈建议以懒加载方式引入。
+使用方法可参考`example/index.tsx`，由于包体积原因，强烈建议以懒加载方式引入。
 
 ```js
-import type * as DiagramEditor from "embed-drawio/dist/es/core/editor";
-import type * as DiagramViewer from "embed-drawio/dist/es/core/viewer";
+import type { DiagramEditor } from "embed-drawio/dist/es/core/editor";
+import type { DiagramViewer } from "embed-drawio/dist/es/core/viewer";
 
 let editor: typeof DiagramEditor | null = null;
-export const diagramEditorLoader = (): Promise<typeof DiagramEditor> => {
+export const loadEditor = async (): Promise<typeof DiagramEditor> => {
   if (editor) return Promise.resolve(editor);
-  return Promise.all([
-    import(
-      /* webpackChunkName: "embed-drawio-editor" */ "embed-drawio/dist/es/core/editor"
-    ),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+  const res = await Promise.all([
+    import(/* webpackChunkName: "embed-drawio-editor" */ "embed-drawio/dist/es/core/editor"),
+    // @ts-expect-error css declaration
     import(/* webpackChunkName: "embed-drawio-css" */ "embed-drawio/dist/es/index.css"),
-  ]).then(res => (editor = res[0]));
+  ]);
+  editor = res[0].DiagramEditor;
+  return editor;
 };
 
 let viewer: typeof DiagramViewer | null = null;
-export const diagramViewerLoader = (): Promise<typeof DiagramViewer> => {
+export const loadViewer = async (): Promise<typeof DiagramViewer> => {
   if (viewer) return Promise.resolve(viewer);
-  return Promise.all([
-    import(
-      /* webpackChunkName: "embed-drawio-viewer" */ "embed-drawio/dist/es/core/viewer"
-    ),
-  ]).then(res => (viewer = res[0]));
+  const res = await Promise.all([
+    import(/* webpackChunkName: "embed-drawio-viewer" */ "embed-drawio/dist/es/core/viewer"),
+  ]);
+  viewer = res[0].DiagramViewer;
+  return viewer;
 };
 ```
 
 ## 嵌入DrawIO
 支持`DrawIO`的嵌入通信方案。
 
-使用方法可参考`example/app.tsx`，由于`sideEffects`原因，强烈建议以路径方式引入。
+使用方法可参考`example/index.tsx`，由于`sideEffects`原因，强烈建议以路径方式引入。
 
 
 ```js

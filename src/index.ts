@@ -1,5 +1,11 @@
 export { EditorBus } from "./event";
-export { svgToString, stringToSvg, base64ToSvgString } from "./utils/svg";
+export {
+  svgToString,
+  stringToSvg,
+  base64ToSvgString,
+  svgToBase64,
+  makeSVGDownloader,
+} from "./utils/svg";
 export { xmlToString, stringToXml } from "./utils/xml";
 export { convertXMLToSVG } from "./utils/convert";
 export { DiagramEditor } from "./core/editor";

@@ -39,4 +39,17 @@ export class DiagramViewer {
     this.graph = null;
     this.container = null;
   };
+
+  public static xmlToSvg = (
+    xml: XMLDocument | null,
+    background: string | null,
+    scale = 1,
+    border = 1
+  ): SVGElement | null => {
+    if (!xml) return null;
+    const viewer = new DiagramViewer(xml);
+    const svg = viewer.renderSVG(background, scale, border);
+    viewer.destroy();
+    return svg;
+  };
 }
