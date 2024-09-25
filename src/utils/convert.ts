@@ -36,6 +36,7 @@ export const convertXMLToSVG = (
     const exporter = new mxImageExport();
     const state = graph.getView().getState(graph.model.root);
     exporter.drawState(state, canvas);
+    graph.destroy();
     return svg;
   }
   return null;

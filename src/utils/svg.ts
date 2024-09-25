@@ -1,3 +1,5 @@
+import { isString } from "laser-utils/dist/es/is";
+
 export const svgToString = (svg: Node | null): string | null => {
   if (!svg) return null;
   try {
@@ -27,4 +29,46 @@ export const base64ToSvgString = (base64: string): string | null => {
     console.log("base64ToSvgString Error: ", error);
     return null;
   }
+};
+
+export const convertSVGToBase64 = (svg: string | SVGElement): string | null => {
+  const svgString = isString(svg) ? svg : svgToString(svg);
+  if (svgString) {
+    return "data:image/svg+xml;base64," + btoa(svgString);
+  }
+  return null;
+};
+
+export const downloadSVG = (
+  svg: string | SVGElement,
+  name = "image.jpg"
+): Promise<(() => void) | null> => {
+  return new Promise(r => {
+    const svgBase64 = convertSVGToBase64(svg);
+    if (!svgBase64) {
+      r(null);
+      return void 0;
+    }
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = image.width * ratio;
+      canvas.height = image.height * ratio;
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+      ctx.scale(ratio, ratio);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0);
+      const func = () => {
+        const link = document.createElement("a");
+        link.download = name;
+        link.href = canvas.toDataURL("image/jpeg");
+        link.click();
+      };
+      r(func);
+    };
+    image.src = svgBase64;
+  });
 };

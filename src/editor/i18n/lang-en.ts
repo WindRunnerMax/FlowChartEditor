@@ -322,4 +322,5 @@ zoom=Zoom
 zoomIn=Zoom In
 zoomOut=Zoom Out
 flowchart=Flow Chart
+exit=Exit
 `;

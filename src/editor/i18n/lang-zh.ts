@@ -323,4 +323,5 @@ zoom=缩放
 zoomIn=放大
 zoomOut=缩小
 flowchart=流程图
+exit=退出
 `;

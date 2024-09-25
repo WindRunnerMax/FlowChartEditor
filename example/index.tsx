@@ -3,9 +3,12 @@ import ReactDOM from "react-dom";
 import type { FC } from "react";
 import { useEffect, useRef, useState } from "react";
 import { SVG_DATA, XML_DATA } from "./constant";
-import { base64ToSvgString, stringToSvg, stringToXml, xmlToString } from "./utils";
 import { clearElement } from "./utils";
-import { diagramLoader } from "./loader";
+import { loadEditor, loadViewer } from "./loader";
+import { stringToXml, xmlToString } from "../src/utils/xml";
+import { base64ToSvgString, stringToSvg } from "../src/utils/svg";
+import { getLanguage } from "../src/editor/i18n";
+import { EditorBus } from "../src/event";
 
 const DiagramExample: FC = () => {
   const [loading, setLoading] = useState(true);
@@ -15,16 +18,17 @@ const DiagramExample: FC = () => {
   const svgExampleContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    diagramLoader().then(() => {
+    // Preload Diagram
+    Promise.all([loadEditor(), loadViewer()]).then(() => {
       setLoading(false);
-    }); // Preload Diagram
+    });
   }, []);
 
   const convertXML = (xml: string = xmlExample) => {
     const div = xmlExampleContainer.current;
     if (div) {
-      diagramLoader().then(diagram => {
-        const diagramViewer = new diagram.DiagramViewer(stringToXml(xml));
+      loadViewer().then(Viewer => {
+        const diagramViewer = new Viewer(stringToXml(xml));
         const svg = diagramViewer.renderSVG(null, 1, 1);
         diagramViewer.destroy();
         clearElement(div);
@@ -42,42 +46,32 @@ const DiagramExample: FC = () => {
     }
   };
 
-  const editXML = () => {
-    diagramLoader().then(diagram => {
-      const renderExit = (el: HTMLDivElement) => {
-        ReactDOM.render(
-          <div onClick={diagramEditor.exit} className="diagram-exit-btn">
-            退出
-          </div>,
-          el
-        );
-      };
-      const diagramEditor = new diagram.DiagramEditor(document.body, renderExit);
-      diagram.getLanguage("zh").then(res => {
-        diagramEditor.start(res, stringToXml(xmlExample), (xml: Node) => {
-          const xmlString = xmlToString(xml);
-          xmlString && setXMLExample(xmlString);
-          xmlString && convertXML(xmlString);
-        });
-      });
+  const editXML = async () => {
+    const Editor = await loadEditor();
+    const diagramEditor = new Editor(document.body, () => {
+      diagramEditor.exit();
+    });
+    const lang = await getLanguage("zh");
+    diagramEditor.start(lang, stringToXml(xmlExample), (xml: Node) => {
+      const xmlString = xmlToString(xml);
+      xmlString && setXMLExample(xmlString);
+      xmlString && convertXML(xmlString);
     });
   };
 
   const editSVG = () => {
-    diagramLoader().then(diagram => {
-      const bus = new diagram.EditorBus({
-        data: svgExample,
-        format: "xmlsvg",
-        onExport: (svg: string) => {
-          const svgStr = base64ToSvgString(svg);
-          if (svgStr) {
-            setSVGExample(svgStr);
-            convertSVG(svgStr);
-          }
-        },
-      });
-      bus.startEdit();
+    const bus = new EditorBus({
+      data: svgExample,
+      format: "xmlsvg",
+      onExport: (svg: string) => {
+        const svgStr = base64ToSvgString(svg);
+        if (svgStr) {
+          setSVGExample(svgStr);
+          convertSVG(svgStr);
+        }
+      },
     });
+    bus.startEdit();
   };
 
   return (

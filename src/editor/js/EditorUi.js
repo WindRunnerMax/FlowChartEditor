@@ -41,7 +41,7 @@ export { ChangePageSetup, EditorUi };
 /**
  * Constructs a new graph editor
  */
-function EditorUi(editor, container, lightbox, renderExitButton) {
+function EditorUi(editor, container, lightbox, onExit) {
   mxEventSource.call(this);
 
   this.destroyFunctions = [];
@@ -104,7 +104,11 @@ function EditorUi(editor, container, lightbox, renderExitButton) {
     this.createUi();
     this.refresh();
 
-    renderExitButton && renderExitButton(this.exitButton);
+    const exit = document.createElement("div");
+    exit.className = "diagram-exit-btn";
+    exit.innerText = mxResources.get("exit");
+    exit.onclick = onExit;
+    this.exitButton.appendChild(exit);
 
     // Disables HTML and text selection
     const textEditing = mxUtils.bind(this, function (evt) {

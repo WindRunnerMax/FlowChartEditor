@@ -18,7 +18,7 @@
     "build:es": "tsc -p tsconfig.build.json",
     "build:lib": "tsc -p tsconfig.lib.json",
     "build:css": "gulp -f gulpfile.js",
-    "build:npm": "rm -rf ./dist && npm run build:es && npm run build:lib && npm run build:css",
+    "build:dist": "rm -rf ./dist && npm run build:es && npm run build:lib && npm run build:css",
     "lint:es": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .gitignore",
     "lint": "npm run lint-es && npm run lint-style"

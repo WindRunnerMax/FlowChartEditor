@@ -1,12 +1,11 @@
 import "../editor/styles/common.css";
 import "../editor/styles/grapheditor.css";
 import "../styles/diagram.css";
-import { stringToXml, xmlToString } from "../utils/xml";
+import { stringToXml } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";
 import { mxEvent, mxResources } from "./mxgraph";
 import type { Language } from "../editor/i18n";
-import { getLanguage } from "../editor/i18n";
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -18,10 +17,7 @@ export class DiagramEditor {
   private editorUi: EditorUi | null;
   private diagramContainer: HTMLElement;
 
-  constructor(
-    private container: HTMLElement,
-    private createExitButton: (container: HTMLDivElement) => void
-  ) {
+  constructor(private container: HTMLElement, private onExit: () => void) {
     this.editor = null;
     this.editorUi = null;
     this.diagramContainer = document.createElement("div");
@@ -37,7 +33,7 @@ export class DiagramEditor {
     this.container.style.overflow = "hidden";
     mxResources.parse(lang);
     this.editor = new Editor(false, themes);
-    this.editorUi = new EditorUi(this.editor, this.diagramContainer, null, this.createExitButton);
+    this.editorUi = new EditorUi(this.editor, this.diagramContainer, null, this.onExit);
     if (init) {
       this.editorUi.editor.setGraphXml(init.documentElement);
     }
@@ -55,5 +51,3 @@ export class DiagramEditor {
     this.container.removeChild(this.diagramContainer);
   };
 }
-
-export { stringToXml, getLanguage, xmlToString };
