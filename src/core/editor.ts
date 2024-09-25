@@ -1,6 +1,6 @@
 import "../editor/styles/common.css";
 import "../editor/styles/grapheditor.css";
-import "../styles/diagram.scss";
+import "../styles/diagram.css";
 import { stringToXml, xmlToString } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
 import { Editor, EditorUi, Graph } from "../editor";

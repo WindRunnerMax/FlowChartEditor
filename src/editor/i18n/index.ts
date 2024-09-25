@@ -1,4 +1,5 @@
 export type Language = string & { __type__: "language" };
+
 export const getLanguage = (language: "en" | "zh" = "zh"): Promise<Language> => {
   switch (language) {
     case "en":

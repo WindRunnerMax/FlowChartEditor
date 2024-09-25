@@ -17,7 +17,6 @@
     "resolveJsonModule": true,
     "declaration": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
     "typeRoots": ["node_modules/@types", "node_modules/@typed-mxgraph"]

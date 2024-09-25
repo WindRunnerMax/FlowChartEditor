@@ -1,10 +1,10 @@
 /* eslint-disable */
 /* eslint-enable no-undef, prettier/prettier, no-unused-vars */
 import { mxClient } from "../../core/mxgraph";
-import arrow from "./arrow.gif";
-import cross from "./cross.gif";
-import hs from "./hs.png";
-import hv from "./hv.png";
+import arrow from "./arrow";
+import cross from "./cross";
+import hs from "./hs";
+import hv from "./hv";
 
 const base64 = { arrow, cross, hs, hv };
 

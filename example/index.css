@@ -1,0 +1,22 @@
+body {
+  font-size: 14px;
+}
+
+.example {
+  align-items: center;
+  display: flex;
+}
+
+.buttonGroup {
+  margin: 30px;
+}
+
+.buttonGroup > button {
+  display: block;
+  margin: 10px;
+}
+
+.diagram-container .diagram-exit-btn {
+  cursor: pointer;
+  margin-right: 10px;
+}

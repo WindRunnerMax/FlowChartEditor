@@ -1,7 +1,6 @@
 module.exports = {
   extends:[
     "stylelint-config-standard",
-    "stylelint-config-sass-guidelines"
   ],
   ignoreFiles: [
     "**/node_modules/**/*.*", 

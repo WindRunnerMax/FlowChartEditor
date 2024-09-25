@@ -42,7 +42,6 @@ import Workstation_128x128 from "./clipart/Workstation_128x128";
 const XML = ".xml";
 const PNG = ".png";
 const dict: Record<string, string> = {};
-export const getStencil = (name: string) => dict[name];
 
 dict["arrows" + XML] = arrows;
 dict["basic" + XML] = basic;
@@ -85,3 +84,5 @@ dict["Virus_128x128" + PNG] = Virus_128x128;
 dict["Wireless_Router_N_128x128" + PNG] = Wireless_Router_N_128x128;
 dict["Worker1_128x128" + PNG] = Worker1_128x128;
 dict["Workstation_128x128" + PNG] = Workstation_128x128;
+
+export const getStencil = (name: string) => dict[name];

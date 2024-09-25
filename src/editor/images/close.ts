@@ -1,0 +1,1 @@
+export default `data:image/gif;base64,R0lGODlhDAAMAIAAAP///0RERCH5BAAAAAAALAAAAAAMAAwAAAIdjI8Hy23w2JtR1bQiVDlIvnVIt3llqKFm4yRuUAAAOw==`;

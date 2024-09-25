@@ -1,10 +1,10 @@
 import "./js/Shapes";
 import { mxWindow } from "../core/mxgraph";
-import close from "./images/close.gif";
-import normalize from "./images/normalize.gif";
-import maximize from "./images/maximize.gif";
-import minimize from "./images/minimize.gif";
-import resize from "./images/close.gif";
+import close from "./images/close";
+import normalize from "./images/normalize";
+import maximize from "./images/maximize";
+import minimize from "./images/minimize";
+import resize from "./images/close";
 
 mxWindow.prototype.closeImage = close;
 mxWindow.prototype.normalizeImage = normalize;

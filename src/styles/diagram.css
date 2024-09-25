@@ -1,0 +1,39 @@
+.diagram-container {
+  display: block;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10005;
+}
+
+.diagram-container .geMenubarContainer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.diagram-container .geMenubarContainer .geMenubar {
+  width: auto;
+}
+
+.diagram-container .geMenubarContainer .geMenubar .geItem {
+  margin: 0 7px;
+}
+
+.diagram-container .form-options-line {
+  align-items: center;
+  display: flex;
+}
+
+.mxPopupMenu {
+  background: #fff !important;
+  border: unset !important;
+  border-radius: 4px;
+  padding: 3px;
+}
+
+.mxWindow {
+  z-index: 10006 !important;
+}

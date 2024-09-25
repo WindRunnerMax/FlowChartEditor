@@ -22,19 +22,19 @@ $ npm i embed-drawio
 使用方法可参考`example/app.tsx`，由于包体积原因，强烈建议以懒加载方式引入。
 
 ```js
-import type * as DiagramEditor from "embed-drawio/dist/core/diagram-editor";
-import type * as DiagramViewer from "embed-drawio/dist/core/diagram-viewer";
+import type * as DiagramEditor from "embed-drawio/dist/es/core/editor";
+import type * as DiagramViewer from "embed-drawio/dist/es/core/viewer";
 
 let editor: typeof DiagramEditor | null = null;
 export const diagramEditorLoader = (): Promise<typeof DiagramEditor> => {
   if (editor) return Promise.resolve(editor);
   return Promise.all([
     import(
-      /* webpackChunkName: "embed-drawio-editor" */ "embed-drawio/dist/core/diagram-editor"
+      /* webpackChunkName: "embed-drawio-editor" */ "embed-drawio/dist/es/core/editor"
     ),
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    import(/* webpackChunkName: "embed-drawio-css" */ "embed-drawio/dist/index.css"),
+    import(/* webpackChunkName: "embed-drawio-css" */ "embed-drawio/dist/es/index.css"),
   ]).then(res => (editor = res[0]));
 };
 
@@ -43,7 +43,7 @@ export const diagramViewerLoader = (): Promise<typeof DiagramViewer> => {
   if (viewer) return Promise.resolve(viewer);
   return Promise.all([
     import(
-      /* webpackChunkName: "embed-drawio-viewer" */ "embed-drawio/dist/core/diagram-viewer"
+      /* webpackChunkName: "embed-drawio-viewer" */ "embed-drawio/dist/es/core/viewer"
     ),
   ]).then(res => (viewer = res[0]));
 };
@@ -56,8 +56,8 @@ export const diagramViewerLoader = (): Promise<typeof DiagramViewer> => {
 
 
 ```js
-import { EditorEvent } from "embed-drawio/dist/event/basic";
-import { EditorBus } from "embed-drawio/dist/event/index";
+import { EditorEvent } from "embed-drawio/dist/es/event/basic";
+import { EditorBus } from "embed-drawio/dist/es/event/index";
 
 // ...
 ```
