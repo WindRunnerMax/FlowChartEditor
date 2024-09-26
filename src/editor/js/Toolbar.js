@@ -9,10 +9,10 @@ import {
   mxClient,
   mxPopupMenu,
 } from "../../core/mxgraph";
-import { EditorUi } from "./EditorUi";
 import { Menus } from "./Menus";
-import { Editor, FilenameDialog } from "./Editor";
+import { FilenameDialog } from "./Dialogs";
 import { dropdownImage } from "../images/base64";
+import { EDITOR, EDITOR_UI } from "../utils/constant";
 
 export { Toolbar };
 
@@ -106,7 +106,7 @@ Toolbar.prototype.init = function () {
   viewMenu.style.position = "relative";
   viewMenu.style.overflow = "hidden";
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     viewMenu.style.width = mxClient.IS_QUIRKS ? "58px" : "50px";
   } else {
     viewMenu.style.width = mxClient.IS_QUIRKS ? "62px" : "36px";
@@ -130,7 +130,7 @@ Toolbar.prototype.init = function () {
     viewMenu.innerHTML =
       Math.round(this.editorUi.editor.graph.view.scale * 100) + "%" + this.dropdownImageHtml;
 
-    if (EditorUi.compactUi) {
+    if (EDITOR_UI.COMPAT_UI) {
       viewMenu.getElementsByTagName("img")[0].style.right = "1px";
       viewMenu.getElementsByTagName("img")[0].style.top = "5px";
     }
@@ -479,7 +479,7 @@ Toolbar.prototype.addTableDropDown = function () {
   elt.style.width = mxClient.IS_QUIRKS ? "50px" : "30px";
 
   // Fix for item size in kennedy theme
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     elt.getElementsByTagName("img")[0].style.left = "22px";
     elt.getElementsByTagName("img")[0].style.top = "5px";
   }
@@ -501,7 +501,7 @@ Toolbar.prototype.addDropDownArrow = function (
   atlasLeft
 ) {
   atlasDelta = atlasDelta != null ? atlasDelta : 32;
-  left = EditorUi.compactUi ? left : atlasLeft;
+  left = EDITOR_UI.COMPAT_UI ? left : atlasLeft;
 
   menu.style.whiteSpace = "nowrap";
   menu.style.overflow = "hidden";
@@ -518,11 +518,11 @@ Toolbar.prototype.addDropDownArrow = function (
   menu.style.width = mxClient.IS_QUIRKS ? atlasWidth + "px" : atlasWidth - atlasDelta + "px";
 
   if (mxClient.IS_QUIRKS) {
-    menu.style.height = EditorUi.compactUi ? "24px" : "26px";
+    menu.style.height = EDITOR_UI.COMPAT_UI ? "24px" : "26px";
   }
 
   // Fix for item size in kennedy theme
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     menu.getElementsByTagName("img")[0].style.left = "24px";
     menu.getElementsByTagName("img")[0].style.top = "5px";
     menu.style.width = mxClient.IS_QUIRKS ? width + "px" : width - 10 + "px";
@@ -567,7 +567,7 @@ Toolbar.prototype.createTextToolbar = function () {
   styleElt.style.overflow = "hidden";
   styleElt.innerHTML = mxResources.get("style") + this.dropdownImageHtml;
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     styleElt.style.paddingRight = "18px";
     styleElt.getElementsByTagName("img")[0].style.right = "1px";
     styleElt.getElementsByTagName("img")[0].style.top = "5px";
@@ -583,7 +583,7 @@ Toolbar.prototype.createTextToolbar = function () {
 
   this.setFontName(Menus.prototype.defaultFont);
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     this.fontMenu.style.paddingRight = "18px";
     this.fontMenu.getElementsByTagName("img")[0].style.right = "1px";
     this.fontMenu.getElementsByTagName("img")[0].style.top = "5px";
@@ -604,7 +604,7 @@ Toolbar.prototype.createTextToolbar = function () {
 
   this.setFontSize(Menus.prototype.defaultFontSize);
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     this.sizeMenu.style.paddingRight = "18px";
     this.sizeMenu.getElementsByTagName("img")[0].style.right = "1px";
     this.sizeMenu.getElementsByTagName("img")[0].style.top = "5px";
@@ -736,7 +736,7 @@ Toolbar.prototype.createTextToolbar = function () {
     '<div class="geSprite geSprite-left" style="margin-left:-2px;"></div>' + this.dropdownImageHtml;
   alignMenu.style.width = mxClient.IS_QUIRKS ? "50px" : "30px";
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     alignMenu.getElementsByTagName("img")[0].style.left = "22px";
     alignMenu.getElementsByTagName("img")[0].style.top = "5px";
   }
@@ -753,7 +753,7 @@ Toolbar.prototype.createTextToolbar = function () {
         null,
         "geIcon geSprite geSprite-subscript"
       );
-      elt.setAttribute("title", mxResources.get("subscript") + " (" + Editor.ctrlKey + "+,)");
+      elt.setAttribute("title", mxResources.get("subscript") + " (" + EDITOR.CTRL_KEY + "+,)");
 
       elt = menu.addItem(
         "",
@@ -762,7 +762,7 @@ Toolbar.prototype.createTextToolbar = function () {
         null,
         "geIcon geSprite geSprite-superscript"
       );
-      elt.setAttribute("title", mxResources.get("superscript") + " (" + Editor.ctrlKey + "+.)");
+      elt.setAttribute("title", mxResources.get("superscript") + " (" + EDITOR.CTRL_KEY + "+.)");
 
       // KNOWN: IE+FF don't return keyboard focus after color dialog (calling focus doesn't help)
       elt = menu.addItem(
@@ -803,7 +803,7 @@ Toolbar.prototype.createTextToolbar = function () {
     '<div class="geSprite geSprite-dots" style="margin-left:-2px;"></div>' + this.dropdownImageHtml;
   formatMenu.style.width = mxClient.IS_QUIRKS ? "50px" : "30px";
 
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     formatMenu.getElementsByTagName("img")[0].style.left = "22px";
     formatMenu.getElementsByTagName("img")[0].style.top = "5px";
   }
@@ -1071,7 +1071,7 @@ Toolbar.prototype.createTextToolbar = function () {
   elt.style.width = mxClient.IS_QUIRKS ? "50px" : "30px";
 
   // Fix for item size in kennedy theme
-  if (EditorUi.compactUi) {
+  if (EDITOR_UI.COMPAT_UI) {
     elt.getElementsByTagName("img")[0].style.left = "22px";
     elt.getElementsByTagName("img")[0].style.top = "5px";
   }

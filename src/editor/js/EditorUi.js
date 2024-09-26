@@ -32,8 +32,9 @@ import { Toolbar } from "./Toolbar";
 import { Format } from "./Format";
 import { ColorDialog } from "./Dialogs";
 import { submenuImage } from "../images/base64";
+import { PageSetup } from "./PageSetup";
 
-export { ChangePageSetup, EditorUi };
+export { EditorUi };
 
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
@@ -2624,73 +2625,9 @@ EditorUi.prototype.setPageVisible = function (value) {
   this.fireEvent(new mxEventObject("pageViewChanged"));
 };
 
-/**
- * Change types
- */
-function ChangePageSetup(ui, color, image, format, pageScale) {
-  this.ui = ui;
-  this.color = color;
-  this.previousColor = color;
-  this.image = image;
-  this.previousImage = image;
-  this.format = format;
-  this.previousFormat = format;
-  this.pageScale = pageScale;
-  this.previousPageScale = pageScale;
-
-  // Needed since null are valid values for color and image
-  this.ignoreColor = false;
-  this.ignoreImage = false;
-}
-
-/**
- * Implementation of the undoable page rename.
- */
-ChangePageSetup.prototype.execute = function () {
-  const graph = this.ui.editor.graph;
-
-  if (!this.ignoreColor) {
-    this.color = this.previousColor;
-    var tmp = graph.background;
-    this.ui.setBackgroundColor(this.previousColor);
-    this.previousColor = tmp;
-  }
-
-  if (!this.ignoreImage) {
-    this.image = this.previousImage;
-    var tmp = graph.backgroundImage;
-    this.ui.setBackgroundImage(this.previousImage);
-    this.previousImage = tmp;
-  }
-
-  if (this.previousFormat != null) {
-    this.format = this.previousFormat;
-    var tmp = graph.pageFormat;
-
-    if (this.previousFormat.width != tmp.width || this.previousFormat.height != tmp.height) {
-      this.ui.setPageFormat(this.previousFormat);
-      this.previousFormat = tmp;
-    }
-  }
-
-  if (this.foldingEnabled != null && this.foldingEnabled != this.ui.editor.graph.foldingEnabled) {
-    this.ui.setFoldingEnabled(this.foldingEnabled);
-    this.foldingEnabled = !this.foldingEnabled;
-  }
-
-  if (this.previousPageScale != null) {
-    const currentPageScale = this.ui.editor.graph.pageScale;
-
-    if (this.previousPageScale != currentPageScale) {
-      this.ui.setPageScale(this.previousPageScale);
-      this.previousPageScale = currentPageScale;
-    }
-  }
-};
-
 // Registers codec for ChangePageSetup
 (function () {
-  const codec = new mxObjectCodec(new ChangePageSetup(), [
+  const codec = new mxObjectCodec(new PageSetup(), [
     "ui",
     "previousColor",
     "previousImage",
@@ -3721,7 +3658,7 @@ EditorUi.prototype.showBackgroundImageDialog = function (apply, img) {
     apply != null
       ? apply
       : mxUtils.bind(this, function (image) {
-          const change = new ChangePageSetup(this, null, image);
+          const change = new PageSetup(this, null, image);
           change.ignoreColor = true;
 
           this.editor.graph.model.execute(change);

@@ -13,13 +13,19 @@ import {
   mxCell,
   mxWindow,
 } from "../../core/mxgraph";
-
-import { Editor, Dialog, FilenameDialog } from "./Editor";
+import {
+  checkmarkImage,
+  closeImage,
+  helpImage,
+  lockedImage,
+  noColorImage,
+  unlockedImage,
+} from "../images/base64";
 import { mxJSColor, mxColor } from "../jscolor/jscolor";
-import { EditorUi } from "./EditorUi";
-import { PRESENT_COLORS, DEFAULT_COLORS } from "../utils/constant";
+import { PRESENT_COLORS, DEFAULT_COLORS, EDITOR_UI, DIALOG } from "../utils/constant";
+import { Graph } from "./Graph";
 
-export { ColorDialog, OutlineWindow, LayersWindow };
+export { ColorDialog, OutlineWindow, LayersWindow, FilenameDialog };
 
 /**
  * Constructs a new color dialog.
@@ -115,7 +121,7 @@ function ColorDialog(editorUi, color, apply, cancelFn) {
           }
 
           if (clr == "none") {
-            td.style.background = "url('" + Dialog.prototype.noColorImage + "')";
+            td.style.background = "url('" + noColorImage + "')";
           } else {
             td.style.backgroundColor = "#" + clr;
           }
@@ -149,7 +155,7 @@ function ColorDialog(editorUi, color, apply, cancelFn) {
       td.style.padding = "0px";
       td.style.width = "16px";
       td.style.height = "16px";
-      td.style.backgroundImage = "url('" + Dialog.prototype.closeImage + "')";
+      td.style.backgroundImage = "url('" + closeImage + "')";
       td.style.backgroundPosition = "center center";
       td.style.backgroundRepeat = "no-repeat";
       td.style.cursor = "pointer";
@@ -478,17 +484,17 @@ function LayersWindow(editorUi, x, y, w, h) {
 
   const div = document.createElement("div");
   div.style.userSelect = "none";
-  div.style.background = Dialog.backdropColor == "white" ? "whiteSmoke" : Dialog.backdropColor;
+  div.style.background = DIALOG.BACK_DROP_COLOR == "white" ? "whiteSmoke" : DIALOG.BACK_DROP_COLOR;
   div.style.border = "1px solid whiteSmoke";
   div.style.height = "100%";
   div.style.marginBottom = "10px";
   div.style.overflow = "auto";
 
-  const tbarHeight = !EditorUi.compactUi ? "30px" : "26px";
+  const tbarHeight = !EDITOR_UI.COMPAT_UI ? "30px" : "26px";
 
   const listDiv = document.createElement("div");
   listDiv.style.backgroundColor =
-    Dialog.backdropColor == "white" ? "#dcdcdc" : Dialog.backdropColor;
+    DIALOG.BACK_DROP_COLOR == "white" ? "#dcdcdc" : DIALOG.BACK_DROP_COLOR;
   listDiv.style.position = "absolute";
   listDiv.style.overflow = "auto";
   listDiv.style.left = "0px";
@@ -524,9 +530,9 @@ function LayersWindow(editorUi, x, y, w, h) {
   ldiv.style.right = "0px";
   ldiv.style.height = tbarHeight;
   ldiv.style.overflow = "hidden";
-  ldiv.style.padding = !EditorUi.compactUi ? "1px" : "4px 0px 3px 0px";
+  ldiv.style.padding = !EDITOR_UI.COMPAT_UI ? "1px" : "4px 0px 3px 0px";
   ldiv.style.backgroundColor =
-    Dialog.backdropColor == "white" ? "whiteSmoke" : Dialog.backdropColor;
+    DIALOG.BACK_DROP_COLOR == "white" ? "whiteSmoke" : DIALOG.BACK_DROP_COLOR;
   ldiv.style.borderWidth = "1px 0px 0px 0px";
   ldiv.style.borderColor = "#c3c3c3";
   ldiv.style.borderStyle = "solid";
@@ -604,7 +610,7 @@ function LayersWindow(editorUi, x, y, w, h) {
                 graph.getSelectionCount() == 1 &&
                 graph.model.isAncestor(child, graph.getSelectionCell())
               ) {
-                menu.addCheckmark(item, Editor.checkmarkImage);
+                menu.addCheckmark(item, checkmarkImage);
               }
             })(graph.model.getChildAt(graph.model.root, i));
           }
@@ -637,7 +643,7 @@ function LayersWindow(editorUi, x, y, w, h) {
 
   mxEvent.addListener(dataLink, "click", function (evt) {
     if (graph.isEnabled()) {
-      editorUi.showDataDialog(selectionLayer);
+      renameLayer(selectionLayer);
     }
 
     mxEvent.consume(evt);
@@ -738,7 +744,7 @@ function LayersWindow(editorUi, x, y, w, h) {
       ldiv.style.height = "22px";
       ldiv.style.display = "block";
       ldiv.style.backgroundColor =
-        Dialog.backdropColor == "white" ? "whiteSmoke" : Dialog.backdropColor;
+        DIALOG.BACK_DROP_COLOR == "white" ? "whiteSmoke" : DIALOG.BACK_DROP_COLOR;
       ldiv.style.borderWidth = "0px 0px 1px 0px";
       ldiv.style.borderColor = "#c3c3c3";
       ldiv.style.borderStyle = "solid";
@@ -789,9 +795,9 @@ function LayersWindow(editorUi, x, y, w, h) {
       const style = graph.getCurrentCellStyle(child);
 
       if (mxUtils.getValue(style, "locked", "0") == "1") {
-        btn.setAttribute("src", Dialog.prototype.lockedImage);
+        btn.setAttribute("src", lockedImage);
       } else {
-        btn.setAttribute("src", Dialog.prototype.unlockedImage);
+        btn.setAttribute("src", unlockedImage);
       }
 
       if (graph.isEnabled()) {
@@ -928,7 +934,7 @@ function LayersWindow(editorUi, x, y, w, h) {
       });
 
       if (graph.getDefaultParent() == child) {
-        ldiv.style.background = Dialog.backdropColor == "white" ? "#e6eff8" : "#505759";
+        ldiv.style.background = DIALOG.BACK_DROP_COLOR == "white" ? "#e6eff8" : "#505759";
         ldiv.style.fontWeight = graph.isEnabled() ? "bold" : "";
         selectionLayer = child;
       } else {
@@ -959,7 +965,7 @@ function LayersWindow(editorUi, x, y, w, h) {
     const label = graph.convertValueToString(selectionLayer) || mxResources.get("background");
     removeLink.setAttribute("title", mxResources.get("removeIt", [label]));
     duplicateLink.setAttribute("title", mxResources.get("duplicateIt", [label]));
-    dataLink.setAttribute("title", mxResources.get("editData"));
+    dataLink.setAttribute("title", mxResources.get("rename"));
 
     if (graph.isSelectionEmpty()) {
       insertLink.className = "geButton mxDisabled";
@@ -1029,3 +1035,330 @@ function LayersWindow(editorUi, x, y, w, h) {
     this.window.destroy();
   };
 }
+
+/**
+ * Constructs a new filename dialog.
+ */
+function FilenameDialog(
+  editorUi,
+  filename,
+  buttonText,
+  fn,
+  label,
+  validateFn,
+  content,
+  helpLink,
+  closeOnBtn,
+  cancelFn,
+  hints,
+  w
+) {
+  closeOnBtn = closeOnBtn != null ? closeOnBtn : true;
+  let row, td;
+
+  const table = document.createElement("table");
+  const tbody = document.createElement("tbody");
+  table.style.marginTop = "8px";
+
+  row = document.createElement("tr");
+
+  td = document.createElement("td");
+  td.style.whiteSpace = "nowrap";
+  td.style.fontSize = "10pt";
+  td.style.width = hints ? "80px" : "120px";
+  mxUtils.write(td, (label || mxResources.get("filename")) + ":");
+
+  row.appendChild(td);
+
+  const nameInput = document.createElement("input");
+  nameInput.setAttribute("value", filename || "");
+  nameInput.style.marginLeft = "4px";
+  nameInput.style.width = w != null ? w + "px" : "180px";
+
+  const genericBtn = mxUtils.button(buttonText, function () {
+    if (validateFn == null || validateFn(nameInput.value)) {
+      if (closeOnBtn) {
+        editorUi.hideDialog();
+      }
+
+      fn(nameInput.value);
+    }
+  });
+  genericBtn.className = "geBtn gePrimaryBtn";
+
+  this.init = function () {
+    if (label == null && content != null) {
+      return;
+    }
+
+    nameInput.focus();
+
+    if (mxClient.IS_GC || mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS) {
+      nameInput.select();
+    } else {
+      document.execCommand("selectAll", false, null);
+    }
+
+    // Installs drag and drop handler for links
+    if (Graph.fileSupport) {
+      // Setup the dnd listeners
+      const dlg = table.parentNode;
+
+      if (dlg != null) {
+        let dropElt = null;
+
+        mxEvent.addListener(dlg, "dragleave", function (evt) {
+          if (dropElt != null) {
+            dropElt.style.backgroundColor = "";
+            dropElt = null;
+          }
+
+          evt.stopPropagation();
+          evt.preventDefault();
+        });
+
+        mxEvent.addListener(
+          dlg,
+          "dragover",
+          mxUtils.bind(this, function (evt) {
+            // IE 10 does not implement pointer-events so it can't have a drop highlight
+            if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10)) {
+              dropElt = nameInput;
+              dropElt.style.backgroundColor = "#ebf2f9";
+            }
+
+            evt.stopPropagation();
+            evt.preventDefault();
+          })
+        );
+
+        mxEvent.addListener(
+          dlg,
+          "drop",
+          mxUtils.bind(this, function (evt) {
+            if (dropElt != null) {
+              dropElt.style.backgroundColor = "";
+              dropElt = null;
+            }
+
+            if (mxUtils.indexOf(evt.dataTransfer.types, "text/uri-list") >= 0) {
+              nameInput.value = decodeURIComponent(evt.dataTransfer.getData("text/uri-list"));
+              genericBtn.click();
+            }
+
+            evt.stopPropagation();
+            evt.preventDefault();
+          })
+        );
+      }
+    }
+  };
+
+  td = document.createElement("td");
+  td.style.whiteSpace = "nowrap";
+  td.appendChild(nameInput);
+  row.appendChild(td);
+
+  if (label != null || content == null) {
+    tbody.appendChild(row);
+
+    if (hints != null) {
+      if (editorUi.editor.diagramFileTypes != null) {
+        const typeSelect = FilenameDialog.createFileTypes(
+          editorUi,
+          nameInput,
+          editorUi.editor.diagramFileTypes
+        );
+        typeSelect.style.marginLeft = "6px";
+        typeSelect.style.width = "74px";
+
+        td.appendChild(typeSelect);
+        nameInput.style.width = w != null ? w - 40 + "px" : "140px";
+      }
+
+      td.appendChild(FilenameDialog.createTypeHint(editorUi, nameInput, hints));
+    }
+  }
+
+  if (content != null) {
+    row = document.createElement("tr");
+    td = document.createElement("td");
+    td.colSpan = 2;
+    td.appendChild(content);
+    row.appendChild(td);
+    tbody.appendChild(row);
+  }
+
+  row = document.createElement("tr");
+  td = document.createElement("td");
+  td.colSpan = 2;
+  td.style.paddingTop = "20px";
+  td.style.whiteSpace = "nowrap";
+  td.setAttribute("align", "right");
+
+  const cancelBtn = mxUtils.button(mxResources.get("cancel"), function () {
+    editorUi.hideDialog();
+
+    if (cancelFn != null) {
+      cancelFn();
+    }
+  });
+  cancelBtn.className = "geBtn";
+
+  if (editorUi.editor.cancelFirst) {
+    td.appendChild(cancelBtn);
+  }
+
+  if (helpLink != null) {
+    const helpBtn = mxUtils.button(mxResources.get("help"), function () {
+      editorUi.editor.graph.openLink(helpLink);
+    });
+
+    helpBtn.className = "geBtn";
+    td.appendChild(helpBtn);
+  }
+
+  mxEvent.addListener(nameInput, "keypress", function (e) {
+    if (e.keyCode == 13) {
+      genericBtn.click();
+    }
+  });
+
+  td.appendChild(genericBtn);
+
+  if (!editorUi.editor.cancelFirst) {
+    td.appendChild(cancelBtn);
+  }
+
+  row.appendChild(td);
+  tbody.appendChild(row);
+  table.appendChild(tbody);
+
+  this.container = table;
+}
+
+/**
+ *
+ */
+FilenameDialog.filenameHelpLink = null;
+
+/**
+ *
+ */
+FilenameDialog.createTypeHint = function (ui, nameInput, hints) {
+  const hint = document.createElement("img");
+  hint.style.cssText =
+    "vertical-align:top;height:16px;width:16px;margin-left:4px;background-repeat:no-repeat;background-position:center bottom;cursor:pointer;";
+  mxUtils.setOpacity(hint, 70);
+
+  const nameChanged = function () {
+    hint.setAttribute("src", helpImage);
+    hint.setAttribute("title", mxResources.get("help"));
+
+    for (let i = 0; i < hints.length; i++) {
+      if (
+        hints[i].ext.length > 0 &&
+        nameInput.value.toLowerCase().substring(nameInput.value.length - hints[i].ext.length - 1) ==
+          "." + hints[i].ext
+      ) {
+        hint.setAttribute("src", mxClient.imageBasePath + "/warning.png");
+        hint.setAttribute("title", mxResources.get(hints[i].title));
+        break;
+      }
+    }
+  };
+
+  mxEvent.addListener(nameInput, "keyup", nameChanged);
+  mxEvent.addListener(nameInput, "change", nameChanged);
+  mxEvent.addListener(hint, "click", function (evt) {
+    const title = hint.getAttribute("title");
+
+    if (hint.getAttribute("src") == helpImage) {
+      ui.editor.graph.openLink(FilenameDialog.filenameHelpLink);
+    } else if (title != "") {
+      ui.showError(
+        null,
+        title,
+        mxResources.get("help"),
+        function () {
+          ui.editor.graph.openLink(FilenameDialog.filenameHelpLink);
+        },
+        null,
+        mxResources.get("ok"),
+        null,
+        null,
+        null,
+        340,
+        90
+      );
+    }
+
+    mxEvent.consume(evt);
+  });
+
+  nameChanged();
+
+  return hint;
+};
+
+/**
+ *
+ */
+FilenameDialog.createFileTypes = function (editorUi, nameInput, types) {
+  const typeSelect = document.createElement("select");
+
+  for (let i = 0; i < types.length; i++) {
+    const typeOption = document.createElement("option");
+    typeOption.setAttribute("value", i);
+    mxUtils.write(
+      typeOption,
+      mxResources.get(types[i].description) + " (." + types[i].extension + ")"
+    );
+    typeSelect.appendChild(typeOption);
+  }
+
+  mxEvent.addListener(typeSelect, "change", function () {
+    var ext = types[typeSelect.value].extension;
+    const idx = nameInput.value.lastIndexOf(".");
+
+    if (idx > 0) {
+      var ext = types[typeSelect.value].extension;
+      nameInput.value = nameInput.value.substring(0, idx + 1) + ext;
+    } else {
+      nameInput.value = nameInput.value + "." + ext;
+    }
+
+    if ("createEvent" in document) {
+      const changeEvent = document.createEvent("HTMLEvents");
+      changeEvent.initEvent("change", false, true);
+      nameInput.dispatchEvent(changeEvent);
+    } else {
+      nameInput.fireEvent("onchange");
+    }
+  });
+
+  const nameInputChanged = function () {
+    const idx = nameInput.value.lastIndexOf(".");
+    let active = 0;
+
+    // Finds current extension
+    if (idx > 0) {
+      const ext = nameInput.value.toLowerCase().substring(idx + 1);
+
+      for (let i = 0; i < types.length; i++) {
+        if (ext == types[i].extension) {
+          active = i;
+          break;
+        }
+      }
+    }
+
+    typeSelect.value = active;
+  };
+
+  mxEvent.addListener(nameInput, "change", nameInputChanged);
+  mxEvent.addListener(nameInput, "keyup", nameInputChanged);
+  nameInputChanged();
+
+  return typeSelect;
+};

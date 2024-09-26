@@ -1,6 +1,21 @@
+import { mxClient } from "../../core/mxgraph";
+
 export const GRAPH = {
   ARROW_FILL: "#29b6f2",
   ARROW_SPACING: 2,
+};
+
+export const EDITOR = {
+  HINT_OFFSET: 20,
+  CTRL_KEY: mxClient.IS_MAC ? "Cmd" : "Ctrl",
+};
+
+export const EDITOR_UI = {
+  COMPAT_UI: true,
+};
+
+export const DIALOG = {
+  BACK_DROP_COLOR: "white",
 };
 
 export const PRESENT_COLORS = [

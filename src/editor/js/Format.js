@@ -10,11 +10,12 @@ import {
   mxClient,
   mxCellRenderer,
 } from "../../core/mxgraph";
-import { Editor, Dialog, FilenameDialog, PageSetupDialog } from "./Editor";
+import { FilenameDialog } from "./Dialogs";
+import { Editor, Dialog, PageSetupDialog } from "./Editor";
 import { Menus } from "./Menus";
 import { Graph } from "./Graph";
 import { arrowSVG } from "../images/base64";
-import { ChangePageSetup } from "./EditorUi";
+import { PageSetup } from "./PageSetup";
 import { background } from "../images/base64";
 
 export {
@@ -6846,7 +6847,7 @@ DiagramFormatPanel.prototype.addPaperSize = function (div) {
         graph.pageFormat.width != pageFormat.width ||
         graph.pageFormat.height != pageFormat.height
       ) {
-        const change = new ChangePageSetup(ui, null, null, pageFormat);
+        const change = new PageSetup(ui, null, null, pageFormat);
         change.ignoreColor = true;
         change.ignoreImage = true;
 

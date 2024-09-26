@@ -14,9 +14,9 @@ import {
   mxEventSource,
 } from "../../core/mxgraph";
 
-import { Editor, FilenameDialog } from "./Editor";
-import { LayersWindow, OutlineWindow } from "./Dialogs";
-import { ChangePageSetup } from "./EditorUi";
+import { LayersWindow, OutlineWindow, FilenameDialog } from "./Dialogs";
+import { PageSetup } from "./PageSetup";
+import { EDITOR } from "../utils/constant";
 
 export { Actions, Action };
 
@@ -53,7 +53,7 @@ Actions.prototype.init = function () {
     },
     null,
     "sprite-undo",
-    Editor.ctrlKey + "+Z"
+    EDITOR.CTRL_KEY + "+Z"
   );
   this.addAction(
     "redo",
@@ -62,7 +62,7 @@ Actions.prototype.init = function () {
     },
     null,
     "sprite-redo",
-    !mxClient.IS_WIN ? Editor.ctrlKey + "+Shift+Z" : Editor.ctrlKey + "+Y"
+    !mxClient.IS_WIN ? EDITOR.CTRL_KEY + "+Shift+Z" : EDITOR.CTRL_KEY + "+Y"
   );
   this.addAction(
     "cut",
@@ -71,7 +71,7 @@ Actions.prototype.init = function () {
     },
     null,
     "sprite-cut",
-    Editor.ctrlKey + "+X"
+    EDITOR.CTRL_KEY + "+X"
   );
   this.addAction(
     "copy",
@@ -84,7 +84,7 @@ Actions.prototype.init = function () {
     },
     null,
     "sprite-copy",
-    Editor.ctrlKey + "+C"
+    EDITOR.CTRL_KEY + "+C"
   );
   this.addAction(
     "paste",
@@ -95,7 +95,7 @@ Actions.prototype.init = function () {
     },
     false,
     "sprite-paste",
-    Editor.ctrlKey + "+V"
+    EDITOR.CTRL_KEY + "+V"
   );
   this.addAction("pasteHere", function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
@@ -218,7 +218,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Delete"
+    EDITOR.CTRL_KEY + "+Delete"
   );
   this.addAction(
     "duplicate",
@@ -231,7 +231,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+D"
+    EDITOR.CTRL_KEY + "+D"
   );
   this.put(
     "turn",
@@ -242,7 +242,7 @@ Actions.prototype.init = function () {
       },
       null,
       null,
-      Editor.ctrlKey + "+R"
+      EDITOR.CTRL_KEY + "+R"
     )
   );
   this.addAction(
@@ -252,7 +252,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+I"
+    EDITOR.CTRL_KEY + "+Shift+I"
   );
   this.addAction(
     "selectEdges",
@@ -261,7 +261,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+E"
+    EDITOR.CTRL_KEY + "+Shift+E"
   );
   this.addAction(
     "selectAll",
@@ -270,7 +270,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+A"
+    EDITOR.CTRL_KEY + "+A"
   );
   this.addAction(
     "selectNone",
@@ -279,7 +279,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+A"
+    EDITOR.CTRL_KEY + "+Shift+A"
   );
   this.addAction(
     "lockUnlock",
@@ -301,7 +301,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+L"
+    EDITOR.CTRL_KEY + "+L"
   );
 
   // Navigation actions
@@ -321,7 +321,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+Home"
+    EDITOR.CTRL_KEY + "+Shift+Home"
   );
   this.addAction(
     "enterGroup",
@@ -330,7 +330,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+End"
+    EDITOR.CTRL_KEY + "+Shift+End"
   );
   this.addAction(
     "collapse",
@@ -339,7 +339,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Home"
+    EDITOR.CTRL_KEY + "+Home"
   );
   this.addAction(
     "expand",
@@ -348,7 +348,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+End"
+    EDITOR.CTRL_KEY + "+End"
   );
 
   // Arrange actions
@@ -359,7 +359,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+F"
+    EDITOR.CTRL_KEY + "+Shift+F"
   );
   this.addAction(
     "toBack",
@@ -368,7 +368,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+B"
+    EDITOR.CTRL_KEY + "+Shift+B"
   );
   this.addAction(
     "group",
@@ -381,7 +381,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+G"
+    EDITOR.CTRL_KEY + "+G"
   );
   this.addAction(
     "ungroup",
@@ -397,7 +397,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+U"
+    EDITOR.CTRL_KEY + "+Shift+U"
   );
   this.addAction("removeFromGroup", function () {
     graph.removeCellsFromParent();
@@ -459,7 +459,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+Y"
+    EDITOR.CTRL_KEY + "+Shift+Y"
   );
   this.addAction("formattedText", function () {
     const refState = graph.getView().getState(graph.getSelectionCell());
@@ -583,7 +583,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + " + (Numpad) / Alt+Mousewheel"
+    EDITOR.CTRL_KEY + " + (Numpad) / Alt+Mousewheel"
   );
   this.addAction(
     "zoomOut",
@@ -596,7 +596,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + " - (Numpad) / Alt+Mousewheel"
+    EDITOR.CTRL_KEY + " - (Numpad) / Alt+Mousewheel"
   );
   this.addAction(
     "fitWindow",
@@ -625,7 +625,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+H"
+    EDITOR.CTRL_KEY + "+Shift+H"
   );
   this.addAction(
     "fitPage",
@@ -653,7 +653,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+J"
+    EDITOR.CTRL_KEY + "+J"
   );
   this.addAction(
     "fitTwoPages",
@@ -684,7 +684,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+Shift+J"
+    EDITOR.CTRL_KEY + "+Shift+J"
   );
   this.addAction(
     "fitPageWidth",
@@ -732,7 +732,7 @@ Actions.prototype.init = function () {
       }),
       null,
       null,
-      Editor.ctrlKey + "+0"
+      EDITOR.CTRL_KEY + "+0"
     )
   );
   this.addAction(
@@ -746,7 +746,7 @@ Actions.prototype.init = function () {
           const val = parseInt(newValue);
 
           if (!isNaN(val) && val > 0) {
-            const change = new ChangePageSetup(ui, null, null, null, val / 100);
+            const change = new PageSetup(ui, null, null, null, val / 100);
             change.ignoreColor = true;
             change.ignoreImage = true;
 
@@ -770,7 +770,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+G"
+    EDITOR.CTRL_KEY + "+Shift+G"
   );
   action.setToggleAction(true);
   action.setSelectedCallback(function () {
@@ -797,7 +797,7 @@ Actions.prototype.init = function () {
   });
 
   action = this.addAction("collapseExpand", function () {
-    const change = new ChangePageSetup(ui);
+    const change = new PageSetup(ui);
     change.ignoreColor = true;
     change.ignoreImage = true;
     change.foldingEnabled = !graph.foldingEnabled;
@@ -932,7 +932,7 @@ Actions.prototype.init = function () {
     function () {
       document.execCommand("bold", false, null);
     },
-    Editor.ctrlKey + "+B"
+    EDITOR.CTRL_KEY + "+B"
   );
   toggleFontStyle(
     "italic",
@@ -940,7 +940,7 @@ Actions.prototype.init = function () {
     function () {
       document.execCommand("italic", false, null);
     },
-    Editor.ctrlKey + "+I"
+    EDITOR.CTRL_KEY + "+I"
   );
   toggleFontStyle(
     "underline",
@@ -948,7 +948,7 @@ Actions.prototype.init = function () {
     function () {
       document.execCommand("underline", false, null);
     },
-    Editor.ctrlKey + "+U"
+    EDITOR.CTRL_KEY + "+U"
   );
 
   // Color actions
@@ -1157,7 +1157,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+D"
+    EDITOR.CTRL_KEY + "+Shift+D"
   );
   this.addAction(
     "clearDefaultStyle",
@@ -1168,7 +1168,7 @@ Actions.prototype.init = function () {
     },
     null,
     null,
-    Editor.ctrlKey + "+Shift+R"
+    EDITOR.CTRL_KEY + "+Shift+R"
   );
   this.addAction("addWaypoint", function () {
     const cell = graph.getSelectionCell();
@@ -1250,7 +1250,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+,"
+    EDITOR.CTRL_KEY + "+,"
   );
   action = this.addAction(
     "superscript",
@@ -1261,7 +1261,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+."
+    EDITOR.CTRL_KEY + "+."
   );
   action = this.addAction(
     "indent",
@@ -1299,7 +1299,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+Shift+L"
+    EDITOR.CTRL_KEY + "+Shift+L"
   );
   action.setToggleAction(true);
   action.setSelectedCallback(
@@ -1314,7 +1314,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+Shift+P"
+    EDITOR.CTRL_KEY + "+Shift+P"
   );
   action.setToggleAction(true);
   action.setSelectedCallback(
@@ -1342,7 +1342,7 @@ Actions.prototype.init = function () {
     }),
     null,
     null,
-    Editor.ctrlKey + "+Shift+O"
+    EDITOR.CTRL_KEY + "+Shift+O"
   );
 
   action.setToggleAction(true);

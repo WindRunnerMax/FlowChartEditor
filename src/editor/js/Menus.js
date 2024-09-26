@@ -18,8 +18,8 @@ import {
   mxEventSource,
   mxMouseEvent,
 } from "../../core/mxgraph";
-import { Editor, FilenameDialog } from "./Editor";
-import { ColorDialog } from "./Dialogs";
+import { Editor } from "./Editor";
+import { ColorDialog, FilenameDialog } from "./Dialogs";
 
 export { Menubar, Menu, Menus };
 

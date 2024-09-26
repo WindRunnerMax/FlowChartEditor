@@ -60,12 +60,12 @@ import {
   mxCell,
   mxGeometry,
 } from "../../core/mxgraph";
-import { Editor } from "./Editor";
 import { getStencil } from "../stencils";
-
+import { rowMoveImage } from "../images/base64";
 import pako from "pako";
 import html_sanitize from "sanitize-html";
 import { gridImage, refreshTarget } from "../images/base64";
+import { EDITOR } from "../utils/constant";
 
 export { TableLayout, Graph, HoverIcons };
 
@@ -8987,7 +8987,7 @@ if (typeof mxVertexHandler != "undefined") {
           Math.round((this.pBounds.width - this.hint.clientWidth) / 2) +
           "px";
         this.hint.style.top =
-          this.pBounds.y + this.currentDy + this.pBounds.height + Editor.hintOffset + "px";
+          this.pBounds.y + this.currentDy + this.pBounds.height + EDITOR.HINT_OFFSET + "px";
       }
     };
 
@@ -9407,7 +9407,7 @@ if (typeof mxVertexHandler != "undefined") {
           if (rowState != null && model.isVertex(rowState.cell)) {
             // Adds handle to move row
             // LATER: Move to overlay pane to hide during zoom but keep padding
-            const moveHandle = mxUtils.createImage(Editor.rowMoveImage);
+            const moveHandle = mxUtils.createImage(rowMoveImage);
             moveHandle.style.position = "absolute";
             moveHandle.style.cursor = "pointer";
             moveHandle.style.width = "7px";
@@ -9571,7 +9571,7 @@ if (typeof mxVertexHandler != "undefined") {
         }
 
         this.hint.style.left = bb.x + Math.round((bb.width - this.hint.clientWidth) / 2) + "px";
-        this.hint.style.top = bb.y + bb.height + Editor.hintOffset + "px";
+        this.hint.style.top = bb.y + bb.height + EDITOR.HINT_OFFSET + "px";
 
         if (this.linkHint != null) {
           this.linkHint.style.display = "none";
@@ -9653,7 +9653,7 @@ if (typeof mxVertexHandler != "undefined") {
       }
 
       this.hint.style.left = Math.round(me.getGraphX() - this.hint.clientWidth / 2) + "px";
-      this.hint.style.top = Math.max(me.getGraphY(), point.y) + Editor.hintOffset + "px";
+      this.hint.style.top = Math.max(me.getGraphY(), point.y) + EDITOR.HINT_OFFSET + "px";
 
       if (this.linkHint != null) {
         this.linkHint.style.display = "none";
@@ -10537,7 +10537,7 @@ if (typeof mxVertexHandler != "undefined") {
         this.linkHint.style.left =
           Math.max(0, Math.round(rs.x + (rs.width - this.linkHint.clientWidth) / 2)) + "px";
         this.linkHint.style.top =
-          Math.round(b + this.verticalOffset / 2 + Editor.hintOffset) + "px";
+          Math.round(b + this.verticalOffset / 2 + EDITOR.HINT_OFFSET) + "px";
       }
     };
 
@@ -10596,7 +10596,7 @@ if (typeof mxVertexHandler != "undefined") {
 
           this.linkHint.style.left =
             Math.max(0, Math.round(b.x + (b.width - this.linkHint.clientWidth) / 2)) + "px";
-          this.linkHint.style.top = Math.round(b.y + b.height + Editor.hintOffset) + "px";
+          this.linkHint.style.top = Math.round(b.y + b.height + EDITOR.HINT_OFFSET) + "px";
         }
       }
     };
