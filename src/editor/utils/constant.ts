@@ -1,3 +1,8 @@
+export const GRAPH = {
+  ARROW_FILL: "#29b6f2",
+  ARROW_SPACING: 2,
+};
+
 export const PRESENT_COLORS = [
   "E6D0DE",
   "CDA2BE",

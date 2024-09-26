@@ -61,7 +61,6 @@ import {
   mxGeometry,
 } from "../../core/mxgraph";
 import { Editor } from "./Editor";
-import { Sidebar } from "./Sidebar";
 import { getStencil } from "../stencils";
 
 import pako from "pako";
@@ -9722,13 +9721,6 @@ if (typeof mxVertexHandler != "undefined") {
     mxEdgeHandler.prototype.fixedHandleImage = HoverIcons.prototype.fixedHandle;
     mxEdgeHandler.prototype.labelHandleImage = HoverIcons.prototype.secondaryHandle;
     mxOutline.prototype.sizerImage = HoverIcons.prototype.mainHandle;
-
-    Sidebar.prototype.triangleUp = HoverIcons.prototype.triangleUp;
-    Sidebar.prototype.triangleRight = HoverIcons.prototype.triangleRight;
-    Sidebar.prototype.triangleDown = HoverIcons.prototype.triangleDown;
-    Sidebar.prototype.triangleLeft = HoverIcons.prototype.triangleLeft;
-    Sidebar.prototype.refreshTarget = HoverIcons.prototype.refreshTarget;
-    Sidebar.prototype.roundDrop = HoverIcons.prototype.roundDrop;
 
     // Pre-fetches images (only needed for non data-uris)
     new Image().src = HoverIcons.prototype.mainHandle.src;

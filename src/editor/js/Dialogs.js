@@ -17,7 +17,7 @@ import {
 import { Editor, Dialog, FilenameDialog } from "./Editor";
 import { mxJSColor, mxColor } from "../jscolor/jscolor";
 import { EditorUi } from "./EditorUi";
-import { PRESENT_COLORS, DEFAULT_COLORS } from "../constant";
+import { PRESENT_COLORS, DEFAULT_COLORS } from "../utils/constant";
 
 export { ColorDialog, OutlineWindow, LayersWindow };
 

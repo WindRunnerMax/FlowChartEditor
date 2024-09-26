@@ -20,11 +20,20 @@ import {
   mxCodec,
   mxGraphModel,
 } from "../../core/mxgraph";
-import { Graph, HoverIcons } from "./Graph";
+import { Graph } from "./Graph";
 import { Editor, Dialog } from "./Editor";
 import { getStencil } from "../stencils";
 import Gear_128x128 from "../stencils/clipart/Gear_128x128";
 import { collapsedImage, expandedImage, searchImage } from "../images/base64";
+import {
+  REFRESH_TARGET_IMAGE,
+  ROUND_DROP_IMAGE,
+  TRIANGLE_DOWN_IMAGE,
+  TRIANGLE_LEFT_IMAGE,
+  TRIANGLE_RIGHT_IMAGE,
+  TRIANGLE_UP_IMAGE,
+} from "../utils/graph";
+import { GRAPH } from "../utils/constant";
 
 export { Sidebar };
 
@@ -114,6 +123,13 @@ function Sidebar(editorUi, container) {
 
   this.init();
 }
+
+Sidebar.prototype.triangleUp = TRIANGLE_UP_IMAGE;
+Sidebar.prototype.triangleRight = TRIANGLE_RIGHT_IMAGE;
+Sidebar.prototype.triangleDown = TRIANGLE_DOWN_IMAGE;
+Sidebar.prototype.triangleLeft = TRIANGLE_LEFT_IMAGE;
+Sidebar.prototype.refreshTarget = REFRESH_TARGET_IMAGE;
+Sidebar.prototype.roundDrop = ROUND_DROP_IMAGE;
 
 /**
  * Adds all palettes to the sidebar.
@@ -4386,7 +4402,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
       arrow.setAttribute("title", tooltip);
     }
 
-    mxUtils.setOpacity(arrow, img == HoverIcons.prototype.refreshTarget ? 30 : 20);
+    mxUtils.setOpacity(arrow, img == REFRESH_TARGET_IMAGE ? 30 : 20);
     arrow.style.position = "absolute";
     arrow.style.cursor = "crosshair";
 
@@ -4724,7 +4740,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
         }
 
         bds.grow(this.graph.tolerance);
-        bds.grow(HoverIcons.prototype.arrowSpacing);
+        bds.grow(GRAPH.ARROW_SPACING);
 
         var handler = this.graph.selectionCellsHandler.getHandler(currentTargetState.cell);
 
@@ -4878,7 +4894,7 @@ Sidebar.prototype.createDragSource = function (elt, dropHandler, preview, cells,
           }
 
           bds.grow(this.graph.tolerance);
-          bds.grow(HoverIcons.prototype.arrowSpacing);
+          bds.grow(GRAPH.ARROW_SPACING);
 
           var handler = this.graph.selectionCellsHandler.getHandler(state.cell);
 

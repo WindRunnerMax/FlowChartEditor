@@ -1,6 +1,6 @@
 {
   "name": "embed-drawio",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "files": [
     "dist",
     "pnpm-lock.yaml"
@@ -21,14 +21,14 @@
     "build:dist": "rm -rf ./dist && npm run build:es && npm run build:lib && npm run build:css",
     "lint:es": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .gitignore",
-    "lint": "npm run lint-es && npm run lint-style"
+    "lint": "npm run lint-es && npm run lint-style",
+    "lint:circular": "madge --circular ./src"
   },
   "dependencies": {
     "laser-utils": "0.0.5-alpha.10",
     "mxgraph": "4.2.2",
     "pako": "1.0.6",
-    "sanitize-html": "2.7.3",
-    "sanitizer": "0.1.3"
+    "sanitize-html": "2.7.3"
   },
   "devDependencies": {
     "@typed-mxgraph/typed-mxgraph": "1.0.7",
@@ -44,9 +44,9 @@
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-react": "7.27.0",
     "eslint-plugin-react-hooks": "4.3.0",
-    "gulp": "^5.0.0",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-concat": "^2.6.1",
+    "gulp": "5.0.0",
+    "gulp-clean-css": "4.3.0",
+    "gulp-concat": "2.6.1",
     "prettier": "2.4.1",
     "react": "17.0.2",
     "react-app-rewired": "2.1.8",

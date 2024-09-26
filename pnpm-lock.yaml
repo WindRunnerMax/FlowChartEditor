@@ -17,9 +17,6 @@ dependencies:
   sanitize-html:
     specifier: 2.7.3
     version: 2.7.3
-  sanitizer:
-    specifier: 0.1.3
-    version: 0.1.3
 
 devDependencies:
   '@typed-mxgraph/typed-mxgraph':
@@ -62,13 +59,13 @@ devDependencies:
     specifier: 4.3.0
     version: 4.3.0(eslint@7.11.0)
   gulp:
-    specifier: ^5.0.0
+    specifier: 5.0.0
     version: 5.0.0
   gulp-clean-css:
-    specifier: ^4.3.0
+    specifier: 4.3.0
     version: 4.3.0
   gulp-concat:
-    specifier: ^2.6.1
+    specifier: 2.6.1
     version: 2.6.1
   prettier:
     specifier: 2.4.1
@@ -10188,10 +10185,6 @@ packages:
   /sanitize.css@13.0.0:
     resolution: {integrity: sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==}
     dev: true
-
-  /sanitizer@0.1.3:
-    resolution: {integrity: sha512-j05vL56tR90rsYqm9ZD05v6K4HI7t4yMDEvvU0x4f+IADXM9Jx1x9mzatxOs5drJq6dGhugxDW99mcPvXVLl+Q==}
-    dev: false
 
   /sass-loader@12.6.0(webpack@5.91.0):
     resolution: {integrity: sha512-oLTaH0YCtX4cfnJZxKSLAyglED0naiYfNG1iXfU5w1LNZ+ukoA5DtyDIN5zmKVZwYNJP4KRc5Y3hkWga+7tYfA==}
