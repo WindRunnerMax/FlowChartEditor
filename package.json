@@ -1,6 +1,6 @@
 {
   "name": "embed-drawio",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "files": [
     "dist",
     "pnpm-lock.yaml"
@@ -47,6 +47,7 @@
     "gulp": "5.0.0",
     "gulp-clean-css": "4.3.0",
     "gulp-concat": "2.6.1",
+    "jsdom": "25.0.1",
     "prettier": "2.4.1",
     "react": "17.0.2",
     "react-app-rewired": "2.1.8",

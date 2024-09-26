@@ -23,6 +23,7 @@ import {
   mxCodecRegistry,
   mxMorphing,
 } from "../../core/mxgraph";
+import { PageSetup } from "./PageSetup";
 import { Actions } from "./Actions";
 import { Editor, Dialog, ErrorDialog } from "./Editor";
 import { Sidebar } from "./Sidebar";
@@ -32,7 +33,6 @@ import { Toolbar } from "./Toolbar";
 import { Format } from "./Format";
 import { ColorDialog } from "./Dialogs";
 import { submenuImage } from "../images/base64";
-import { PageSetup } from "./PageSetup";
 
 export { EditorUi };
 

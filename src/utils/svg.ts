@@ -35,7 +35,7 @@ export const base64ToSvgString = (base64: string): string | null => {
 export const svgToBase64 = (svg: string | SVGElement): string | null => {
   const svgString = isString(svg) ? svg : svgToString(svg);
   if (svgString) {
-    return "data:image/svg+xml;base64," + btoa(svgString);
+    return `data:image/svg+xml;base64,${btoa(svgString)}`;
   }
   return null;
 };

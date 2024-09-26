@@ -1,6 +1,7 @@
+import "../editor/js/Shapes";
 import { stringToXml } from "../utils/xml";
 import { DEFAULT_STYLE_XML } from "../styles/default";
-import { Graph } from "../editor";
+import { Graph } from "../editor/js/Graph";
 import { mxCodec, mxEvent } from "./mxgraph";
 
 const themes: Record<string, Node> = {};
