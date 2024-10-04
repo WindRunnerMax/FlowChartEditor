@@ -22,7 +22,7 @@
     "lint:es": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .gitignore",
     "lint": "npm run lint-es && npm run lint-style",
-    "lint:circular": "madge --circular ./src"
+    "lint:circular": "madge --extensions js,jsx --circular ./dist"
   },
   "dependencies": {
     "laser-utils": "0.0.5-alpha.10",

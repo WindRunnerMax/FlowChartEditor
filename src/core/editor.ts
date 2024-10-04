@@ -4,7 +4,7 @@ import { Editor, EditorUi, Graph } from "../editor";
 import { mxEvent, mxResources } from "./mxgraph";
 import type { Language } from "../editor/i18n";
 import { getLanguage } from "../editor/i18n";
-import type { Func } from "laser-utils";
+import type { A, O, F } from "laser-utils/dist/es/types";
 
 const themes: Record<string, Node> = {};
 themes[Graph.prototype.defaultThemeName] = (
@@ -26,7 +26,7 @@ export class DiagramEditor {
   public start = (
     lang: Language,
     init?: XMLDocument | null,
-    onXMLChange?: (xml: Element) => void
+    onXMLChange?: (xml: Element, changes: A.Any) => void
   ): void => {
     this.container.appendChild(this.diagramContainer);
     this.container.style.overflow = "hidden";
@@ -36,8 +36,14 @@ export class DiagramEditor {
     if (init) {
       this.editorUi.editor.setGraphXml(init.documentElement);
     }
-    this.editor.graph.getModel().addListener(mxEvent.CHANGE, () => {
-      onXMLChange && onXMLChange(this.editorUi && this.editorUi.editor.getGraphXml());
+    this.editor.graph.getModel().addListener(mxEvent.CHANGE, (_: O.Any, event: O.Any) => {
+      if (onXMLChange) {
+        let changes: A.Any = [];
+        if (event && event.properties && event.properties.changes) {
+          changes = event.properties.changes;
+        }
+        onXMLChange(this.editorUi && this.editorUi.editor.getGraphXml(), changes);
+      }
     });
   };
 
@@ -54,7 +60,7 @@ export class DiagramEditor {
     this.container.removeChild(this.diagramContainer);
   };
 
-  public static getLang = (lang: Func.Args<typeof getLanguage>["0"]) => {
+  public static getLang = (lang: F.Args<typeof getLanguage>["0"]) => {
     return getLanguage(lang);
   };
 }

@@ -117,8 +117,7 @@ mxCodec.prototype.decode = function (node, into) {
   if (node && node.nodeType == mxConstants.NODETYPE_ELEMENT) {
     let ctor: unknown = null;
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore // 因为需要处理的`XML Node`可能不在`Window`上
+      // @ts-expect-error 需要处理的 XML Node 可能不在 Window 上
       ctor = mx[node.nodeName] || window[node.nodeName];
     } catch (error) {
       console.log(`NODE ${node.nodeName} IS NOT FOUND`, error);
@@ -172,11 +171,11 @@ mxSvgCanvas2D.prototype.createClip = function (x2, y2, w3, h3) {
   y2 = Math.round(y2);
   w3 = Math.round(w3);
   h3 = Math.round(h3);
-  const id = "mx-clip-" + x2 + "-" + y2 + "-" + w3 + "-" + h3;
+  const id = `mx-clip-${x2}-${y2}-${w3}-${h3}`;
   let counter = 0;
-  let tmp = id + "-" + counter;
+  let tmp = `${id}-${counter}`;
   while (document.getElementById(tmp) != null) {
-    tmp = id + "-" + ++counter;
+    tmp = `${id}-${++counter}`;
   }
   const clip = this.createElement("clipPath");
   clip.setAttribute("id", tmp);
