@@ -1,15 +1,13 @@
 module.exports = {
-  extends:[
-    "stylelint-config-standard",
-  ],
+  extends: ["stylelint-config-standard"],
   ignoreFiles: [
-    "**/node_modules/**/*.*", 
-    "**/dist/**/*.*", 
-    "**/build/**/*.*", 
-    "**/coverage/**/*.*", 
-    "**/public/**/*.*"
+    "**/node_modules/**/*.*",
+    "**/dist/**/*.*",
+    "**/build/**/*.*",
+    "**/coverage/**/*.*",
+    "**/public/**/*.*",
   ],
-  rules:{
+  rules: {
     "no-descending-specificity": null,
     "color-function-notation": null,
     "alpha-value-notation": null,
@@ -17,10 +15,12 @@ module.exports = {
     "max-nesting-depth": 6,
     "selector-max-compound-selectors": 6,
     "selector-class-pattern": null,
-    "selector-pseudo-class-no-unknown": [true, {
-        "ignorePseudoClasses": ["global"]
-      }
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"],
+      },
     ],
-    "selector-no-qualifying-type": null
-  }
-}
+    "selector-no-qualifying-type": null,
+  },
+};

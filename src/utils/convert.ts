@@ -29,7 +29,7 @@ export const convertXMLToSVG = (
     svg.setAttribute("xmlns", XMLNS);
     svg.setAttribute("width", bounds.width.toString());
     svg.setAttribute("height", bounds.height.toString());
-    svg.setAttribute("viewBox", "0 0 " + bounds.width + " " + bounds.height);
+    svg.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
     svg.setAttribute("version", "1.1");
     const canvas = new mxSvgCanvas2D(svg);
     canvas.translate(-bounds.x, -bounds.y);

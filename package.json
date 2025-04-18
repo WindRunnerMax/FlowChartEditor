@@ -1,6 +1,6 @@
 {
   "name": "embed-drawio",
-  "version": "0.1.5",
+  "version": "0.1.10",
   "files": [
     "dist",
     "pnpm-lock.yaml"
@@ -25,6 +25,7 @@
     "lint:circular": "madge --extensions js,jsx --circular ./dist"
   },
   "dependencies": {
+    "js-base64": "3.7.7",
     "laser-utils": "0.0.5-alpha.10",
     "mxgraph": "4.2.2",
     "pako": "1.0.6",

@@ -1,6 +1,7 @@
 import { mxImage } from "../../core/mxgraph";
 import { refreshTarget } from "../images/base64";
 import { GRAPH } from "./constant";
+import { Base64 } from "js-base64";
 
 export const createSvgImage = (
   w: number,
@@ -18,7 +19,7 @@ export const createSvgImage = (
       }${w}px" height="${h}px" ${viewBox} version="1.1">${data}</svg>`
     )
   );
-  return new mxImage(`data:image/svg+xml;base64,${btoa(tmp)}`, w, h);
+  return new mxImage(`data:image/svg+xml;base64,${Base64.encode(tmp)}`, w, h);
 };
 
 export const TRIANGLE_UP_IMAGE = createSvgImage(

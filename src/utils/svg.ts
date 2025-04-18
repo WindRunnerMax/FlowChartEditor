@@ -1,5 +1,6 @@
 import { isString } from "laser-utils/dist/es/is";
 import type { Func } from "laser-utils/dist/es/types";
+import { Base64 } from "js-base64";
 
 export const svgToString = (svg: Node | null): string | null => {
   if (!svg) return null;
@@ -24,7 +25,7 @@ export const stringToSvg = (str: string): SVGElement | null => {
 
 export const base64ToSvgString = (base64: string): string | null => {
   try {
-    const svg = atob(base64.replace("data:image/svg+xml;base64,", ""));
+    const svg = Base64.decode(base64.replace("data:image/svg+xml;base64,", ""));
     return svg;
   } catch (error) {
     console.log("base64ToSvgString Error: ", error);
@@ -35,7 +36,7 @@ export const base64ToSvgString = (base64: string): string | null => {
 export const svgToBase64 = (svg: string | SVGElement): string | null => {
   const svgString = isString(svg) ? svg : svgToString(svg);
   if (svgString) {
-    return `data:image/svg+xml;base64,${btoa(svgString)}`;
+    return `data:image/svg+xml;base64,${Base64.encode(svgString)}`;
   }
   return null;
 };
